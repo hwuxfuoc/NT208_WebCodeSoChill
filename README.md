@@ -115,8 +115,8 @@ WebCodeSoChill/
 
 Chi tiết hơn về từng phần được mô tả trong:
 
-- [`Frontend.md`](https://claude.ai/chat/Frontend.md) – Cấu trúc thư mục frontend, danh sách component, flow UI/UX.
-- [`Backend.md`](https://claude.ai/chat/Backend.md) – Danh sách API endpoints, cơ chế Judge system, luồng xác thực.
+- [`Frontend.md`](Frontend.md) – Cấu trúc thư mục frontend, danh sách component, flow UI/UX.
+- [`Backend.md`](Backend.md) – Danh sách API endpoints, cơ chế Judge system, luồng xác thực.
 
 ---
 
@@ -124,7 +124,7 @@ Chi tiết hơn về từng phần được mô tả trong:
 
 Hướng dẫn cài đặt chi tiết từng bước (bao gồm cài đặt Node.js, MongoDB, biến môi trường...) vui lòng xem tại file:
 
-👉 [**Setup.md**](https://claude.ai/chat/Setup.md)
+👉 [**Setup.md**](Setup.md)
 
 Tóm tắt nhanh các bước chính:
 
@@ -178,7 +178,7 @@ Dưới đây là các nền tảng được khuyến nghị để deploy từng
 
 | Nội dung | Đường dẫn |
 | --- | --- |
-| ER Diagram (thiết kế database) | [Xem trên Eraser.io](https://www.notion.so/...) |
+| ER Diagram (thiết kế database) | [Xem trên Eraser.io](https://app.eraser.io/workspace/MibBxluYc33hORCIUomJ?origin=share) |
 | Frontend Local | [http://localhost:5173](http://localhost:5173/) |
 | Backend API Local | [http://localhost:5000](http://localhost:5000/) |
 | Live Demo | *(Sẽ cập nhật sau khi deploy)* |
