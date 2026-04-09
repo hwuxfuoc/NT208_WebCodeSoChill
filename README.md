@@ -1,106 +1,132 @@
-# NT208_WebUrbanTech
+# NT208_WebCodeSoChill
+---
 
-**WebUrbanTech** là một nền tảng bất động sản hiện đại được xây dựng hoàn toàn bằng JavaScript, lấy cảm hứng từ các trang web uy tín tại Việt Nam như [**batdongsan.com.vn**](http://batdongsan.com.vn/) — nền tảng hàng đầu về mua bán, cho thuê nhà đất với cơ sở dữ liệu lớn, bộ lọc tìm kiếm chi tiết và các công cụ hỗ trợ người dùng đưa ra quyết định thông minh.
+# **Web CodeSoChill** 
 
-Dự án cung cấp trải nghiệm toàn diện cho cả người mua/thuê và người bán/cho thuê bất động sản, bao gồm:
+**Web CodeSoChill** là nền tảng học lập trình và Online Judge hiện đại, giúp người dùng rèn luyện kỹ năng lập trình qua việc giải bài tập và nộp bài với hệ thống chấm bài tự động (Automatic Judge).
 
-- Đăng ký / đăng nhập tài khoản an toàn.
-- Đăng tin bán hoặc cho thuê nhà đất với thông tin chi tiết: hình ảnh đa góc, giá cả, vị trí địa lý, diện tích, số phòng ngủ/phòng tắm, tiện ích kèm theo.
-- Tìm kiếm, lọc và xem chi tiết các tin đăng từ cộng đồng người dùng.
-- Lưu tin yêu thích và quản lý danh sách cá nhân.
-- Kết bạn với người dùng khác và chat trực tiếp thời gian thực để trao đổi thông tin nhanh chóng.
-- Tích hợp tính năng tư vấn bất động sản thông minh bằng AI, hỗ trợ người dùng nhận gợi ý về giá thị trường, xu hướng hoặc lựa chọn phù hợp.
+Lấy cảm hứng từ các nền tảng uy tín như LeetCode, Codeforces, AtCoder và VNOJ, CodeSoChill tập trung vào trải nghiệm thân thiện, dễ sử dụng, phù hợp cho sinh viên, học sinh và người mới bắt đầu học lập trình.
 
-Dự án được thiết kế với trọng tâm vào tính thân thiện, bảo mật và khả năng mở rộng, phù hợp cho việc học tập, phát triển cá nhân hoặc làm nền tảng khởi đầu cho sản phẩm thực tế.
+### Tính năng chính
 
-## Tech Stack & Kiến Trúc Dự Án
+- Đăng ký / Đăng nhập tài khoản an toàn
+- Thư viện bài tập phong phú theo chủ đề (Cơ bản, Thuật toán, Cấu trúc dữ liệu, OOP, …)
+- **Nộp bài (Submit)** và **chạy testcase tự động** thời gian thực
+- Hiển thị kết quả chi tiết: Accepted, Wrong Answer, Time Limit Exceeded, Runtime Error, …
+- Editor code trực tuyến với syntax highlighting
+- Xem lịch sử nộp bài và phân tích kết quả
+- Xem bảng xếp hạng (Leaderboard)
+- Quản lý profile và danh sách bài đã giải
+- Giao diện hiện đại, responsive, dễ sử dụng
 
-Dự án sử dụng **MERN Stack** — một trong những bộ công nghệ phổ biến nhất cho ứng dụng full-stack JavaScript:
+---
 
-- **MongoDB** — Cơ sở dữ liệu NoSQL linh hoạt.
-- **Express.js** — Framework backend tối ưu cho API.
-- **React.js** — Thư viện xây dựng giao diện người dùng động.
-- **Node.js** — Môi trường runtime cho server-side JavaScript.
+## **Tech Stack & Kiến Trúc**
 
-Toàn bộ codebase được viết bằng JavaScript (và JSX cho frontend), giúp duy trì tính nhất quán, dễ bảo trì và phát triển nhanh.
-
-**Hướng Dẫn Cài Đặt & Chạy Local xem chi tiết tại: [Setup](https://github.com/hwuxfuoc/NT208_WebUrbanTech/blob/main/Setup.md)**
+Dự án được xây dựng bằng **MERN Stack** (MongoDB - Express.js - React.js - Node.js).
 
 ### Frontend
+- **React.js** + Vite
+- **Ant Design** (thiết kế component chính)
+- **Bootstrap** + CSS thuần (hỗ trợ styling linh hoạt)
+- **Ace Editor** hoặc **Monaco Editor** (code editor)
+- **Axios** – gọi API
+- **React Router DOM** – điều hướng
 
-Frontend chịu trách nhiệm xây dựng giao diện người dùng hiện đại, responsive và tương tác mượt mà. Các trang chính bao gồm: Trang chủ, Đăng tin bất động sản, Danh sách tin đăng (listings), Trang chi tiết bất động sản, Profile cá nhân, Chat, Đăng ký/Đăng nhập.
-
-**Công nghệ sử dụng**:
-
-- React (với JSX) — Xây dựng component-based UI.
-- Vite — Công cụ build và dev server cực nhanh.
-- Bootstrap — Styling utility-first, giúp thiết kế nhanh và tùy chỉnh dễ dàng.
-- Material UI (MUI) — Thư viện component đẹp, sẵn dùng cho form, button, dialog, v.v.
-- Axios — Xử lý các yêu cầu HTTP đến backend.
-- React Router DOM — Quản lý routing và navigation.
-
-**Port local**: 5173 (mặc định của Vite).
-
-Chi tiết về cấu trúc thư mục Frontend và thứ tự code xem chi tiết [tại đây](https://github.com/hwuxfuoc/NT208_WebUrbanTech/blob/main/Frontend.md)
+**Port local**: `5173`
 
 ### Backend
+- **Node.js** + **Express.js**
+- **Mongoose** – kết nối MongoDB
+- **JWT** – xác thực
+- **bcryptjs** – mã hóa mật khẩu
+- Hệ thống Judge (Code Execution Engine) sử dụng sandbox an toàn
 
-Backend xử lý toàn bộ logic nghiệp vụ, API, xác thực và kết nối cơ sở dữ liệu. Hỗ trợ các endpoint CRUD cho bất động sản, người dùng, tin nhắn chat; quản lý authentication và authorization.
-
-**Công nghệ sử dụng**:
-
-- Node.js — Runtime chính.
-- Express.js — Xây dựng server và định tuyến API.
-- Mongoose — ODM cho MongoDB, giúp định nghĩa schema và query dễ dàng.
-- JWT (JSON Web Tokens) — Xác thực stateless an toàn.
-- bcryptjs — Mã hóa mật khẩu người dùng.
-- cors — Cho phép cross-origin requests từ frontend.
-- dotenv — Quản lý biến môi trường (ví dụ: database URI, JWT secret).
-
-**Port local**: 5000.
-
-Chi tiết về cấu trúc thư mục Backend, các API và giải thích xem chi tiết [tại đây](https://github.com/hwuxfuoc/NT208_WebUrbanTech/blob/main/Backend.md)
+**Port local**: `5000`
 
 ### Database
+- **MongoDB Atlas** (Free tier)
+- Các collection chính:
+  - `users`
+  - `problems` (bài tập)
+  - `submissions` (bài nộp)
+  - `testcases`
+  - `contests` (nếu có)
 
-Dữ liệu được lưu trữ trên **MongoDB Atlas** (free tier M0) — dịch vụ cloud NoSQL của MongoDB, không cần quản lý server thủ công.
+---
 
-Các collection chính theo thiết kế schema (dựa trên ERD):
+## Hướng dẫn cài đặt & chạy local
 
-- **Users**: Thông tin tài khoản, profile, mật khẩu đã hash.
-- **Properties**: Chi tiết bất động sản (giá, vị trí, hình ảnh, mô tả, loại hình, v.v.).
-- **Messages** & **Conversations**: Lưu trữ tin nhắn và cuộc trò chuyện chat.
-- **Favorites**: Danh sách bất động sản yêu thích của từng user.
+Chi tiết hướng dẫn cài đặt vui lòng xem tại:  
+**[Setup.md](https://github.com/hwuxfuoc/.../Setup.md)** (bạn thay link sau khi tạo)
 
-Thiết kế schema đảm bảo tính linh hoạt, hỗ trợ mở rộng tính năng sau này (ví dụ: thêm review, rating, báo cáo tin đăng).
+### Cấu trúc thư mục
 
-**Connection String**: `mongodb+srv://hwuxfuoc19it_db_user:e76NQ2jZaEZEzvXN@clusterurbantech.97zwxie.mongodb.net?retryWrites=true&w=majority`
-
-## Deployment
-
-Dự án được thiết kế để deploy miễn phí hoặc chi phí thấp:
-
-- **Frontend** (React/Vite static build): Deploy dễ dàng trên **Vercel** hoặc **Netlify** — hai nền tảng hàng đầu cho ứng dụng frontend, hỗ trợ auto-deploy từ GitHub, custom domain miễn phí và CDN toàn cầu.
-- **Backend** (Node/Express): Deploy trên [**Render.com**](http://render.com/) — hỗ trợ free tier cho web services, tự động build và restart, phù hợp cho API server.
-- **Database**: Tiếp tục sử dụng **MongoDB Atlas** free tier.
-
-Sau khi deploy, cập nhật biến môi trường (ví dụ: API base URL) trong frontend để kết nối với backend production.
-
-## Cấu trúc thư mục chính:
-
-```
-weburbantech/
-├── backend/
-├── frontend/
-└── README.md
+```bash
+WebCodeSoChill/
+├── backend/          # Node.js + Express
+├── frontend/         # React + Vite
+├── judge/            # (tùy chọn) thư mục sandbox code execution
+├── README.md
+├── Setup.md
+└── .env.example
 ```
 
-## Các Liên Kết
+---
 
-| Nội dung | Link |
-| --- | --- |
-| **Database ER Diagram** | [Eraser.io Workspace](https://app.eraser.io/workspace/MibBxluYc33hORCIUomJ?origin=share) |
-| **MongoDB Atlas** | [MongoDB](https://cloud.mongodb.com/v2/695fce2ae63f673f55aaf2d2#/overview) |
-| **Frontend (Local)** | [http://localhost:5173](http://localhost:5173/) |
-| **Backend API (Local)** | [http://localhost:5000](http://localhost:5000/) |
-| **Deploy Live** | (Render) |
+## Chi tiết các phần
+
+- **[Frontend.md](https://github.com/hwuxfuoc/.../Frontend.md)** – Cấu trúc thư mục, component, flow UI
+- **[Backend.md](https://github.com/hwuxfuoc/.../Backend.md)** – API endpoints, Judge system, authentication
+
+---
+
+## Deployment (Gợi ý)
+
+- **Frontend**: Vercel / Netlify
+- **Backend**: Render.com / Railway / Fly.io
+- **Database**: MongoDB Atlas
+- **Judge Service** (Code Execution): Có thể tách riêng service dùng Docker sandbox
+
+---
+
+## Công nghệ & Công cụ chính
+
+| Công nghệ          | Mục đích                     |
+|--------------------|------------------------------|
+| React.js + Vite    | Frontend framework           |
+| Ant Design         | UI Component Library         |
+| Bootstrap          | Responsive & Utility CSS     |
+| Node.js + Express  | Backend API                  |
+| MongoDB + Mongoose | Database                     |
+| JWT + bcryptjs     | Authentication & Security    |
+| Ace/Monaco Editor  | Code Editor                  |
+
+---
+
+## Liên kết
+
+| Nội dung              | Link |
+|-----------------------|------|
+| **ER Diagram**        | [Eraser.io](...) |
+| **Frontend Local**    | http://localhost:5173 |
+| **Backend API Local** | http://localhost:5000 |
+| **Live Demo**         | (sẽ cập nhật sau khi deploy) |
+
+---
+
+**Web CodeSoChill** – Học lập trình một cách “chill” nhất! 💻
+
+---
+
+---
+
+Bạn có thể copy nguyên bản trên vào file `README.md`. 
+
+Bạn muốn tôi chỉnh thêm gì không? Ví dụ:
+- Thêm logo hoặc badge (Tech stack badges)
+- Làm phiên bản ngắn hơn
+- Thêm phần "Tính năng sắp ra mắt"
+- Thay đổi giọng văn (thân thiện hơn hoặc chuyên nghiệp hơn)
+
+Cứ nói nhé, mình chỉnh ngay!
