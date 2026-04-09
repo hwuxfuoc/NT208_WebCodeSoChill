@@ -56,8 +56,7 @@ Thiết kế theo chuẩn **responsive**, tương thích trên cả máy tính, 
 ## 🛠 Tech Stack & Kiến trúc
 
 Dự án được xây dựng theo mô hình **MERN Stack** – một trong những stack phổ biến nhất cho ứng dụng web hiện đại:
-
-![image.png](attachment:0a51aebd-e5fc-44e1-a6cf-0d4fafd2fbfb:image.png)
+<img width="1158" height="271" alt="image" src="https://github.com/user-attachments/assets/89144649-020d-424f-9b9c-97b6c685d974" />
 
 ### 🖥 Frontend
 
