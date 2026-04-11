@@ -223,7 +223,34 @@ npm-debug.log*
 
 ---
 
-### Bước 5: Cấu hình scripts trong package.json
+### Bước 5: Tạo file server
+
+Tạo file `server.js` trong thư mục `backend/`. Đây là file chính để khởi chạy server.
+
+Nội dung cơ bản:
+
+```jsx
+import express from "express";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Server is running...");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+```
+
+---
+
+### Bước 6: Cấu hình scripts trong package.json
 
 Mở file `package.json` và thêm vào phần `"scripts"`:
 
@@ -239,7 +266,7 @@ Mở file `package.json` và thêm vào phần `"scripts"`:
 
 ---
 
-### Bước 5: Khởi động backend
+### Bước 7: Khởi động backend
 
 ```bash
 npm run dev
