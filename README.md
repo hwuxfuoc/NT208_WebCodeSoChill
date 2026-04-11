@@ -3,7 +3,7 @@
 > **Web CodeSoChill** là một nền tảng học lập trình trực tuyến kết hợp hệ thống Online Judge hiện đại, cho phép người dùng luyện tập kỹ năng lập trình thông qua việc giải bài tập và nộp bài với hệ thống chấm tự động (Automatic Judge). Mọi kết quả được phản hồi tức thì, giúp người học nắm bắt điểm sai và cải thiện nhanh chóng.
 > 
 
-Lấy cảm hứng từ các nền tảng uy tín như **LeetCode**, **Codeforces**, **AtCoder** và **VNOJ**, CodeSoChill được xây dựng với triết lý ưu tiên trải nghiệm người dùng: giao diện thân thiện, dễ tiếp cận, phù hợp cho **sinh viên**, **học sinh** và **người mới bắt đầu học lập trình** – những người cần một môi trường luyện tập nhẹ nhàng nhưng đầy đủ tính năng.
+Lấy cảm hứng từ các nền tảng uy tín như **LeetCode**, **Codeforces**, **AtCoder**, **VNOJ** và **WeCode**, CodeSoChill được xây dựng với triết lý ưu tiên trải nghiệm người dùng: giao diện thân thiện, dễ tiếp cận, phù hợp cho **sinh viên**, **học sinh** và **người mới bắt đầu học lập trình** – những người cần một môi trường luyện tập nhẹ nhàng nhưng đầy đủ tính năng.
 
 ---
 
