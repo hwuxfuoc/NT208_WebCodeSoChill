@@ -7,6 +7,7 @@ const testCaseSchema = new moogoose.Schema({
     output:     { type: String, required: true },
     isSample:   { type: Boolean, default: false }, // True for sample test cases, false for hidden test cases
     order:      { type: Number, default: 0, required: true }, // Order of the test case for a problem
+    
     createdAt:  { type: Date, default: Date.now },
     updatedAt:  { type: Date, default: Date.now },
 }, { timestamps: true });
