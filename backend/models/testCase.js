@@ -1,19 +1,13 @@
 // backend/models/testCase.js
-const moogoose = require('mongoose');
+const mongoose = require('mongoose');
 
-const testCaseSchema = new moogoose.Schema({
-    problemId:  { type: moogoose.Schema.Types.ObjectId, ref: 'Problem', required: true }, // Ex: 001-A
+const testCaseSchema = new mongoose.Schema({
+    problemId:  { type: mongoose.Schema.Types.ObjectId, ref: 'Problem', required: true },
     input:      { type: String, required: true },
     output:     { type: String, required: true },
-    isSample:   { type: Boolean, default: false }, // True for sample test cases, false for hidden test cases
-    order:      { type: Number, default: 0, required: true }, // Order of the test case for a problem
-    
-    createdAt:  { type: Date, default: Date.now },
-    updatedAt:  { type: Date, default: Date.now },
+    isSample:   { type: Boolean, default: false }, // true = hiển thị trong đề, false = hidden testcase
+    order:      { type: Number, default: 0, required: true },
+
 }, { timestamps: true });
 
-testCaseSchema.pre('save', async function() {
-    this.updatedAt = Date.now();
-});
-
-module.exports = moogoose.model('TestCase', testCaseSchema); 
+module.exports = mongoose.model('TestCase', testCaseSchema);
