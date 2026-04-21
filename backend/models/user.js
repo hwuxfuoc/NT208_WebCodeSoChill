@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     phone:                  { type: String, default: '' },
 
     // Coding preferences (Settings → Account)
-    preferredLanguages:     { type: String, default: 'python' },
+    preferredLanguages:     { type: [String], default: ['python'] }, // Array để hỗ trợ nhiều ngôn ngữ
     experienceLevel:        { type: String, enum: ['beginner', 'intermediate', 'advanced'], default: 'beginner' },
 
     // Social links (Settings → Account)
@@ -42,12 +42,6 @@ const userSchema = new mongoose.Schema({
     role:                   { type: String, enum: ['user', 'admin'], default: 'user' },
     isVerified:             { type: Boolean, default: false },
 
-    updatedAt:              { type: Date, default: Date.now },
-    createdAt:              { type: Date, default: Date.now },
-    }, { timestamps: true });
+}, { timestamps: true });
 
-userSchema.pre('save', async function() {
-    this.updatedAt = Date.now();
-});
-
-module.exports = mongoose.model('User', userSchema); 
+module.exports = mongoose.model('User', userSchema);
