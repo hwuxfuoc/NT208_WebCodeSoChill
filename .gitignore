@@ -12,3 +12,7 @@ build/
 
 # logs
 npm-debug.log*
+
+# note
+READMEAI.md
+frontend/README_TUTORIAL.md
