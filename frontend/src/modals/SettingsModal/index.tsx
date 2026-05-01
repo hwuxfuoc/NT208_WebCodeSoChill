@@ -16,7 +16,7 @@ export default function SettingsModal() {
       <div style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 12 }}>
         <div className="card" style={{ margin: 0, height: "fit-content" }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}><b>Settings</b><button onClick={closeModal}>X</button></div>
-          {tabs.map((tab) => <button key={tab} onClick={() => setActive(tab)} style={{ display: "block", marginTop: 8, width: "100%", textAlign: "left", padding: 8, borderRadius: 8, border: 0, background: active===tab?"#ff7f66":"#f5f7fa", color: active===tab?"#fff":"#111" }}>{tab}</button>)}
+          {tabs.map((tab) => <button key={tab} onClick={() => setActive(tab)} style={{ display: "block", marginTop: 8, width: "100%", textAlign: "left", padding: 8, borderRadius: 8, border: 0, background: active===tab?"var(--main-orange-color)":"#f5f7fa", color: active===tab?"#fff":"#111" }}>{tab}</button>)}
         </div>
         <div className="card" style={{ margin: 0 }}>
           {active === "account" && <AccountSettingsPage />}

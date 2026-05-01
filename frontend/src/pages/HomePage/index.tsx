@@ -35,8 +35,8 @@ export default function HomePage() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="last" fill="#9ad9c9" name="Last Month" />
-                <Bar dataKey="now" fill="#ff7f66" name="This Month" />
+                <Bar dataKey="last" fill="var(--main-green-color)" name="Last Month" />
+                <Bar dataKey="now" fill="var(--main-orange-color)" name="This Month" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -55,7 +55,7 @@ export default function HomePage() {
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="last" stroke="#95a1b7" strokeWidth={2} />
-                <Line type="monotone" dataKey="now" stroke="#4fc5a2" strokeWidth={2} />
+                <Line type="monotone" dataKey="now" stroke="var(--main-green-color)" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
