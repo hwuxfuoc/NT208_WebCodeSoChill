@@ -1,75 +1,47 @@
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { contestBars, dailyLine } from "../../utils/mockData";
-
-function StatCard({ title, value, subtitle }: { title: string; value: string; subtitle: string }) {
-  return (
-    <div className="stat-card">
-      <strong>{value}</strong>
-      <span>{title}</span>
-      <small>{subtitle}</small>
-    </div>
-  );
-}
+import BannerPromo from "./BannerPromo";
+import ContestStatisticChart from "./ContestStatisticChart";
+import DailyProblemsChart from "./DailyProblemsChart";
+import StatCard from "./StatCard";
+import DailyChallengeCard from "./DailyChallengeCard";
 
 export default function HomePage() {
   return (
     <div className="page-stack">
-      <h1>Homepage</h1>
+      <div className="page-header">
+        <h1>Homepage</h1>
+      </div>
       <div className="home-grid-top">
-        <section className="card promo">
-          <h2>Join Now and Get Discount Voucher Up to 20%</h2>
-          <p>Become a membership to get more benefits! Limited deal this week.</p>
-          <div className="stats-row">
-            <StatCard title="Problems" value="1,500+" subtitle="Practice every day" />
-            <StatCard title="Contest / month" value="20+" subtitle="Weekly challenge" />
-            <StatCard title="Community" value="200+" subtitle="Active members" />
+        <div className="flex flex-col gap-4">
+          <BannerPromo />
+          
+          <div className="stats-row mt-0 h-28">
+            <StatCard 
+              title="Problems" 
+              value="1.500+" 
+              color="bg-[var(--main-green-color)]"
+              icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>} 
+            />
+            <StatCard 
+              title="Contest per month" 
+              value="20+" 
+              color="bg-[#1F2532]"
+              icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>} 
+            />
+            <StatCard 
+              title="Communities" 
+              value="200+" 
+              color="bg-[var(--main-orange-color)]"
+              icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4" y1="12" x2="2" y2="12"></line><line x1="22" y1="12" x2="20" y2="12"></line><line x1="19.07" y1="4.93" x2="17.66" y2="6.34"></line><line x1="6.34" y1="17.66" x2="4.93" y2="19.07"></line><line x1="19.07" y1="19.07" x2="17.66" y2="17.66"></line><line x1="6.34" y1="6.34" x2="4.93" y2="4.93"></line></svg>} 
+            />
           </div>
-        </section>
-        <section className="card">
-          <h3>Contest Statistic</h3>
-          <div style={{ width: "100%", height: 250 }}>
-            <ResponsiveContainer>
-              <BarChart data={contestBars}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="last" fill="var(--main-green-color)" name="Last Month" />
-                <Bar dataKey="now" fill="var(--main-orange-color)" name="This Month" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
+        </div>
+
+        <ContestStatisticChart />
       </div>
 
-      <div className="home-grid-bottom">
-        <section className="card">
-          <h3>Daily Problems</h3>
-          <div style={{ width: "100%", height: 250 }}>
-            <ResponsiveContainer>
-              <LineChart data={dailyLine}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="d" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="last" stroke="#95a1b7" strokeWidth={2} />
-                <Line type="monotone" dataKey="now" stroke="var(--main-green-color)" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-        <section className="card challenge-card">
-          <h3>Today's Challenge</h3>
-          <p>Solve 10 easy problems to get 100 EXP.</p>
-          <div className="progress-outer"><div className="progress-inner" style={{ width: "30%" }} /></div>
-          <ul>
-            <li>Reverse String Pairs</li>
-            <li>Palindrome Check XL</li>
-          </ul>
-          <button className="btn-light">Go to Problem</button>
-        </section>
+      <div className="home-grid-bottom mt-4">
+        <DailyProblemsChart />
+        <DailyChallengeCard />
       </div>
     </div>
   );
