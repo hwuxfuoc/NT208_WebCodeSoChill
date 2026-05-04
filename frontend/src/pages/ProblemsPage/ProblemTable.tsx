@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
 interface Problem {
   id: string | number;
   title: string;
@@ -16,12 +15,10 @@ interface ProblemTableProps {
   total?: number;
 }
 
-// ─── Difficulty config ────────────────────────────────────────────────────────
-// medium → orange (root var); easy → green; hard → red
 const DIFF: Record<string, { bg: string; color: string; barColor: string }> = {
-  easy:   { bg: "#dcfce7", color: "#16a34a",                        barColor: "#16a34a" },
-  medium: { bg: "#ffedd5", color: "var(--main-orange-color)",        barColor: "var(--main-orange-color)" },
-  hard:   { bg: "#fee2e2", color: "#dc2626",                        barColor: "#dc2626" },
+  easy: { bg: "#dcfce7", color: "var(--main-green-color)", barColor: "var(--main-green-color)" },
+  medium: { bg: "#ffedd5", color: "var(--main-orange-color)", barColor: "var(--main-orange-color)" },
+  hard: { bg: "#fee2e2", color: "#dc2626", barColor: "#dc2626" },
 };
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
@@ -34,8 +31,9 @@ function DifficultyBadge({ difficulty }: { difficulty: string }) {
         backgroundColor: s.bg,
         color: s.color,
         fontSize: "9px",
-        width: "58px",
-        padding: "4px 0",
+        width: "50px",
+        padding: "2px 0",
+        marginBottom: "7px",
       }}
       data-difficulty={d}
     >
@@ -79,7 +77,6 @@ function SolveButton({ id, solved }: { id: string | number; solved: boolean }) {
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function ProblemTable({ rows, page, pageCount, setPage, total }: ProblemTableProps) {
   const totalCount = total ?? rows.length;
 
@@ -103,7 +100,6 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
                 className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
                 data-problem-id={p.id}
               >
-                {/* Status */}
                 <td className="py-4 text-center">
                   {p.solved ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto" style={{ color: "var(--main-green-color)" }}>
@@ -115,22 +111,18 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
                   )}
                 </td>
 
-                {/* Title */}
                 <td className="py-4">
                   <span className="font-bold text-[14px] text-[#1A1D2B]">{p.title}</span>
                 </td>
 
-                {/* Acceptance with bar */}
                 <td className="py-4">
                   <AcceptanceBar value={p.acceptance} difficulty={p.difficulty} />
                 </td>
 
-                {/* Difficulty badge */}
                 <td className="py-4">
                   <DifficultyBadge difficulty={p.difficulty} />
                 </td>
 
-                {/* Action */}
                 <td className="py-4 text-right pr-2">
                   <SolveButton id={p.id} solved={p.solved} />
                 </td>
@@ -140,7 +132,6 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
         </table>
       </div>
 
-      {/* Footer: count + pagination */}
       <div className="flex justify-between items-center mt-5 pt-4 border-t border-gray-100">
         <span className="text-[11px] text-gray-400 font-medium">
           Showing {rows.length} of {totalCount} problems

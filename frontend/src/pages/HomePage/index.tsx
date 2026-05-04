@@ -1,8 +1,8 @@
 import BannerPromo from "./BannerPromo";
 import ContestStatisticChart from "./ContestStatisticChart";
 import DailyProblemsChart from "./DailyProblemsChart";
-import StatCard from "./StatCard";
 import DailyChallengeCard from "./DailyChallengeCard";
+import StatRow from "./StatRow";
 
 export default function HomePage() {
   return (
@@ -13,32 +13,10 @@ export default function HomePage() {
       <div className="home-grid-top">
         <div className="flex flex-col gap-4">
           <BannerPromo />
-          
-          <div className="stats-row mt-0 h-28">
-            <StatCard 
-              title="Problems" 
-              value="1.500+" 
-              color="bg-[var(--main-green-color)]"
-              icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>} 
-            />
-            <StatCard 
-              title="Contest per month" 
-              value="20+" 
-              color="bg-[#1F2532]"
-              icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>} 
-            />
-            <StatCard 
-              title="Communities" 
-              value="200+" 
-              color="bg-[var(--main-orange-color)]"
-              icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4" y1="12" x2="2" y2="12"></line><line x1="22" y1="12" x2="20" y2="12"></line><line x1="19.07" y1="4.93" x2="17.66" y2="6.34"></line><line x1="6.34" y1="17.66" x2="4.93" y2="19.07"></line><line x1="19.07" y1="19.07" x2="17.66" y2="17.66"></line><line x1="6.34" y1="6.34" x2="4.93" y2="4.93"></line></svg>} 
-            />
-          </div>
+          <StatRow />
         </div>
-
         <ContestStatisticChart />
       </div>
-
       <div className="home-grid-bottom mt-4">
         <DailyProblemsChart />
         <DailyChallengeCard />

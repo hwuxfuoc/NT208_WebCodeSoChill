@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { problems, topics } from "../../utils/mockData";
+import { problems } from "../../utils/mockData";
 
 import CalendarStreak from "./CalendarStreak";
 import DailyRandomChallenge from "./DailyRandomChallenge";
 import TopicFilterBar from "./TopicFilterBar";
 import ProblemSearchBar from "./ProblemSearchBar";
 import ProblemTable from "./ProblemTable";
+import TodayChallengePanel from "./TodayChallengePanel";
+import ProblemsHeader from "./ProblemsHeader";
 
 export type TabType = "all" | "solved" | "unsolved";
 
@@ -29,12 +30,12 @@ export default function ProblemsPage() {
 
   return (
     <div className="page-stack">
-      <div className="page-header mb-6">
-        <h1 className="text-3xl font-extrabold text-[#1A1D2B]">Problems</h1>
-      </div>
+      <ProblemsHeader />
 
       <div className="flex gap-6">
-        <div className="flex-1 flex flex-col gap-6 min-w-0">
+        <div className="flex-1 flex flex-col gap-4 min-w-0">
+          <TodayChallengePanel />
+
           <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
             <TopicFilterBar topic={topic} setTopic={setTopic} setPage={setPage} />
             <ProblemSearchBar query={query} setQuery={setQuery} tab={tab} setTab={setTab} setPage={setPage} />

@@ -5,7 +5,6 @@ export default function DailyRandomChallenge() {
 
   return (
     <section className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4">
-      {/* Icon + Title */}
       <div className="flex items-center gap-3">
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -27,7 +26,6 @@ export default function DailyRandomChallenge() {
         Solve 5 random problems today to collect EXP.
       </p>
 
-      {/* Progress bar */}
       <div>
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Progress</span>
@@ -41,7 +39,6 @@ export default function DailyRandomChallenge() {
         </div>
       </div>
 
-      {/* Start Random button */}
       <button
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[13px] text-white transition-opacity hover:opacity-90"
         style={{ backgroundColor: "var(--main-orange-color)" }}
@@ -52,7 +49,6 @@ export default function DailyRandomChallenge() {
         Start Random
       </button>
 
-      {/* Earn EXP button */}
       <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-[13px] text-gray-500 bg-[#f4f6f8] hover:bg-gray-200 transition-colors">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>

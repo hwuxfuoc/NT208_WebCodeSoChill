@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function DailyChallengeCard() {
   return (
     <section className="card challenge-card relative overflow-hidden flex flex-col">
@@ -32,7 +34,12 @@ export default function DailyChallengeCard() {
           </div>
         </div>
         
-        <button className="btn-light w-full mt-6 py-3 font-bold text-sm tracking-wide shadow-md">GO TO PROBLEM</button>
+        <Link
+          to="/problems#today-challenge"
+          className="btn-light w-full mt-6 py-3 font-bold text-sm tracking-wide shadow-md text-center block"
+        >
+          GO TO PROBLEM
+        </Link>
       </div>
     </section>
   );

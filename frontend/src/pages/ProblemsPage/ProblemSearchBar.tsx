@@ -11,7 +11,6 @@ interface ProblemSearchBarProps {
 export default function ProblemSearchBar({ query, setQuery, tab, setTab, setPage }: ProblemSearchBarProps) {
   return (
     <div className="flex items-center gap-3 mb-6">
-      {/* Search Input */}
       <div className="relative flex-1">
         <svg
           width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -29,7 +28,6 @@ export default function ProblemSearchBar({ query, setQuery, tab, setTab, setPage
         />
       </div>
 
-      {/* Sort button */}
       <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#f4f6f8] text-gray-500 hover:bg-gray-200 transition-colors flex-shrink-0">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -38,14 +36,12 @@ export default function ProblemSearchBar({ query, setQuery, tab, setTab, setPage
         </svg>
       </button>
 
-      {/* Filter button */}
       <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#f4f6f8] text-gray-500 hover:bg-gray-200 transition-colors flex-shrink-0">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
         </svg>
       </button>
 
-      {/* All / Solved / Unsolved toggle */}
       <div className="flex items-center bg-[#f4f6f8] rounded-xl p-1 flex-shrink-0">
         {(["all", "solved", "unsolved"] as TabType[]).map((item) => (
           <button

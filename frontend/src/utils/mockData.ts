@@ -10,6 +10,24 @@ export const problems = [
   { id: "palindrome", title: "Longest Palindromic Substring", acceptance: 38.7, difficulty: "medium", topic: "String", solved: true }
 ];
 
+export const todayChallenges = {
+  solvedCount: 3,
+  total: 10,
+  exp: 100,
+  problems: [
+    { id: "reverse-string",   title: "Reverse String Pulse",       difficulty: "easy"   },
+    { id: "palindrome-xl",    title: "Palindrome Check XL",        difficulty: "easy"   },
+    { id: "two-sum",          title: "Two Sum Re-imagined",        difficulty: "easy"   },
+    { id: "anagram",          title: "Valid Anagram Pulse",        difficulty: "easy"   },
+    { id: "fib-dp",           title: "Fibonacci with DP",          difficulty: "easy"   },
+    { id: "stack-basics",     title: "Stack Basics",               difficulty: "easy"   },
+    { id: "binary-search",    title: "Binary Search Classic",      difficulty: "medium" },
+    { id: "linked-list",      title: "Linked List Reversal",       difficulty: "medium" },
+    { id: "bfs-grid",         title: "BFS Grid Traversal",         difficulty: "medium" },
+    { id: "dp-coins",         title: "Coin Change (DP)",           difficulty: "medium" },
+  ],
+};
+
 export const contestBars = [
   { month: "Jan", last: 72, now: 90 }, { month: "Feb", last: 58, now: 65 }, { month: "Mar", last: 81, now: 44 },
   { month: "Apr", last: 63, now: 70 }, { month: "May", last: 45, now: 87 }, { month: "Jun", last: 88, now: 71 },
@@ -23,6 +41,30 @@ export const dailyLine = [
 ];
 
 export const posts = [
-  { author: "Sarah Zen", text: "Refactored microservices communication layer. Swapping REST to gRPC reduced latency by 40%.", likes: 124, comments: 18 },
-  { author: "Jordan Byte", text: "Finished mapping an event-sourced architecture for my open-source project.", likes: 482, comments: 54 }
+  { 
+    id: 1,
+    author: "Sarah Zen", 
+    role: "Senior Dev @ Cloud Flow",
+    timeAgo: "2h ago",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    text: "Just refactored our microservices communication layer. Swapping REST for gRPC reduced latency by 40%! If anyone is struggling with payload overhead, it's a total game changer.", 
+    likes: 124, 
+    comments: 18,
+    codeSnippet: `const pulseClient = new GrpcClient({
+  service: "Inventory.Sync",
+  retries: 3,
+  timeout: 500
+});`
+  },
+  { 
+    id: 2,
+    author: "Jordan Byte", 
+    role: "Infrastructure Lead @ Shago",
+    timeAgo: "5h ago",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    text: "Finally finished mapping out the system architecture for the new open-source project. Clean, modular, and scalable. Thoughts on the layer separation? 🏗️", 
+    likes: 482, 
+    comments: 56,
+    imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800&h=400"
+  }
 ];

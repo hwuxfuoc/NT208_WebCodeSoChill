@@ -3,11 +3,13 @@ import { useState } from "react";
 interface ContestRegisterModalProps {
   onClose: () => void;
   contestName: string;
+  isLive?: boolean;
+  startTime?: string;
 }
 
-export default function ContestRegisterModal({ onClose, contestName }: ContestRegisterModalProps) {
+export default function ContestRegisterModal({ onClose, contestName, isLive = false, startTime }: ContestRegisterModalProps) {
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", division: "div2" });
+  const [form, setForm] = useState({ name: "", email: "" });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +26,6 @@ export default function ContestRegisterModal({ onClose, contestName }: ContestRe
         className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative"
         onClick={e => e.stopPropagation()}
       >
-        {/* Close */}
         <button
           onClick={onClose}
           className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors"
@@ -63,18 +64,21 @@ export default function ContestRegisterModal({ onClose, contestName }: ContestRe
                   className="w-full bg-[#f4f6f8] rounded-xl px-4 py-3 text-sm text-gray-700 outline-none border border-transparent focus:border-orange-400 transition-colors"
                 />
               </div>
-              <div>
-                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Division</label>
-                <select
-                  value={form.division}
-                  onChange={e => setForm(f => ({ ...f, division: e.target.value }))}
-                  className="w-full bg-[#f4f6f8] rounded-xl px-4 py-3 text-sm text-gray-700 outline-none border border-transparent focus:border-orange-400 transition-colors"
-                >
-                  <option value="div1">Division 1 (Expert+)</option>
-                  <option value="div2">Division 2 (All levels)</option>
-                  <option value="div3">Division 3 (Beginner)</option>
-                </select>
-              </div>
+
+              {isLive ? (
+                <div className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
+                  <span className="text-sm font-semibold text-emerald-700">Contest is happening right now!</span>
+                </div>
+              ) : startTime ? (
+                <div className="flex items-center gap-2.5 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span className="text-sm font-semibold text-blue-700">Contest will start on {startTime}</span>
+                </div>
+              ) : null}
 
               <button
                 type="submit"

@@ -14,7 +14,7 @@ export default function DailyProblemsChart() {
       <div style={{ width: "100%", height: 300 }}>
         <ResponsiveContainer>
           <LineChart data={dailyLine} margin={{ top: 25, right: 10, left: -3, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#d1d5db" strokeOpacity={0.9} />
             <XAxis dataKey="d" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} dy={10} />
             <YAxis width={30} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
             <Tooltip />

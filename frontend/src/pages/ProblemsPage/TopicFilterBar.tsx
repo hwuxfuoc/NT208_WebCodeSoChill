@@ -1,4 +1,3 @@
-// ─── Figma: Topics with counts shown inline in pill ─────────────────────────
 const TOPIC_COUNTS: Record<string, number> = {
   "All Topics": 0,
   "Array": 462,
@@ -30,7 +29,6 @@ export default function TopicFilterBar({ topic, setTopic, setPage }: TopicFilter
                 : { backgroundColor: "#f4f6f8", color: "#667085" }
             }
           >
-            {/* Icon for "All Topics" */}
             {item === "All Topics" && (
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3"></circle>
