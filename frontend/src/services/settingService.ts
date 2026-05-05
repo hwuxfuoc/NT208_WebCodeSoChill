@@ -15,3 +15,11 @@ export const changePassword = (data: {
 }) => {
   return api.put("/api/settings/security/password", data);
 };
+
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  return api.post('/api/upload/avatar', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+};

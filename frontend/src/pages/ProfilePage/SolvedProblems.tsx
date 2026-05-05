@@ -18,18 +18,56 @@ function Ring({ pct, color, label, solved, total }: { pct: number; color: string
   );
 }
 
-export default function SolvedProblems() {
+interface SolvedProblemsProps {
+  stats?: any;
+  solvedByDifficulty?: any[];
+}
+
+export default function SolvedProblems({ stats, solvedByDifficulty = [] }: SolvedProblemsProps) {
+  const calculatePercentage = (difficulty: string) => {
+    const item = solvedByDifficulty.find(d => d._id === difficulty);
+    const total = { easy: 780, medium: 1200, hard: 640 }[difficulty] || 1000;
+    return item ? Math.round((item.count / total) * 100) : 0;
+  };
+
+  const getSolvedCount = (difficulty: string) => {
+    const item = solvedByDifficulty.find(d => d._id === difficulty);
+    return item?.count || 0;
+  };
+
+  const easyTotal = 780;
+  const mediumTotal = 1200;
+  const hardTotal = 640;
+
   return (
     <section className="card flex flex-col">
       <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Solved Problems</p>
       <div className="flex justify-around items-center mb-5">
-        <Ring pct={82} color="var(--main-green-color)" label="Easy"   solved={642} total={780} />
-        <Ring pct={48} color="var(--main-orange-color)"  label="Medium" solved={580} total={1200} />
-        <Ring pct={28} color="#dc2626"                   label="Hard"   solved={180} total={640} />
+        <Ring 
+          pct={calculatePercentage('easy')} 
+          color="var(--main-green-color)" 
+          label="Easy"   
+          solved={getSolvedCount('easy')} 
+          total={easyTotal} 
+        />
+        <Ring 
+          pct={calculatePercentage('medium')} 
+          color="var(--main-orange-color)"  
+          label="Medium" 
+          solved={getSolvedCount('medium')} 
+          total={mediumTotal} 
+        />
+        <Ring 
+          pct={calculatePercentage('hard')} 
+          color="#dc2626"                   
+          label="Hard"   
+          solved={getSolvedCount('hard')} 
+          total={hardTotal} 
+        />
       </div>
       <div className="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center">
         <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Solved</span>
-        <span className="text-xl font-extrabold text-[#1A1D2B]">1,402</span>
+        <span className="text-xl font-extrabold text-[#1A1D2B]">{stats?.totalSolved || 0}</span>
       </div>
     </section>
   );
