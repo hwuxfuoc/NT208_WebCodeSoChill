@@ -1,13 +1,34 @@
 import { useState } from "react";
 import { useModal } from "../../context/ModalContext";
+import { useAuth } from "../../hooks/useAuth";
 
-export default function UserProfileCard() {
+interface UserProfileCardProps {
+  user?: any;
+  stats?: any;
+  isOwnProfile?: boolean;
+}
+
+export default function UserProfileCard({ user, stats, isOwnProfile = false }: UserProfileCardProps) {
   const { openModal } = useModal();
+  const { user: currentUser } = useAuth();
   const [showShare, setShowShare] = useState(false);
 
   const toggleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowShare(!showShare);
+  };
+
+  const displayUser = user || currentUser;
+  const joinDate = user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Jan 2022';
+
+  const getRankBadge = (rank: string | undefined) => {
+    const ranks: Record<string, string> = {
+      'Master': '#FFD700',
+      'Expert': '#C0C0C0',
+      'Pro': '#CD7F32',
+      'Noob': '#666666',
+    };
+    return ranks[rank || 'Noob'] || '#666666';
   };
 
   return (
@@ -16,25 +37,27 @@ export default function UserProfileCard() {
 
       <div className="relative shrink-0">
         <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-white shadow-md">
-          <img src="https://ss-images.saostar.vn/wp700/pc/1659428921809/saostar-8eqrvdlmozut8ndc.jpg" alt="Alex Rivera" className="w-full h-full object-cover" />
+          <img src={displayUser?.avatarUrl || "https://via.placeholder.com/80"} alt={displayUser?.displayname} className="w-full h-full object-cover" />
         </div>
         <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full" />
       </div>
 
       <div className="relative z-10 flex-1">
         <div className="flex items-center gap-3 mb-1">
-          <h2 className="text-2xl font-extrabold text-[#1A1D2B]">Alex Rivera</h2>
-          <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider" style={{ backgroundColor: "var(--main-orange-color)", color: "#fff" }}>Grandmaster</span>
+          <h2 className="text-2xl font-extrabold text-[#1A1D2B]">{displayUser?.displayname}</h2>
+          <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-white" style={{ backgroundColor: getRankBadge(stats?.rank) }}>
+            {stats?.rank || 'Noob'}
+          </span>
         </div>
         <p className="text-sm text-gray-500 font-medium flex items-center gap-3">
           <span className="flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--main-orange-color)" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            Top 0.5% globally
+            {stats?.totalSolved || 0} Solved
           </span>
           <span className="w-1 h-1 bg-gray-300 rounded-full" />
           <span className="flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            Joined Jan 2022
+            Joined {joinDate}
           </span>
         </p>
       </div>
@@ -63,7 +86,7 @@ export default function UserProfileCard() {
               </div>
               <div className="flex items-center gap-2 bg-[#1e1e2e] rounded-xl p-1.5 border border-[#3e3e5e]">
                 <div className="flex-1 overflow-hidden px-2">
-                  <p className="text-xs text-gray-400 truncate">https://codesochill.dev/p/alex_rivera</p>
+                  <p className="text-xs text-gray-400 truncate">https://codesochill.dev/profile/{displayUser?.username}</p>
                 </div>
                 <button className="px-4 py-1.5 rounded-lg bg-gray-800 text-white text-[11px] font-bold hover:bg-gray-700 transition-colors shrink-0">
                   Copy
@@ -72,9 +95,11 @@ export default function UserProfileCard() {
             </div>
           )}
         </div>
-        <button onClick={() => openModal("settings")} className="px-5 py-2.5 rounded-xl font-bold text-sm text-white shadow-md hover:opacity-90 transition-all" style={{ backgroundColor: "var(--main-orange-color)" }}>
-          Edit Profile
-        </button>
+        {isOwnProfile && (
+          <button onClick={() => openModal("settings")} className="px-5 py-2.5 rounded-xl font-bold text-sm text-white shadow-md hover:opacity-90 transition-all" style={{ backgroundColor: "var(--main-orange-color)" }}>
+            Edit Profile
+          </button>
+        )}
       </div>
     </section>
   );

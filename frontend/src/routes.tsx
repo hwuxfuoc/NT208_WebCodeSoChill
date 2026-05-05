@@ -9,6 +9,7 @@ import CommunityPage from "./pages/CommunityPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 const routes: RouteObject[] = [
   {
@@ -29,6 +30,7 @@ const routes: RouteObject[] = [
     children: [{ index: true, element: <ProblemDetailPage /> }]
   },
   { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
   { path: "*", element: <NotFoundPage /> }
 ];
 

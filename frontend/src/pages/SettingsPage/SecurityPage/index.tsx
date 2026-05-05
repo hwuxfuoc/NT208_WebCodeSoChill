@@ -1,3 +1,4 @@
+//frontend/src/pages/SettingsPage/SecurityPage/index.tsx
 export default function SecuritySettingsPage() {
   return (
     <div>

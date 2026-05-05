@@ -1,8 +1,8 @@
 //frontend/src/services/problemService.ts
 import api from "./api";
 
-export const getProblems = () => {
-  return api.get("/api/problems");
+export const getProblems = (page = 1, limit = 20) => {
+  return api.get("/api/problems", { params: { page, limit } });
 };
 
 export const getProblem = (id: string) => {

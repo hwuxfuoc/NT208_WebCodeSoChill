@@ -94,4 +94,32 @@ const getLeaderboard = async (req, res) => {
     }
 };
 
-module.exports = { getProfile, getUserSubmissions, getUserStats, getLeaderboard };
+// @desc    Cập nhật profile của user (Chính user đó)
+// @route   PUT /api/users/me
+const updateProfile = async (req, res) => {
+    try {
+        const { displayname, bio, phone, avatarUrl, preferredLanguages, experienceLevel, socialLinks } = req.body;
+        
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            {
+                displayname,
+                bio,
+                phone,
+                avatarUrl,
+                preferredLanguages,
+                experienceLevel,
+                socialLinks,
+            },
+            { new: true, runValidators: true }
+        ).select('-hashedPassword');
+        
+        if (!user) return res.status(404).json({ message: 'User không tồn tại' });
+        res.json({ message: 'Cập nhật thành công', user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+};
+
+module.exports = { getProfile, getUserSubmissions, getUserStats, getLeaderboard, updateProfile };

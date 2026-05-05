@@ -6,7 +6,7 @@ const User = require('../../models/user');
 // @route   PUT /api/settings/account
 const updateAccount = async (req, res) => {
     try {
-        const { displayname, bio, country, phone, preferredLanguages, experienceLevel, socialLinks } = req.body;
+        const { displayname, bio, country, phone, preferredLanguages, experienceLevel, socialLinks, avatarUrl } = req.body;
 
         // Nếu đổi username, kiểm tra trùng
         if (req.body.username) {
@@ -16,7 +16,7 @@ const updateAccount = async (req, res) => {
 
         const updated = await User.findByIdAndUpdate(
             req.user.id,
-            { displayname, bio, country, phone, preferredLanguages, experienceLevel, socialLinks, username: req.body.username },
+            { displayname, bio, country, phone, preferredLanguages, experienceLevel, socialLinks, username: req.body.username, avatarUrl },
             { new: true, runValidators: true }
         ).select('-hashedPassword');
 

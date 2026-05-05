@@ -1,3 +1,4 @@
+//frontend/src/pages/SettingsPage/AccountPage/index.tsx
 export default function AccountSettingsPage() {
   return (
     <div>

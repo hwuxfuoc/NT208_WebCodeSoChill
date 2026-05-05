@@ -1,3 +1,4 @@
+//frontend/src/pages/SettingsPage/AppearancePage/index.tsx
 export default function AppearanceSettingsPage() {
   return (
     <div>

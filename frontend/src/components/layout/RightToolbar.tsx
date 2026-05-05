@@ -1,9 +1,10 @@
 import { useModal } from "../../context/ModalContext";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function RightToolbar() {
   const { openModal } = useModal();
-  const user: any = null;
-  const avatarUrl = user?.avatarUrl || "https://ss-images.saostar.vn/wp700/pc/1659428921809/saostar-8eqrvdlmozut8ndc.jpg";
+  const { user } = useAuth();
+  const avatarUrl = user?.avatarUrl || "https://via.placeholder.com/80";
 
   return (
     <aside className="right-toolbar">

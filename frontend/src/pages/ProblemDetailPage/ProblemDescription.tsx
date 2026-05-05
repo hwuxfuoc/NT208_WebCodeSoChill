@@ -1,4 +1,6 @@
 //frontend/src/pages/ProblemDetailPage/ProblemDescription.tsx
+import { useEffect, useState } from "react";
+import { getProblem } from "../../services/problemService";
 import { Link } from "react-router-dom";
 
 interface Props {
