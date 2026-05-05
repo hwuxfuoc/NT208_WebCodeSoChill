@@ -1,13 +1,13 @@
-// backend/api/community/communityRoutes.js
+// backend/api/notification/notificationRoutes.js
 const express = require('express');
 const router = express.Router();
-const { getPosts, createPost, likePost, getComments, addComment } = require('./communityController');
+const { getNotifications, markAsRead, markAllAsRead, deleteAll } = require('./notificationController');
 const auth = require('../../middleware/auth');
 
-router.get('/posts', getPosts);
-router.post('/posts', auth, createPost);
-router.post('/posts/:id/like', auth, likePost);
-router.get('/posts/:id/comments', getComments);
-router.post('/posts/:id/comments', auth, addComment);
+// /read-all phải đặt TRƯỚC /:id/read
+router.put('/read-all', auth, markAllAsRead);
+router.get('/', auth, getNotifications);
+router.put('/:id/read', auth, markAsRead);
+router.delete('/', auth, deleteAll);
 
 module.exports = router;
