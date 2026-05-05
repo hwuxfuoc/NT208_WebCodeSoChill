@@ -1,3 +1,4 @@
+//frontend/src/pages/ProblemDetailPage/ProblemDescription.tsx
 import { Link } from "react-router-dom";
 
 interface Props {

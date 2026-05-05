@@ -14,13 +14,13 @@ connectDB();
 
 // Routes
 app.use('/api/auth',          require('./api/auth/authRoutes'));
-app.use('/api/users',         require('./api/user/userRoutes'));
-app.use('/api/problems',      require('./api/problem/problemRoutes'));
-app.use('/api/submissions',   require('./api/submission/submissionRoutes'));
-app.use('/api/contests',      require('./api/contest/contestRoutes'));
+app.use('/api/users',         require('./api/users/userRoutes'));
+app.use('/api/problems',      require('./api/problems/problemRoutes'));
+app.use('/api/submissions',   require('./api/submissions/submissionRoutes'));
+app.use('/api/contests',      require('./api/contests/contestRoutes'));
 app.use('/api/community',     require('./api/community/communityRoutes'));
-app.use('/api/notifications', require('./api/notification/notificationRoutes'));
-app.use('/api/settings',      require('./api/setting/settingRoutes'));
+app.use('/api/notifications', require('./api/notifications/notificationRoutes'));
+app.use('/api/settings',      require('./api/settings/settingRoutes'));
 
 app.get('/', (req, res) => res.send('Server is running...'));
 
