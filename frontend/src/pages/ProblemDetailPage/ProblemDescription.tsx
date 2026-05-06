@@ -3,10 +3,23 @@ import { useEffect, useState } from "react";
 import { getProblem } from "../../services/problemService";
 import { Link } from "react-router-dom";
 
+interface Sample {
+  input: string;
+  output: string;
+  explanation: string;
+}
+
 interface Props {
-  id?: string;
-  title?: string;
-  difficulty?: "Easy" | "Medium" | "Hard";
+  id: string;
+  title: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  description: string;
+  constraints: string;
+  samples: Sample[];
+  tags: string[];
+  topics: string[];
+  timeLimit: number;
+  memoryLimit: number;
 }
 
 const difficultyStyle = {
@@ -16,9 +29,16 @@ const difficultyStyle = {
 };
 
 export default function ProblemDescription({
-  id = "ID-001A",
-  title = "Two Sum Re-imagined",
-  difficulty = "Easy",
+  id,
+  title,
+  difficulty,
+  description,
+  constraints,
+  samples,
+  tags,
+  topics,
+  timeLimit,
+  memoryLimit,
 }: Props) {
   const style = difficultyStyle[difficulty];
 
@@ -44,70 +64,51 @@ export default function ProblemDescription({
           </span>
           <span className="text-xs text-gray-400 font-semibold">{id}</span>
         </div>
+        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+          <span>Time: {timeLimit}ms</span>
+          <span>Memory: {memoryLimit}MB</span>
+        </div>
+        <div className="flex flex-wrap gap-1 mt-2">
+          {tags.map((tag) => (
+            <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
 
       <div className="px-6 py-5 flex-1 overflow-y-auto text-sm leading-relaxed text-[#1A1D2B]">
         <h2 className="text-lg font-bold mb-3">{title}</h2>
-        <p className="text-gray-600 mb-3">
-          Given an array of integers <mark className="bg-orange-100 text-orange-600 rounded px-1 font-mono text-xs">nums</mark> and an integer{" "}
-          <mark className="bg-orange-100 text-orange-600 rounded px-1 font-mono text-xs">target</mark>, return indices of the two
-          numbers such that they add up to target.
-        </p>
-        <p className="text-gray-600 mb-5">
-          In this re-imagined version, you may assume that each input would have{" "}
-          <strong>at most</strong> one solution, and you may not use the same element twice. If no
-          solution exists, return{" "}
-          <mark className="bg-orange-100 text-orange-600 rounded px-1 font-mono text-xs">[-1, -1]</mark>.
-        </p>
+        <div className="text-gray-600 mb-5" dangerouslySetInnerHTML={{ __html: description }} />
 
-        <div className="mb-4">
-          <p className="text-xs font-black uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-2">
-            <span className="w-1 h-4 rounded-full" style={{ backgroundColor: "var(--main-orange-color)" }}></span>
-            Example 1
-          </p>
-          <div className="bg-gray-50 rounded-xl p-4 font-mono text-xs text-gray-700 border border-gray-100">
-            <p><span className="text-gray-500">Input:</span> nums = [2,7,11,15], target = 9</p>
-            <p><span className="text-gray-500">Output:</span> [0,1]</p>
-            <p className="mt-1 text-gray-400"><span className="text-gray-500">Explanation:</span> Because nums[0] + nums[1] == 9, we return [0, 1].</p>
+        {samples.map((sample, index) => (
+          <div key={index} className="mb-4">
+            <p className="text-xs font-black uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-2">
+              <span className="w-1 h-4 rounded-full" style={{ backgroundColor: "var(--main-orange-color)" }}></span>
+              Example {index + 1}
+            </p>
+            <div className="bg-gray-50 rounded-xl p-4 font-mono text-xs text-gray-700 border border-gray-100">
+              <p><span className="text-gray-500">Input:</span> {sample.input}</p>
+              <p><span className="text-gray-500">Output:</span> {sample.output}</p>
+              {sample.explanation && (
+                <p className="mt-1 text-gray-400"><span className="text-gray-500">Explanation:</span> {sample.explanation}</p>
+              )}
+            </div>
           </div>
-        </div>
+        ))}
 
-        <div className="mb-6">
-          <p className="text-xs font-black uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-2">
-            <span className="w-1 h-4 rounded-full" style={{ backgroundColor: "var(--main-orange-color)" }}></span>
-            Example 2
-          </p>
-          <div className="bg-gray-50 rounded-xl p-4 font-mono text-xs text-gray-700 border border-gray-100">
-            <p><span className="text-gray-500">Input:</span> nums = [3,2,4], target = 6</p>
-            <p><span className="text-gray-500">Output:</span> [1,2]</p>
-          </div>
-        </div>
-
-        <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-100">
-          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-700 mb-3">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-            Constraints
-          </p>
-          <ul className="space-y-1.5 text-xs text-gray-600 font-mono">
-            {["2 ≤ nums.length ≤ 10⁴", "-10⁹ ≤ nums[i] ≤ 10⁹", "-10⁹ ≤ target ≤ 10⁹"].map((c) => (
-              <li key={c} className="flex items-center gap-2">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--main-green-color)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                </svg>
-                {c}
-              </li>
-            ))}
-            <li className="flex items-center gap-2 font-semibold" style={{ color: "var(--main-orange-color)" }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        {constraints && (
+          <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-100">
+            <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-700 mb-3">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>
               </svg>
-              Time Complexity: O(n) preferred
-            </li>
-          </ul>
-        </div>
+              Constraints
+            </p>
+            <div className="text-xs text-gray-600 font-mono" dangerouslySetInnerHTML={{ __html: constraints }} />
+          </div>
+        )}
 
         <div>
           <p className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-gray-700 mb-3">

@@ -43,5 +43,5 @@ const userSchema = new mongoose.Schema({
     isVerified:             { type: Boolean, default: false },
 
 }, { timestamps: true });
-
-module.exports = mongoose.model('User', userSchema);
+// Use existing model if already compiled to avoid OverwriteModelError on hot-reload
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);

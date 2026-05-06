@@ -1,5 +1,6 @@
 // backend/api/problem/problemController.js
 const Problem = require('../../models/problem');
+const Submission = require('../../models/submission');
 
 // @desc    Danh sách bài tập (filter + pagination)
 // @route   GET /api/problems
@@ -15,14 +16,34 @@ const getProblems = async (req, res) => {
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
         const problems = await Problem.find(query)
-            .select('-description -examples -constraints -testCases')
-            .sort({ problemId: 1 })
+            .select('-testCases')
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(parseInt(limit));
 
         const total = await Problem.countDocuments(query);
 
-        res.json({ problems, total, page: parseInt(page), totalPages: Math.ceil(total / parseInt(limit)) });
+        // Calculate acceptance for each problem
+        const problemsWithAcceptance = await Promise.all(problems.map(async (problem) => {
+            const totalSubmissions = await Submission.countDocuments({ problemId: problem._id });
+            const acceptedSubmissions = await Submission.countDocuments({ problemId: problem._id, status: 'accepted' });
+            const acceptance = totalSubmissions > 0 ? (acceptedSubmissions / totalSubmissions) * 100 : 0;
+
+            // Check if solved by current user
+            let solved = false;
+            if (req.user) {
+                const userSubmission = await Submission.findOne({ problemId: problem._id, userId: req.user.id, status: 'accepted' });
+                solved = !!userSubmission;
+            }
+
+            return {
+                ...problem.toObject(),
+                acceptance: Math.round(acceptance * 100) / 100, // round to 2 decimals
+                solved
+            };
+        }));
+
+        res.json({ problems: problemsWithAcceptance, total, page: parseInt(page), totalPages: Math.ceil(total / parseInt(limit)) });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });

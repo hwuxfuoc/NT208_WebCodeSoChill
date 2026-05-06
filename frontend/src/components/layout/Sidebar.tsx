@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/images/logo.jpg";
 
 const links = [
@@ -10,6 +12,12 @@ const links = [
 ];
 
 export default function Sidebar() {
+  const authCtx = useContext(AuthContext);
+  const isAdmin = !!authCtx?.user?.role && authCtx.user.role === 'admin';
+  const adminLink = isAdmin
+    ? { to: '/admin/problems', label: 'Admin', icon: <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M12 8v8"/><path d="M8 12h8"/></svg> }
+    : null;
+  const allLinks = adminLink ? [...links, adminLink] : links;
   return (
     <aside className="sidebar">
       <div className="brand mb-6">
@@ -21,7 +29,7 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="side-nav">
-        {links.map(({ to, label, icon }) => (
+        {allLinks.map(({ to, label, icon }) => (
           <div key={to} className="side-item">
             <NavLink to={to} className={({ isActive }) => `side-link ${isActive ? "active" : ""}`}>
               <span className="side-icon flex items-center justify-center w-6">{icon}</span>

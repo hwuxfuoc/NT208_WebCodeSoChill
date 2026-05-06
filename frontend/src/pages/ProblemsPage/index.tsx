@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { problems } from "../../utils/mockData";
+import { useProblems } from "../../hooks/useProblems";
 
 import CalendarStreak from "./CalendarStreak";
 import DailyRandomChallenge from "./DailyRandomChallenge";
@@ -17,16 +17,21 @@ export default function ProblemsPage() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
+  const { problems, loading, error } = useProblems();
+
   const filtered = useMemo(() => {
-    const byTopic = problems.filter((p) => topic === "All Topics" || p.topic === topic);
+    const byTopic = problems.filter((p) => topic === "All Topics" || (p.topics || []).includes(topic));
     const byTab = byTopic.filter((p) => (tab === "all" ? true : tab === "solved" ? p.solved : !p.solved));
     const bySearch = byTab.filter((p) => p.title.toLowerCase().includes(query.toLowerCase()));
     return bySearch;
-  }, [topic, tab, query]);
+  }, [problems, topic, tab, query]);
 
   const pageSize = 10;
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const rows = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="page-stack">

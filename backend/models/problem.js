@@ -1,39 +1,34 @@
-// backend/models/problem.js
+// backend/models/Problem.js
 const mongoose = require('mongoose');
 
+const testCaseSchema = new mongoose.Schema({
+  input: String,
+  expectedOutput: String,
+  explanation: String,
+}, { _id: false });
+
+const sampleSchema = new mongoose.Schema({
+  input: String,
+  output: String,
+  explanation: String,
+}, { _id: false });
+
 const problemSchema = new mongoose.Schema({
-    problemId:          { type: String, required: true, unique: true }, // Ex: "001-A"
-    title:              { type: String, required: true },
-    description:        { type: String, required: true },
-    difficulty:         { type: String, enum: ['easy', 'medium', 'hard'], required: true },
-    tags:               { type: [String] },
-
-    // Technical constraints
-    timeLimit:          { type: Number, default: 1000 }, // ms
-    memoryLimit:        { type: Number, default: 256 },  // MB
-
-    // Examples hiển thị trong đề bài
-    examples: [{
-        input:          { type: String, required: true },
-        output:         { type: String, required: true },
-        explanation:    { type: String },
-    }],
-
-    constraints:        [{ type: String }],
-    timeComplexityHint: { type: String },
-
-    // Stats
-    totalSubmissions:   { type: Number, default: 0 },
-    totalAccepted:      { type: Number, default: 0 },
-    acceptanceRate:     { type: Number, default: 0 }, // %
-
-    // Video explanation
-    videoUrl:           { type: String, default: '' },
-    videoTitle:         { type: String, default: '' },
-
-    isActive:           { type: Boolean, default: true },
-    createdBy:          { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-
+  isActive: { type: Boolean, default: true },
+  problemId: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  difficulty: { type: String, enum: ['easy','medium','hard'], default: 'easy' },
+  description: { type: String, default: '' },
+  constraints: { type: String, default: '' },
+  timeLimit: { type: Number, default: 1000 },
+  memoryLimit: { type: Number, default: 64 },
+  samples: [sampleSchema],
+  testCases: [testCaseSchema],
+  tags: { type: [String], default: [] },
+  topics: { type: [String], default: [] },
+  editorial: { type: String, default: '' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
 }, { timestamps: true });
-
-module.exports = mongoose.model('Problem', problemSchema);
+// Guard against re-defining the model on hot reloads
+module.exports = mongoose.models.Problem || mongoose.model('Problem', problemSchema);

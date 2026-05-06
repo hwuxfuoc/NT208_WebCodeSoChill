@@ -1,12 +1,6 @@
 import { Link } from "react-router-dom";
+import { Problem } from '../../types/problem';
 
-interface Problem {
-  id: string | number;
-  title: string;
-  acceptance: number;
-  difficulty: string;
-  solved: boolean;
-}
 interface ProblemTableProps {
   rows: Problem[];
   page: number;
@@ -58,7 +52,7 @@ function AcceptanceBar({ value, difficulty }: { value: number; difficulty: strin
   );
 }
 
-function SolveButton({ id, solved }: { id: string | number; solved: boolean }) {
+function SolveButton({ id, solved }: { id: string; solved: boolean }) {
   return (
     <Link
       to={`/problems/${id}`}
@@ -94,12 +88,14 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
             </tr>
           </thead>
           <tbody>
-            {rows.map((p) => (
-              <tr
-                key={p.id}
-                className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
-                data-problem-id={p.id}
-              >
+            {rows.map((p, idx) => {
+              const key = p.slug ?? p._id ?? idx;
+              return (
+                <tr
+                  key={key}
+                  className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
+                  data-problem-id={p._id}
+                >
                 <td className="py-4 text-center">
                   {p.solved ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto" style={{ color: "var(--main-green-color)" }}>
@@ -116,7 +112,7 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
                 </td>
 
                 <td className="py-4">
-                  <AcceptanceBar value={p.acceptance} difficulty={p.difficulty} />
+                  <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
                 </td>
 
                 <td className="py-4">
@@ -124,10 +120,11 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
                 </td>
 
                 <td className="py-4 text-right pr-2">
-                  <SolveButton id={p.id} solved={p.solved} />
+                  <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} />
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
