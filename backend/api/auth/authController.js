@@ -45,7 +45,7 @@ const register = [
             res.status(201).json({
                 message: 'Đăng ký thành công',
                 token,
-                user: { id: user.id, username: user.username, displayname: user.displayname, email: user.email }
+                user: { id: user.id, username: user.username, displayname: user.displayname, email: user.email, role: user.role }
             });
         } catch (err) {
             console.error(err);
@@ -82,7 +82,7 @@ const login = [
             res.json({
                 message: 'Đăng nhập thành công',
                 token,
-                user: { id: user.id, username: user.username, displayname: user.displayname, email: user.email, avatarUrl: user.avatarUrl }
+                user: { id: user.id, username: user.username, displayname: user.displayname, email: user.email, avatarUrl: user.avatarUrl, role: user.role }
             });
         } catch (err) {
             console.error(err);

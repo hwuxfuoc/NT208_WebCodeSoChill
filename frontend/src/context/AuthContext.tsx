@@ -9,6 +9,7 @@ export interface User {
   avatarUrl?: string;
   bio?: string;
   phone?: string;
+  role?: string;
 }
 
 export interface AuthContextType {
@@ -45,7 +46,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       authService
         .me()
         .then((res) => {
-          setUser(res.data.user);
+        // Ensure user payload includes role if provided by backend
+        setUser(res.data.user);
         })
         .catch(() => {
           // Token hết hạn hoặc không hợp lệ

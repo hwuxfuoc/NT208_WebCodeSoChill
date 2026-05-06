@@ -3,6 +3,7 @@ import MainLayout from "./components/layout/MainLayout";
 import FullscreenLayout from "./components/layout/FullscreenLayout";
 import HomePage from "./pages/HomePage";
 import ProblemsPage from "./pages/ProblemsPage";
+import AdminProblemsPage from "./pages/AdminProblemsPage";
 import ProblemDetailPage from "./pages/ProblemDetailPage";
 import ContestPage from "./pages/ContestPage";
 import CommunityPage from "./pages/CommunityPage";
@@ -18,6 +19,7 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "problems", element: <ProblemsPage /> },
+      { path: "admin/problems", element: <AdminProblemsPage /> },
       { path: "contest", element: <ContestPage /> },
       { path: "community", element: <CommunityPage /> },
       { path: "profile", element: <ProfilePage /> },
