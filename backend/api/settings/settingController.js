@@ -17,7 +17,7 @@ const updateAccount = async (req, res) => {
         const updated = await User.findByIdAndUpdate(
             req.user.id,
             { displayname, bio, country, phone, preferredLanguages, experienceLevel, socialLinks, username: req.body.username, avatarUrl },
-            { new: true, runValidators: true }
+            { returnDocument: 'after', runValidators: true }
         ).select('-hashedPassword');
 
         res.json({ message: 'Cập nhật thành công', user: updated });
@@ -34,7 +34,7 @@ const updateAppearance = async (req, res) => {
         const updated = await User.findByIdAndUpdate(
             req.user.id,
             { appearance: req.body },
-            { new: true, runValidators: true }
+            { returnDocument: 'after', runValidators: true }
         ).select('appearance');
         res.json({ message: 'Cập nhật giao diện thành công', appearance: updated.appearance });
     } catch (err) {

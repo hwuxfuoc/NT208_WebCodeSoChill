@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getProblems } from '../services/problemService';
 import { Problem, ProblemsResponse } from '../types/problem';
 
-export const useProblems = (page: number = 1, limit: number = 20) => {
+export const useProblems = (page: number = 1, limit: number = 3640) => {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

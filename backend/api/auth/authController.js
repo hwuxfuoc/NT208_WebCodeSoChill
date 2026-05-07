@@ -12,6 +12,7 @@ const registerValidator = [
 ];
 
 const loginValidator = [
+    (req, res, next) => { console.log('>>> VALIDATOR HIT', req.body); next(); },
     body('email').isEmail().withMessage('Email không hợp lệ'),
     body('password').notEmpty().withMessage('Mật khẩu là bắt buộc'),
 ];
@@ -40,12 +41,13 @@ const register = [
             const user = new User({ username, email, hashedPassword, displayname, phone });
             await user.save();
 
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+            const userId = user._id.toString();
+            const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
             res.status(201).json({
                 message: 'Đăng ký thành công',
                 token,
-                user: { id: user.id, username: user.username, displayname: user.displayname, email: user.email, role: user.role }
+                user: { id: userId, username: user.username, displayname: user.displayname, email: user.email, role: user.role }
             });
         } catch (err) {
             console.error(err);
@@ -67,26 +69,42 @@ const login = [
         const { email, password } = req.body;
 
         try {
+            console.log('Login attempt for:', email);
+            
             const user = await User.findOne({ email });
             if (!user) {
+                console.log('User not found:', email);
                 return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng' });
             }
 
+            console.log('=== DEBUG USER ===');
+            console.log('hashedPassword exists:', !!user.hashedPassword);
+            console.log('password exists:', !!user.password);
+            console.log('hashedPassword preview:', user.hashedPassword?.substring(0, 15));
+
+            console.log('User found, comparing password...');
             const isMatch = await bcrypt.compare(password, user.hashedPassword);
             if (!isMatch) {
+                console.log('Password mismatch for:', email);
                 return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng' });
             }
 
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+            console.log('Password matched, generating token...');
+            console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'exists' : 'MISSING');
+            const userId = user._id.toString();
+            console.log('userId:', userId);
+            const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+            console.log('Token generated successfully');
 
+            console.log('Login successful for:', email);
             res.json({
                 message: 'Đăng nhập thành công',
                 token,
-                user: { id: user.id, username: user.username, displayname: user.displayname, email: user.email, avatarUrl: user.avatarUrl, role: user.role }
+                user: { id: userId, username: user.username, displayname: user.displayname, email: user.email, avatarUrl: user.avatarUrl, role: user.role }
             });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Lỗi server' });
+            console.error('Login error details:', err.message, err.stack);
+            res.status(500).json({ message: 'Lỗi server: ' + err.message });
         }
     }
 ];

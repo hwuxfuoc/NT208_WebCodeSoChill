@@ -12,9 +12,19 @@ async function runSeed() {
 
   await connectDB();
 
-  const seedPath = path.resolve(__dirname, '../seed/problems.seed.json');
-  const data = JSON.parse(fs.readFileSync(seedPath, 'utf-8'));
-  const problems = data.problems || [];
+  const { loadSeedProblems } = require('../config/seedUtils');
+  let seedPath = path.resolve(__dirname, '../seed/problems');
+  if (!fs.existsSync(seedPath)) {
+    const fallbackPath = path.resolve(__dirname, '../seed/problems.seed.json');
+    if (fs.existsSync(fallbackPath)) {
+      seedPath = fallbackPath;
+    }
+  }
+  const problems = loadSeedProblems(seedPath);
+  if (!problems.length) {
+    console.log('No seed problems found in:', seedPath);
+    process.exit(0);
+  }
   let admin = null;
   try {
     admin = await User.findOne({ role: 'admin' });
@@ -28,7 +38,7 @@ async function runSeed() {
     try {
       const existing = await Problem.findOne({ slug: payload.slug });
       if (existing) {
-        await Problem.findOneAndUpdate({ slug: payload.slug }, payload, { new: true });
+        await Problem.findOneAndUpdate({ slug: payload.slug }, payload, { returnDocument: 'after' });
         countUpdated++;
       } else {
         const created = new Problem(payload);

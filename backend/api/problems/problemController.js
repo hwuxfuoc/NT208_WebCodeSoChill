@@ -54,18 +54,30 @@ const getProblems = async (req, res) => {
 // @route   GET /api/problems/:id
 const getProblem = async (req, res) => {
     try {
-        const problem = await Problem.findOne({
-            $or: [{ problemId: req.params.id }, { _id: req.params.id.match(/^[0-9a-fA-F]{24}$/) ? req.params.id : null }],
-            isActive: true
-        }).populate('createdBy', 'username displayname');
+        const id = req.params.id;
+        console.log('getProblem called with id:', id);
+
+        // Try different ways to find the problem
+        let problem = await Problem.findOne({ slug: id, isActive: true });
+        console.log('Tried slug:', problem ? 'found' : 'not found');
+        if (!problem) {
+            problem = await Problem.findOne({ problemId: id, isActive: true });
+            console.log('Tried problemId:', problem ? 'found' : 'not found');
+        }
+        if (!problem && id.match(/^[0-9a-fA-F]{24}$/)) {
+            problem = await Problem.findOne({ _id: id, isActive: true });
+            console.log('Tried _id:', problem ? 'found' : 'not found');
+        }
 
         if (!problem) return res.status(404).json({ message: 'Bài tập không tồn tại' });
+
+        problem = await Problem.populate(problem, { path: 'createdBy', select: 'username displayname' });
         res.json({ problem });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });
     }
-};
+};;;;;
 
 // @desc    Bài tập hàng ngày (random từ easy/medium)
 // @route   GET /api/problems/daily
@@ -107,7 +119,7 @@ const createProblem = async (req, res) => {
 // @route   PUT /api/problems/:id
 const updateProblem = async (req, res) => {
     try {
-        const problem = await Problem.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        const problem = await Problem.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
         if (!problem) return res.status(404).json({ message: 'Bài tập không tồn tại' });
         res.json({ message: 'Cập nhật thành công', problem });
     } catch (err) {
