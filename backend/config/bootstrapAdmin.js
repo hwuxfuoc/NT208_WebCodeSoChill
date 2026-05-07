@@ -1,21 +1,5 @@
 // backend/config/bootstrapAdmin.js
-// Use bcrypt if available, fallback to bcryptjs for environments without native bindings
-let bcrypt;
-try {
-  bcrypt = require('bcrypt');
-} catch (e) {
-  try {
-    bcrypt = require('bcryptjs');
-  } catch (e2) {
-    bcrypt = null;
-  }
-}
-if (!bcrypt) {
-  console.warn('Neither bcrypt nor bcryptjs is installed. Admin bootstrap cannot hash passwords.');
-  module.exports = async () => {};
-  return;
-}
-
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const Setting = require('../models/setting');
 

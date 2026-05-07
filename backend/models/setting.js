@@ -6,4 +6,4 @@ const settingSchema = new mongoose.Schema({
   value: { type: mongoose.Schema.Types.Mixed, default: false },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Setting', settingSchema);
+module.exports = mongoose.models.Setting || mongoose.model('Setting', settingSchema);

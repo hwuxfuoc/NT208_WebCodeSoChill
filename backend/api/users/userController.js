@@ -111,7 +111,7 @@ const updateProfile = async (req, res) => {
                 experienceLevel,
                 socialLinks,
             },
-            { new: true, runValidators: true }
+            { returnDocument: 'after', runValidators: true }
         ).select('-hashedPassword');
         
         if (!user) return res.status(404).json({ message: 'User không tồn tại' });
