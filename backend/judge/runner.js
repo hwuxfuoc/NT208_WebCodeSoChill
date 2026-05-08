@@ -48,6 +48,17 @@ const STATUS_MAP = {
     14: 'memory_limit_exceeded',    // Exec Format Error
 };
 
+const normalizeTestCases = (testCases = []) => {
+    return testCases
+        .map((tc, index) => ({
+            order: typeof tc.order === 'number' ? tc.order : index + 1,
+            input: tc.input ?? tc.stdin ?? '',
+            output: tc.output ?? tc.expectedOutput ?? tc.expected_output ?? '',
+            isSample: !!tc.isSample,
+        }))
+        .filter((tc) => tc.input !== undefined && tc.output !== undefined);
+};
+
 /**
  * Gửi 1 submission lên Judge0 và chờ kết quả
  * @param {string} sourceCode
@@ -121,7 +132,7 @@ const judgeOne = async (sourceCode, languageId, stdin, expectedOutput, timeLimit
  * @param {{ problemId, language, code, timeLimit, memoryLimit, sampleOnly? }}
  * @returns {{ status, testResult, timeUsed, memoryUsed, passedTests, totalTests }}
  */
-const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, sampleOnly = false }) => {
+const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, sampleOnly = false, testCases: providedTestCases = [] }) => {
     const languageId = LANGUAGE_MAP[language];
     if (!languageId) {
         return {
@@ -134,12 +145,20 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
         };
     }
 
-    // Lấy testcase từ DB (sample only khi Run, tất cả khi Submit)
-    const query = { problemId };
-    if (sampleOnly) query.isSample = true;
-    const testCases = await TestCase.find(query).sort({ order: 1 });
+    let testCases = [];
+    if (Array.isArray(providedTestCases) && providedTestCases.length > 0) {
+        testCases = providedTestCases;
+        if (sampleOnly && providedTestCases.some((tc) => tc.isSample !== undefined)) {
+            testCases = providedTestCases.filter((tc) => tc.isSample);
+        }
+    } else {
+        const query = { problemId };
+        if (sampleOnly) query.isSample = true;
+        testCases = await TestCase.find(query).sort({ order: 1 }).lean();
+    }
 
-    if (testCases.length === 0) {
+    const normalizedTestCases = normalizeTestCases(testCases);
+    if (normalizedTestCases.length === 0) {
         return {
             status: 'runtime_error',
             testResult: [],
@@ -156,7 +175,7 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
     let maxMemory = 0;
     let overallStatus = 'accepted'; // Sẽ cập nhật nếu có test fail
 
-    for (const tc of testCases) {
+    for (const tc of normalizedTestCases) {
         let oneResult;
         try {
             oneResult = await judgeOne(code, languageId, tc.input, tc.output, timeLimit, memoryLimit);
@@ -190,7 +209,7 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
         timeUsed: maxTime,
         memoryUsed: maxMemory,
         passedTests,
-        totalTests: testCases.length,
+        totalTests: normalizedTestCases.length,
     };
 };
 

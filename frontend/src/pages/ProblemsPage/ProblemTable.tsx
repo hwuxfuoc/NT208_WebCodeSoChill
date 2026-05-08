@@ -5,6 +5,7 @@ interface ProblemTableProps {
   rows: Problem[];
   page: number;
   pageCount: number;
+  pageSize: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   total?: number;
 }
@@ -71,8 +72,10 @@ function SolveButton({ id, solved }: { id: string; solved: boolean }) {
   );
 }
 
-export default function ProblemTable({ rows, page, pageCount, setPage, total }: ProblemTableProps) {
+export default function ProblemTable({ rows, page, pageCount, pageSize, setPage, total }: ProblemTableProps) {
   const totalCount = total ?? rows.length;
+  const startItem = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
+  const endItem = Math.min(page * pageSize, totalCount);
 
   // Build smart page numbers: [1, ..., page-1, page, page+1, ..., last]
   const getPageNumbers = () => {
@@ -126,6 +129,7 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
                   )}
                 </td>
 
+                <td className="py-4 text-center text-sm text-gray-500">{startItem + idx}</td>
                 <td className="py-4">
                   <span className="font-bold text-[14px] text-[#1A1D2B]">{p.title}</span>
                 </td>
@@ -150,7 +154,7 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
 
       <div className="flex justify-between items-center mt-5 pt-4 border-t border-gray-100">
         <span className="text-[11px] text-gray-400 font-medium">
-          Showing {rows.length} of {totalCount} problems
+          Showing {startItem}-{endItem} of {totalCount} problems
         </span>
         <div className="flex items-center gap-1.5">
           <button
