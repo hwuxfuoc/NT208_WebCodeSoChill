@@ -29,8 +29,8 @@ async function bootstrapSeedProblems() {
     }
 
     // Lazy imports to avoid circular deps on boot
-    const Problem = require('../models/Problem');
-    const User = require('../models/User');
+    const Problem = require('../models/problem');
+    const User = require('../models/user');
 
     const admin = await User.findOne({ role: 'admin' });
     const createdBy = admin ? admin._id : null;
@@ -44,7 +44,7 @@ async function bootstrapSeedProblems() {
       return {
         updateOne: {
           filter: { slug: payload.slug },
-          update: { $set: payload },
+          update: { $set: { ...payload, isActive: true } },
           upsert: true
         }
       };

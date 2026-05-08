@@ -39,12 +39,6 @@ async function startServer() {
   app.use('/api/admin',         require('./api/admin/adminRoutes'));
   console.log('✓ Routes registered');
 
-  // test route tạm thời
-  app.get('/test', (req, res) => {
-      console.log('>>> TEST ROUTE HIT');
-      res.json({ ok: true });
-  });
-
   app.get('/', (req, res) => res.send('Server is running...'));
 
   const PORT = process.env.PORT || 5000;

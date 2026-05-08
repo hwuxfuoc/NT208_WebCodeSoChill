@@ -1,8 +1,19 @@
 //frontend/src/services/problemService.ts
 import api from "./api";
 
-export const getProblems = (page = 1, limit = 20) => {
-  return api.get("/api/problems", { params: { page, limit } });
+export interface GetProblemsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  difficulty?: string;
+  tag?: string;
+}
+
+export const getProblems = (params: GetProblemsParams = {}) => {
+  const { page = 1, limit = 20, search, difficulty, tag } = params;
+  return api.get("/api/problems", {
+    params: { page, limit, ...(search && { search }), ...(difficulty && { difficulty }), ...(tag && { tag }) },
+  });
 };
 
 export const getProblem = (id: string) => {
