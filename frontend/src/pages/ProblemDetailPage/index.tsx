@@ -29,7 +29,11 @@ export default function ProblemDetailPage() {
       </div>
 
       <div className="flex-1 h-full min-w-0">
-        <CodeEditor />
+        <CodeEditor
+          problemId={problem._id}
+          timeLimit={problem.timeLimit}
+          memoryLimit={problem.memoryLimit}
+        />
       </div>
     </div>
   );

@@ -29,7 +29,14 @@ const submit = async (req, res) => {
         await submission.save();
 
         // Chạy judge
-        const result = await runCode({ problemId, language, code, timeLimit: problem.timeLimit, memoryLimit: problem.memoryLimit });
+        const result = await runCode({
+            problemId,
+            language,
+            code,
+            timeLimit: problem.timeLimit,
+            memoryLimit: problem.memoryLimit,
+            testCases: problem.testCases,
+        });
 
         // Cập nhật kết quả
         submission.status = result.status;
@@ -87,7 +94,15 @@ const run = async (req, res) => {
         if (!problem) return res.status(404).json({ message: 'Bài tập không tồn tại' });
 
         // Chỉ chạy với sample testcases
-        const result = await runCode({ problemId, language, code, timeLimit: problem.timeLimit, memoryLimit: problem.memoryLimit, sampleOnly: true });
+        const result = await runCode({
+            problemId,
+            language,
+            code,
+            timeLimit: problem.timeLimit,
+            memoryLimit: problem.memoryLimit,
+            sampleOnly: true,
+            testCases: problem.samples,
+        });
 
         res.json({ result });
     } catch (err) {

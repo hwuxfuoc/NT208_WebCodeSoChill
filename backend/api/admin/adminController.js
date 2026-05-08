@@ -1,11 +1,8 @@
 // backend/api/admin/adminController.js
 const User = require('../../models/user');
 
-/**
- * Promote a user to admin
- * POST /api/admin/promote/:userId
- * Assumes auth and adminOnly middlewares have already run
- */
+// @desc    Promote a user to admin
+// @route   POST /api/admin/promote/:userId
 const promoteUser = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -25,3 +22,4 @@ const promoteUser = async (req, res) => {
 module.exports = {
   promoteUser,
 };
+

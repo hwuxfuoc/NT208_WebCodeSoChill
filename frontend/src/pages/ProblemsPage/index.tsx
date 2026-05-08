@@ -53,7 +53,7 @@ export default function ProblemsPage() {
           <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
             <TopicFilterBar topic={topic} setTopic={setTopic} setPage={setPage} />
             <ProblemSearchBar query={query} setQuery={setQuery} tab={tab} setTab={setTab} setPage={setPage} />
-            <ProblemTable rows={problems} page={page} pageCount={totalPages} setPage={setPage} total={total} />
+            <ProblemTable rows={problems} page={page} pageCount={totalPages} setPage={setPage} total={total} pageSize={PAGE_SIZE} />
           </section>
         </div>
 
