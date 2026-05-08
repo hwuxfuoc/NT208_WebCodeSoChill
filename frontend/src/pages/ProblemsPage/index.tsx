@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import { useProblems } from "../../hooks/useProblems";
 
 import CalendarStreak from "./CalendarStreak";
@@ -11,26 +11,35 @@ import ProblemsHeader from "./ProblemsHeader";
 
 export type TabType = "all" | "solved" | "unsolved";
 
+const PAGE_SIZE = 20;
+
 export default function ProblemsPage() {
   const [topic, setTopic] = useState("All Topics");
   const [tab, setTab] = useState<TabType>("all");
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const { problems, loading, error } = useProblems();
+  // Debounce search query (400ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [query]);
 
-  const filtered = useMemo(() => {
-    const byTopic = problems.filter((p) => topic === "All Topics" || (p.topics || []).includes(topic));
-    const byTab = byTopic.filter((p) => (tab === "all" ? true : tab === "solved" ? p.solved : !p.solved));
-    const bySearch = byTab.filter((p) => p.title.toLowerCase().includes(query.toLowerCase()));
-    return bySearch;
-  }, [problems, topic, tab, query]);
+  // Build server-side filter params
+  const tag = topic !== "All Topics" ? topic : undefined;
 
-  const pageSize = 10;
-  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const rows = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const { problems, loading, error, total, totalPages } = useProblems({
+    page,
+    limit: PAGE_SIZE,
+    search: debouncedQuery || undefined,
+    tag,
+  });
 
-  if (loading) return <div>Loading...</div>;
+  if (loading && problems.length === 0) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -44,7 +53,7 @@ export default function ProblemsPage() {
           <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
             <TopicFilterBar topic={topic} setTopic={setTopic} setPage={setPage} />
             <ProblemSearchBar query={query} setQuery={setQuery} tab={tab} setTab={setTab} setPage={setPage} />
-            <ProblemTable rows={rows} page={page} pageCount={pageCount} setPage={setPage} />
+            <ProblemTable rows={problems} page={page} pageCount={totalPages} setPage={setPage} total={total} />
           </section>
         </div>
 
@@ -56,3 +65,4 @@ export default function ProblemsPage() {
     </div>
   );
 }
+

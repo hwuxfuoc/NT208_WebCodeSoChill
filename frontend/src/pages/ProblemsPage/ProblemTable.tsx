@@ -74,6 +74,25 @@ function SolveButton({ id, solved }: { id: string; solved: boolean }) {
 export default function ProblemTable({ rows, page, pageCount, setPage, total }: ProblemTableProps) {
   const totalCount = total ?? rows.length;
 
+  // Build smart page numbers: [1, ..., page-1, page, page+1, ..., last]
+  const getPageNumbers = () => {
+    const pages: (number | '...')[] = [];
+    if (pageCount <= 7) {
+      for (let i = 1; i <= pageCount; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (page > 3) pages.push('...');
+      for (let i = Math.max(2, page - 1); i <= Math.min(pageCount - 1, page + 1); i++) {
+        pages.push(i);
+      }
+      if (page < pageCount - 2) pages.push('...');
+      pages.push(pageCount);
+    }
+    return pages;
+  };
+
+  const pageNumbers = getPageNumbers();
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -143,28 +162,23 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-          {Array.from({ length: Math.min(pageCount, 3) }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              onClick={() => setPage(n)}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-bold transition-colors"
-              style={
-                page === n
-                  ? { backgroundColor: "var(--main-orange-color)", color: "#fff" }
-                  : { backgroundColor: "#f4f6f8", color: "#374151" }
-              }
-            >
-              {n}
-            </button>
-          ))}
-          {pageCount > 3 && <span className="text-gray-400 text-sm px-1">...</span>}
-          {pageCount > 3 && (
-            <button
-              onClick={() => setPage(pageCount)}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-bold bg-[#f4f6f8] text-gray-700 hover:bg-gray-200 transition-colors"
-            >
-              {pageCount}
-            </button>
+          {pageNumbers.map((n, i) =>
+            n === '...' ? (
+              <span key={`dots-${i}`} className="text-gray-400 text-sm px-1">...</span>
+            ) : (
+              <button
+                key={n}
+                onClick={() => setPage(n as number)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-bold transition-colors"
+                style={
+                  page === n
+                    ? { backgroundColor: "var(--main-orange-color)", color: "#fff" }
+                    : { backgroundColor: "#f4f6f8", color: "#374151" }
+                }
+              >
+                {n}
+              </button>
+            )
           )}
           <button
             disabled={page >= pageCount}
@@ -180,3 +194,4 @@ export default function ProblemTable({ rows, page, pageCount, setPage, total }: 
     </>
   );
 }
+

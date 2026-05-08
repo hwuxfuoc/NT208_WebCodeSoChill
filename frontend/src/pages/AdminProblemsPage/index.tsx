@@ -16,7 +16,7 @@ export default function AdminProblemsPage() {
   useEffect(() => {
     const fetchProbs = async () => {
       try {
-        const res = await getProblems(1, 100);
+        const res = await getProblems({ page: 1, limit: 100 });
         // API returns { problems, total, page, totalPages }
         setProblems(res.data.problems || []);
       } catch (e) {

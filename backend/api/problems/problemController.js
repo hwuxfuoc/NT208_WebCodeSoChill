@@ -2,48 +2,116 @@
 const Problem = require('../../models/problem');
 const Submission = require('../../models/submission');
 
-// @desc    Danh sách bài tập (filter + pagination)
+// @desc    Danh sách bài tập (filter + pagination) — Aggregation pipeline
 // @route   GET /api/problems
 const getProblems = async (req, res) => {
     try {
         const { difficulty, tag, search, page = 1, limit = 20 } = req.query;
-        const query = { isActive: true };
+        const pageNum = Math.max(1, parseInt(page));
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit))); // cap at 100
+        const skip = (pageNum - 1) * limitNum;
 
-        if (difficulty) query.difficulty = difficulty;
-        if (tag) query.tags = tag;
-        if (search) query.title = { $regex: search, $options: 'i' };
+        // Build match filter
+        const matchFilter = { isActive: true };
+        if (difficulty) matchFilter.difficulty = difficulty;
+        if (tag) matchFilter.tags = tag;
+        if (search) matchFilter.title = { $regex: search, $options: 'i' };
 
-        const skip = (parseInt(page) - 1) * parseInt(limit);
+        // Build aggregation pipeline
+        const pipeline = [
+            { $match: matchFilter },
+            { $sort: { createdAt: -1 } },
+            { $skip: skip },
+            { $limit: limitNum },
+            // Exclude heavy fields
+            { $project: { testCases: 0 } },
+            // Lookup submissions to calculate acceptance in one go
+            {
+                $lookup: {
+                    from: 'submissions',
+                    localField: '_id',
+                    foreignField: 'problemId',
+                    pipeline: [
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: 1 },
+                                accepted: {
+                                    $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] }
+                                }
+                            }
+                        }
+                    ],
+                    as: '_submissionStats'
+                }
+            },
+        ];
 
-        const problems = await Problem.find(query)
-            .select('-testCases')
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(parseInt(limit));
+        // If user is logged in, also check solved status
+        const userId = req.user ? req.user.id : null;
+        if (userId) {
+            const mongoose = require('mongoose');
+            pipeline.push({
+                $lookup: {
+                    from: 'submissions',
+                    let: { pid: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$problemId', '$$pid'] },
+                                        { $eq: ['$userId', new mongoose.Types.ObjectId(userId)] },
+                                        { $eq: ['$status', 'accepted'] }
+                                    ]
+                                }
+                            }
+                        },
+                        { $limit: 1 },
+                        { $project: { _id: 1 } }
+                    ],
+                    as: '_userSolved'
+                }
+            });
+        }
 
-        const total = await Problem.countDocuments(query);
-
-        // Calculate acceptance for each problem
-        const problemsWithAcceptance = await Promise.all(problems.map(async (problem) => {
-            const totalSubmissions = await Submission.countDocuments({ problemId: problem._id });
-            const acceptedSubmissions = await Submission.countDocuments({ problemId: problem._id, status: 'accepted' });
-            const acceptance = totalSubmissions > 0 ? (acceptedSubmissions / totalSubmissions) * 100 : 0;
-
-            // Check if solved by current user
-            let solved = false;
-            if (req.user) {
-                const userSubmission = await Submission.findOne({ problemId: problem._id, userId: req.user.id, status: 'accepted' });
-                solved = !!userSubmission;
+        // Project final shape
+        pipeline.push({
+            $addFields: {
+                acceptance: {
+                    $let: {
+                        vars: { stats: { $arrayElemAt: ['$_submissionStats', 0] } },
+                        in: {
+                            $cond: [
+                                { $and: ['$$stats', { $gt: ['$$stats.total', 0] }] },
+                                { $round: [{ $multiply: [{ $divide: ['$$stats.accepted', '$$stats.total'] }, 100] }, 2] },
+                                0
+                            ]
+                        }
+                    }
+                },
+                solved: userId
+                    ? { $gt: [{ $size: { $ifNull: ['$_userSolved', []] } }, 0] }
+                    : false
             }
+        });
 
-            return {
-                ...problem.toObject(),
-                acceptance: Math.round(acceptance * 100) / 100, // round to 2 decimals
-                solved
-            };
-        }));
+        // Remove internal fields
+        pipeline.push({
+            $project: { _submissionStats: 0, _userSolved: 0 }
+        });
 
-        res.json({ problems: problemsWithAcceptance, total, page: parseInt(page), totalPages: Math.ceil(total / parseInt(limit)) });
+        const [problems, total] = await Promise.all([
+            Problem.aggregate(pipeline),
+            Problem.countDocuments(matchFilter)
+        ]);
+
+        res.json({
+            problems,
+            total,
+            page: pageNum,
+            totalPages: Math.ceil(total / limitNum)
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });
@@ -55,18 +123,14 @@ const getProblems = async (req, res) => {
 const getProblem = async (req, res) => {
     try {
         const id = req.params.id;
-        console.log('getProblem called with id:', id);
 
         // Try different ways to find the problem
         let problem = await Problem.findOne({ slug: id, isActive: true });
-        console.log('Tried slug:', problem ? 'found' : 'not found');
         if (!problem) {
             problem = await Problem.findOne({ problemId: id, isActive: true });
-            console.log('Tried problemId:', problem ? 'found' : 'not found');
         }
         if (!problem && id.match(/^[0-9a-fA-F]{24}$/)) {
             problem = await Problem.findOne({ _id: id, isActive: true });
-            console.log('Tried _id:', problem ? 'found' : 'not found');
         }
 
         if (!problem) return res.status(404).json({ message: 'Bài tập không tồn tại' });

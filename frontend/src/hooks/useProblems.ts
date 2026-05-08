@@ -1,32 +1,27 @@
-import { useState, useEffect } from 'react';
-import { getProblems } from '../services/problemService';
-import { Problem, ProblemsResponse } from '../types/problem';
+import { useQuery } from '@tanstack/react-query';
+import { getProblems, GetProblemsParams } from '../services/problemService';
+import { ProblemsResponse } from '../types/problem';
 
-export const useProblems = (page: number = 1, limit: number = 3640) => {
-  const [problems, setProblems] = useState<Problem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [total, setTotal] = useState(0);
+export const useProblems = (params: GetProblemsParams = {}) => {
+  const { page = 1, limit = 20, search, difficulty, tag } = params;
 
-  useEffect(() => {
-    const fetchProblems = async () => {
-      try {
-        setLoading(true);
-        const response = await getProblems(page, limit);
-        const data: ProblemsResponse = response.data;
-        setProblems(data.problems);
-        setTotal(data.total);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch problems');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data, isPending, error } = useQuery({
+    queryKey: ['problems', page, limit, search, difficulty, tag],
+    queryFn: async () => {
+      const response = await getProblems({ page, limit, search, difficulty, tag });
+      return response.data as ProblemsResponse;
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    placeholderData: (prev) => prev, // keep previous data while fetching new page (no flicker)
+  });
 
-    fetchProblems();
-  }, [page, limit]);
-
-  return { problems, loading, error, total };
+  return {
+    problems: data?.problems || [],
+    loading: isPending,
+    error: error ? 'Failed to fetch problems' : null,
+    total: data?.total || 0,
+    totalPages: data?.totalPages || 1,
+    page: data?.page || page,
+  };
 };

@@ -14,7 +14,7 @@ export default function StatRow() {
     const fetchStats = async () => {
       try {
         const [problemsRes, leaderboardRes] = await Promise.all([
-          problemService.getProblems(1, 1),
+          problemService.getProblems({ page: 1, limit: 1 }),
           profileService.getLeaderboard(1, 1),
         ]);
         setStats({

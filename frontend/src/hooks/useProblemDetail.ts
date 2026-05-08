@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getProblem } from '../services/problemService';
 
 interface ProblemDetail {
@@ -16,29 +16,21 @@ interface ProblemDetail {
 }
 
 export const useProblemDetail = (id: string | undefined) => {
-  const [problem, setProblem] = useState<ProblemDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isPending, error } = useQuery({
+    queryKey: ['problem', id],
+    queryFn: async () => {
+      const response = await getProblem(id!);
+      return response.data.problem as ProblemDetail;
+    },
+    enabled: !!id,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 20 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    if (!id) return;
-
-    const fetchProblem = async () => {
-      try {
-        setLoading(true);
-        const response = await getProblem(id);
-        setProblem(response.data.problem);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch problem details');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProblem();
-  }, [id]);
-
-  return { problem, loading, error };
+  return {
+    problem: data || null,
+    loading: isPending,
+    error: error ? 'Failed to fetch problem details' : null,
+  };
 };
+
