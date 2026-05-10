@@ -20,11 +20,22 @@ const getProblems = async (req, res) => {
         // Build aggregation pipeline
         const pipeline = [
             { $match: matchFilter },
-            { $sort: { createdAt: -1 } },
+            {
+                $addFields: {
+                    problemIdNumber: {
+                        $cond: [
+                            { $regexMatch: { input: '$problemId', regex: /^[0-9]+$/ } },
+                            { $toInt: '$problemId' },
+                            null
+                        ]
+                    }
+                }
+            },
+            { $sort: { problemIdNumber: 1, slug: 1, createdAt: 1 } },
             { $skip: skip },
             { $limit: limitNum },
             // Exclude heavy fields
-            { $project: { testCases: 0 } },
+            { $project: { testCases: 0, problemIdNumber: 0 } },
             // Lookup submissions to calculate acceptance in one go
             {
                 $lookup: {
