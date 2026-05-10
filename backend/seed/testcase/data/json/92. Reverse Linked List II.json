@@ -1,0 +1,54 @@
+{
+  "problem_number": 92,
+  "title": "Reverse Linked List II",
+  "function": "reverseBetween",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    },
+    {
+      "name": "left",
+      "type": "integer"
+    },
+    {
+      "name": "right",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "left": 2,
+      "right": 4,
+      "expected": [
+        1,
+        4,
+        3,
+        2,
+        5
+      ]
+    },
+    {
+      "head": [
+        5
+      ],
+      "left": 1,
+      "right": 1,
+      "expected": [
+        5
+      ]
+    }
+  ]
+}

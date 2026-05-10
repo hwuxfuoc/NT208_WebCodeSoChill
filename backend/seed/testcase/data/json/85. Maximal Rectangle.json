@@ -1,0 +1,65 @@
+{
+  "problem_number": 85,
+  "title": "Maximal Rectangle",
+  "function": "maximalRectangle",
+  "params": [
+    {
+      "name": "matrix",
+      "type": "character[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "matrix": [
+        [
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "1",
+          "0"
+        ]
+      ],
+      "expected": 6
+    },
+    {
+      "matrix": [
+        [
+          "0"
+        ]
+      ],
+      "expected": 0
+    },
+    {
+      "matrix": [
+        [
+          "1"
+        ]
+      ],
+      "expected": 1
+    }
+  ]
+}

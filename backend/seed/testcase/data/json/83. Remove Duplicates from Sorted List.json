@@ -1,0 +1,43 @@
+{
+  "problem_number": 83,
+  "title": "Remove Duplicates from Sorted List",
+  "function": "deleteDuplicates",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        1,
+        2
+      ],
+      "expected": [
+        1,
+        2
+      ]
+    },
+    {
+      "head": [
+        1,
+        1,
+        2,
+        3,
+        3
+      ],
+      "expected": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

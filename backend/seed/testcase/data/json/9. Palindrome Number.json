@@ -1,0 +1,28 @@
+{
+  "problem_number": 9,
+  "title": "Palindrome Number",
+  "function": "isPalindrome",
+  "params": [
+    {
+      "name": "x",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "x": 121,
+      "expected": "true"
+    },
+    {
+      "x": -121,
+      "expected": "false"
+    },
+    {
+      "x": 10,
+      "expected": "false"
+    }
+  ]
+}

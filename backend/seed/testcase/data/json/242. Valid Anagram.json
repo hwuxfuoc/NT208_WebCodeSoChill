@@ -1,0 +1,30 @@
+{
+  "problem_number": 242,
+  "title": "Valid Anagram",
+  "function": "isAnagram",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "anagram",
+      "t": "nagaram",
+      "expected": "true"
+    },
+    {
+      "s": "rat",
+      "t": "car",
+      "expected": "false"
+    }
+  ]
+}

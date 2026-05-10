@@ -1,0 +1,35 @@
+{
+  "problem_number": 60,
+  "title": "Permutation Sequence",
+  "function": "getPermutation",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "k": 3,
+      "expected": "213"
+    },
+    {
+      "n": 4,
+      "k": 9,
+      "expected": "2314"
+    },
+    {
+      "n": 3,
+      "k": 1,
+      "expected": "123"
+    }
+  ]
+}

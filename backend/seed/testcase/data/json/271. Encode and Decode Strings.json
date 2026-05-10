@@ -1,0 +1,29 @@
+{
+  "problem_number": 271,
+  "title": "Encode and Decode Strings",
+  "function": "encode",
+  "params": [
+    {
+      "name": "dummy_input",
+      "type": "list<string>"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "dummy_input": [
+        "Hello",
+        "World"
+      ],
+      "expected": null
+    },
+    {
+      "dummy_input": [
+        ""
+      ],
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "problem_number": 212,
+  "title": "Word Search II",
+  "function": "findWords",
+  "params": [
+    {
+      "name": "board",
+      "type": "character[][]"
+    },
+    {
+      "name": "words",
+      "type": "string[]"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "board": [
+        [
+          "o",
+          "a",
+          "a",
+          "n"
+        ],
+        [
+          "e",
+          "t",
+          "a",
+          "e"
+        ],
+        [
+          "i",
+          "h",
+          "k",
+          "r"
+        ],
+        [
+          "i",
+          "f",
+          "l",
+          "v"
+        ]
+      ],
+      "words": [
+        "oath",
+        "pea",
+        "eat",
+        "rain"
+      ],
+      "expected": [
+        "eat",
+        "oath"
+      ]
+    },
+    {
+      "board": [
+        [
+          "a",
+          "b"
+        ],
+        [
+          "c",
+          "d"
+        ]
+      ],
+      "words": [
+        "abcb"
+      ],
+      "expected": []
+    }
+  ]
+}

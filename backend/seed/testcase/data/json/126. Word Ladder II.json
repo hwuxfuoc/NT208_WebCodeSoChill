@@ -1,0 +1,64 @@
+{
+  "problem_number": 126,
+  "title": "Word Ladder II",
+  "function": "findLadders",
+  "params": [
+    {
+      "name": "beginWord",
+      "type": "string"
+    },
+    {
+      "name": "endWord",
+      "type": "string"
+    },
+    {
+      "name": "wordList",
+      "type": "list<string>"
+    }
+  ],
+  "return": {
+    "type": "list<list<string>>"
+  },
+  "testcases": [
+    {
+      "beginWord": "hit",
+      "endWord": "cog",
+      "wordList": [
+        "hot",
+        "dot",
+        "dog",
+        "lot",
+        "log",
+        "cog"
+      ],
+      "expected": [
+        [
+          "hit",
+          "hot",
+          "dot",
+          "dog",
+          "cog"
+        ],
+        [
+          "hit",
+          "hot",
+          "lot",
+          "log",
+          "cog"
+        ]
+      ]
+    },
+    {
+      "beginWord": "hit",
+      "endWord": "cog",
+      "wordList": [
+        "hot",
+        "dot",
+        "dog",
+        "lot",
+        "log"
+      ],
+      "expected": []
+    }
+  ]
+}

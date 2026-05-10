@@ -1,0 +1,61 @@
+{
+  "problem_number": 140,
+  "title": "Word Break II",
+  "function": "wordBreak",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "wordDict",
+      "type": "list<string>"
+    }
+  ],
+  "return": {
+    "type": "list<string>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "s": "catsanddog",
+      "wordDict": [
+        "cat",
+        "cats",
+        "and",
+        "sand",
+        "dog"
+      ],
+      "expected": [
+        "cats and dog",
+        "cat sand dog"
+      ]
+    },
+    {
+      "s": "pineapplepenapple",
+      "wordDict": [
+        "apple",
+        "pen",
+        "applepen",
+        "pine",
+        "pineapple"
+      ],
+      "expected": [
+        "pine apple pen apple",
+        "pineapple pen apple",
+        "pine applepen apple"
+      ]
+    },
+    {
+      "s": "catsandog",
+      "wordDict": [
+        "cats",
+        "dog",
+        "sand",
+        "and",
+        "cat"
+      ],
+      "expected": []
+    }
+  ]
+}

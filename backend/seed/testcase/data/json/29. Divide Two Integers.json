@@ -1,0 +1,30 @@
+{
+  "problem_number": 29,
+  "title": "Divide Two Integers",
+  "function": "divide",
+  "params": [
+    {
+      "name": "dividend",
+      "type": "integer"
+    },
+    {
+      "name": "divisor",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "dividend": 10,
+      "divisor": 3,
+      "expected": 3
+    },
+    {
+      "dividend": 7,
+      "divisor": -3,
+      "expected": -2
+    }
+  ]
+}

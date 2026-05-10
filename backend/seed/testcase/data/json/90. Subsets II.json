@@ -1,0 +1,57 @@
+{
+  "problem_number": 90,
+  "title": "Subsets II",
+  "function": "subsetsWithDup",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "list<list<integer>>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "nums": [
+        1,
+        2,
+        2
+      ],
+      "expected": [
+        [],
+        [
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "nums": [
+        0
+      ],
+      "expected": [
+        [],
+        [
+          0
+        ]
+      ]
+    }
+  ]
+}

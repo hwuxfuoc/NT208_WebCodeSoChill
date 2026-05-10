@@ -1,0 +1,30 @@
+{
+  "problem_number": 248,
+  "title": "Strobogrammatic Number III",
+  "function": "strobogrammaticInRange",
+  "params": [
+    {
+      "name": "low",
+      "type": "string"
+    },
+    {
+      "name": "high",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "low": "50",
+      "high": "100",
+      "expected": null
+    },
+    {
+      "low": "0",
+      "high": "0",
+      "expected": null
+    }
+  ]
+}

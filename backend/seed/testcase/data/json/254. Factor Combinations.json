@@ -1,0 +1,28 @@
+{
+  "problem_number": 254,
+  "title": "Factor Combinations",
+  "function": "getFactors",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<list<integer>>"
+  },
+  "testcases": [
+    {
+      "n": 1,
+      "expected": null
+    },
+    {
+      "n": 12,
+      "expected": null
+    },
+    {
+      "n": 37,
+      "expected": null
+    }
+  ]
+}

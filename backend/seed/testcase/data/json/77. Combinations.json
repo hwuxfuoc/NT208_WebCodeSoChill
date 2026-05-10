@@ -1,0 +1,60 @@
+{
+  "problem_number": 77,
+  "title": "Combinations",
+  "function": "combine",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<list<integer>>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "n": 4,
+      "k": 2,
+      "expected": [
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    {
+      "n": 1,
+      "k": 1,
+      "expected": [
+        [
+          1
+        ]
+      ]
+    }
+  ]
+}

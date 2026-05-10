@@ -1,0 +1,29 @@
+{
+  "problem_number": 187,
+  "title": "Repeated DNA Sequences",
+  "function": "findRepeatedDnaSequences",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "s": "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
+      "expected": [
+        "AAAAACCCCC",
+        "CCCCCAAAAA"
+      ]
+    },
+    {
+      "s": "AAAAAAAAAAAAA",
+      "expected": [
+        "AAAAAAAAAA"
+      ]
+    }
+  ]
+}

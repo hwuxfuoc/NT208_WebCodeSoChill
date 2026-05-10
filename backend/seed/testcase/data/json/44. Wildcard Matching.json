@@ -1,0 +1,35 @@
+{
+  "problem_number": 44,
+  "title": "Wildcard Matching",
+  "function": "isMatch",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "p",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "aa",
+      "p": "a",
+      "expected": "false"
+    },
+    {
+      "s": "aa",
+      "p": "*",
+      "expected": "true"
+    },
+    {
+      "s": "cb",
+      "p": "?a",
+      "expected": "false"
+    }
+  ]
+}

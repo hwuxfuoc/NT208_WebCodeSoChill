@@ -1,0 +1,47 @@
+{
+  "problem_number": 59,
+  "title": "Spiral Matrix II",
+  "function": "generateMatrix",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer[][]",
+    "rowsize": "param_1",
+    "colsize": "param_1",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "expected": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          8,
+          9,
+          4
+        ],
+        [
+          7,
+          6,
+          5
+        ]
+      ]
+    },
+    {
+      "n": 1,
+      "expected": [
+        [
+          1
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "problem_number": 268,
+  "title": "Missing Number",
+  "function": "missingNumber",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        3,
+        0,
+        1
+      ],
+      "expected": 2
+    },
+    {
+      "nums": [
+        0,
+        1
+      ],
+      "expected": 2
+    },
+    {
+      "nums": [
+        9,
+        6,
+        4,
+        2,
+        3,
+        5,
+        7,
+        0,
+        1
+      ],
+      "expected": 8
+    }
+  ]
+}

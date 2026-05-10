@@ -1,0 +1,28 @@
+{
+  "problem_number": 224,
+  "title": "Basic Calculator",
+  "function": "calculate",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "1 + 1",
+      "expected": 2
+    },
+    {
+      "s": " 2-1 + 2 ",
+      "expected": 3
+    },
+    {
+      "s": "(1+(4+5+2)-3)+(6+8)",
+      "expected": 23
+    }
+  ]
+}

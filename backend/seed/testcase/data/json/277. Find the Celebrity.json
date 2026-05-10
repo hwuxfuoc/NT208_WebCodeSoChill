@@ -1,0 +1,57 @@
+{
+  "problem_number": 277,
+  "title": "Find the Celebrity",
+  "function": "findCelebrity",
+  "params": [
+    {
+      "name": "graph",
+      "type": "integer[][]",
+      "internal": true
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "graph": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "graph": [
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ],
+      "expected": null
+    }
+  ]
+}

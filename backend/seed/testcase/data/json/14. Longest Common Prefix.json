@@ -1,0 +1,32 @@
+{
+  "problem_number": 14,
+  "title": "Longest Common Prefix",
+  "function": "longestCommonPrefix",
+  "params": [
+    {
+      "name": "strs",
+      "type": "string[]"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "strs": [
+        "flower",
+        "flow",
+        "flight"
+      ],
+      "expected": "fl"
+    },
+    {
+      "strs": [
+        "dog",
+        "racecar",
+        "car"
+      ],
+      "expected": ""
+    }
+  ]
+}

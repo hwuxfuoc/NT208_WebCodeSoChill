@@ -1,0 +1,42 @@
+{
+  "problem_number": 186,
+  "title": "Reverse Words in a String II",
+  "function": "reverseWords",
+  "params": [
+    {
+      "name": "s",
+      "type": "character[]"
+    }
+  ],
+  "return": {
+    "type": "void"
+  },
+  "testcases": [
+    {
+      "s": [
+        "t",
+        "h",
+        "e",
+        " ",
+        "s",
+        "k",
+        "y",
+        " ",
+        "i",
+        "s",
+        " ",
+        "b",
+        "l",
+        "u",
+        "e"
+      ],
+      "expected": null
+    },
+    {
+      "s": [
+        "a"
+      ],
+      "expected": null
+    }
+  ]
+}

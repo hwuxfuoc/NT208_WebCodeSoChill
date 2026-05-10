@@ -1,0 +1,35 @@
+{
+  "problem_number": 76,
+  "title": "Minimum Window Substring",
+  "function": "minWindow",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "s": "ADOBECODEBANC",
+      "t": "ABC",
+      "expected": "BANC"
+    },
+    {
+      "s": "a",
+      "t": "a",
+      "expected": "a"
+    },
+    {
+      "s": "a",
+      "t": "aa",
+      "expected": ""
+    }
+  ]
+}

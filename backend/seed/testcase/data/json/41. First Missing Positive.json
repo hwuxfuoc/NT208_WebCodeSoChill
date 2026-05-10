@@ -1,0 +1,43 @@
+{
+  "problem_number": 41,
+  "title": "First Missing Positive",
+  "function": "firstMissingPositive",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        1,
+        2,
+        0
+      ],
+      "expected": 3
+    },
+    {
+      "nums": [
+        3,
+        4,
+        -1,
+        1
+      ],
+      "expected": 2
+    },
+    {
+      "nums": [
+        7,
+        8,
+        9,
+        11,
+        12
+      ],
+      "expected": 1
+    }
+  ]
+}

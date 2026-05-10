@@ -1,0 +1,46 @@
+{
+  "problem_number": 253,
+  "title": "Meeting Rooms II",
+  "function": "minMeetingRooms",
+  "params": [
+    {
+      "name": "intervals",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "intervals": [
+        [
+          0,
+          30
+        ],
+        [
+          5,
+          10
+        ],
+        [
+          15,
+          20
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "intervals": [
+        [
+          7,
+          10
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "problem_number": 279,
+  "title": "Perfect Squares",
+  "function": "numSquares",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 12,
+      "expected": 3
+    },
+    {
+      "n": 13,
+      "expected": 2
+    }
+  ]
+}

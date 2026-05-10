@@ -1,0 +1,52 @@
+{
+  "problem_number": 219,
+  "title": "Contains Duplicate II",
+  "function": "containsNearbyDuplicate",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "nums": [
+        1,
+        2,
+        3,
+        1
+      ],
+      "k": 3,
+      "expected": "true"
+    },
+    {
+      "nums": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "k": 1,
+      "expected": "true"
+    },
+    {
+      "nums": [
+        1,
+        2,
+        3,
+        1,
+        2,
+        3
+      ],
+      "k": 2,
+      "expected": "false"
+    }
+  ]
+}

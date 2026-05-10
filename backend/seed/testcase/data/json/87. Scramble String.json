@@ -1,0 +1,35 @@
+{
+  "problem_number": 87,
+  "title": "Scramble String",
+  "function": "isScramble",
+  "params": [
+    {
+      "name": "s1",
+      "type": "string"
+    },
+    {
+      "name": "s2",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s1": "great",
+      "s2": "rgeat",
+      "expected": "true"
+    },
+    {
+      "s1": "abcde",
+      "s2": "caebd",
+      "expected": "false"
+    },
+    {
+      "s1": "a",
+      "s2": "a",
+      "expected": "true"
+    }
+  ]
+}

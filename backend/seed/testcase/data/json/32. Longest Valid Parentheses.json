@@ -1,0 +1,28 @@
+{
+  "problem_number": 32,
+  "title": "Longest Valid Parentheses",
+  "function": "longestValidParentheses",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "(()",
+      "expected": 2
+    },
+    {
+      "s": ")()())",
+      "expected": 4
+    },
+    {
+      "s": "",
+      "expected": 0
+    }
+  ]
+}

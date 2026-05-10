@@ -1,0 +1,38 @@
+{
+  "problem_number": 156,
+  "title": "Binary Tree Upside Down",
+  "function": "upsideDownBinaryTree",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode",
+      "dealloc": false
+    }
+  ],
+  "return": {
+    "type": "TreeNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "root": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected": null
+    },
+    {
+      "root": [],
+      "expected": null
+    },
+    {
+      "root": [
+        1
+      ],
+      "expected": null
+    }
+  ]
+}

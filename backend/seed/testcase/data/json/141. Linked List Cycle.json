@@ -1,0 +1,45 @@
+{
+  "problem_number": 141,
+  "title": "Linked List Cycle",
+  "function": "hasCycle",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    },
+    {
+      "name": "pos",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "head": [
+        3,
+        2,
+        0,
+        -4
+      ],
+      "pos": 1,
+      "expected": "true"
+    },
+    {
+      "head": [
+        1,
+        2
+      ],
+      "pos": 0,
+      "expected": "true"
+    },
+    {
+      "head": [
+        1
+      ],
+      "pos": -1,
+      "expected": "false"
+    }
+  ]
+}

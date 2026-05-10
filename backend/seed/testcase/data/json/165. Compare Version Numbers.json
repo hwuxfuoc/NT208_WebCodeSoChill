@@ -1,0 +1,35 @@
+{
+  "problem_number": 165,
+  "title": "Compare Version Numbers",
+  "function": "compareVersion",
+  "params": [
+    {
+      "name": "version1",
+      "type": "string"
+    },
+    {
+      "name": "version2",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "version1": "1.2",
+      "version2": "1.10",
+      "expected": -1
+    },
+    {
+      "version1": "1.01",
+      "version2": "1.001",
+      "expected": 0
+    },
+    {
+      "version1": "1.0",
+      "version2": "1.0.0.0",
+      "expected": 0
+    }
+  ]
+}

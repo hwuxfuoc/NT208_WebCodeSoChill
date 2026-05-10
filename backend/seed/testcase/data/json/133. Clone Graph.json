@@ -1,0 +1,66 @@
+{
+  "problem_number": 133,
+  "title": "Clone Graph",
+  "function": "cloneGraph",
+  "params": [
+    {
+      "name": "edges",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "edges": [
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "edges": [
+        []
+      ],
+      "expected": [
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ]
+      ]
+    },
+    {
+      "edges": [],
+      "expected": [
+        []
+      ]
+    }
+  ]
+}

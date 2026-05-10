@@ -1,0 +1,24 @@
+{
+  "problem_number": 247,
+  "title": "Strobogrammatic Number II",
+  "function": "findStrobogrammatic",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "n": 2,
+      "expected": null
+    },
+    {
+      "n": 1,
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "problem_number": 129,
+  "title": "Sum Root to Leaf Numbers",
+  "function": "sumNumbers",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "root": [
+        1,
+        2,
+        3
+      ],
+      "expected": 25
+    },
+    {
+      "root": [
+        4,
+        9,
+        0,
+        5,
+        1
+      ],
+      "expected": 1026
+    }
+  ]
+}

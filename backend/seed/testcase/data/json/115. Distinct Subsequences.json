@@ -1,0 +1,30 @@
+{
+  "problem_number": 115,
+  "title": "Distinct Subsequences",
+  "function": "numDistinct",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "rabbbit",
+      "t": "rabbit",
+      "expected": 3
+    },
+    {
+      "s": "babgbag",
+      "t": "bag",
+      "expected": 5
+    }
+  ]
+}

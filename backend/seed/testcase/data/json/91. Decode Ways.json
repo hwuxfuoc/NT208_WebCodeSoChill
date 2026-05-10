@@ -1,0 +1,28 @@
+{
+  "problem_number": 91,
+  "title": "Decode Ways",
+  "function": "numDecodings",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "12",
+      "expected": 2
+    },
+    {
+      "s": "226",
+      "expected": 3
+    },
+    {
+      "s": "06",
+      "expected": 0
+    }
+  ]
+}

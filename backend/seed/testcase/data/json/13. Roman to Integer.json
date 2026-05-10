@@ -1,0 +1,28 @@
+{
+  "problem_number": 13,
+  "title": "Roman to Integer",
+  "function": "romanToInt",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "III",
+      "expected": null
+    },
+    {
+      "s": "LVIII",
+      "expected": 3
+    },
+    {
+      "s": "MCMXCIV",
+      "expected": 58
+    }
+  ]
+}

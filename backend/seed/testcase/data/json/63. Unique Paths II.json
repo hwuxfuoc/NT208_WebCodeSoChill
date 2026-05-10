@@ -1,0 +1,49 @@
+{
+  "problem_number": 63,
+  "title": "Unique Paths II",
+  "function": "uniquePathsWithObstacles",
+  "params": [
+    {
+      "name": "obstacleGrid",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "obstacleGrid": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": 2
+    },
+    {
+      "obstacleGrid": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "expected": 1
+    }
+  ]
+}

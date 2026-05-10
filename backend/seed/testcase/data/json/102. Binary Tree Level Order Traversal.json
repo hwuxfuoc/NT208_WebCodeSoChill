@@ -1,0 +1,47 @@
+{
+  "problem_number": 102,
+  "title": "Binary Tree Level Order Traversal",
+  "function": "levelOrder",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "list<list<integer>>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "root": "[3,9,20,null,null,15,7]",
+      "expected": [
+        [
+          3
+        ],
+        [
+          9,
+          20
+        ],
+        [
+          15,
+          7
+        ]
+      ]
+    },
+    {
+      "root": [
+        1
+      ],
+      "expected": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "root": [],
+      "expected": []
+    }
+  ]
+}

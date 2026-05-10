@@ -1,0 +1,28 @@
+{
+  "problem_number": 191,
+  "title": "Number of 1 Bits",
+  "function": "hammingWeight",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 11,
+      "expected": 3
+    },
+    {
+      "n": 128,
+      "expected": 1
+    },
+    {
+      "n": 2147483645,
+      "expected": 30
+    }
+  ]
+}

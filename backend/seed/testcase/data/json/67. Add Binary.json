@@ -1,0 +1,30 @@
+{
+  "problem_number": 67,
+  "title": "Add Binary",
+  "function": "addBinary",
+  "params": [
+    {
+      "name": "a",
+      "type": "string"
+    },
+    {
+      "name": "b",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "a": "11",
+      "b": "1",
+      "expected": "100"
+    },
+    {
+      "a": "1010",
+      "b": "1011",
+      "expected": "10101"
+    }
+  ]
+}

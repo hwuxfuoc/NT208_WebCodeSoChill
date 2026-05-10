@@ -1,0 +1,48 @@
+{
+  "problem_number": 237,
+  "title": "Delete Node in a Linked List",
+  "function": "deleteNode",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    },
+    {
+      "name": "node",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "void"
+  },
+  "testcases": [
+    {
+      "head": [
+        4,
+        5,
+        1,
+        9
+      ],
+      "node": 5,
+      "expected": [
+        4,
+        1,
+        9
+      ]
+    },
+    {
+      "head": [
+        4,
+        5,
+        1,
+        9
+      ],
+      "node": 1,
+      "expected": [
+        4,
+        5,
+        9
+      ]
+    }
+  ]
+}

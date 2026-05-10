@@ -1,0 +1,32 @@
+{
+  "problem_number": 135,
+  "title": "Candy",
+  "function": "candy",
+  "params": [
+    {
+      "name": "ratings",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "ratings": [
+        1,
+        0,
+        2
+      ],
+      "expected": 5
+    },
+    {
+      "ratings": [
+        1,
+        2,
+        2
+      ],
+      "expected": 4
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "problem_number": 266,
+  "title": "Palindrome Permutation",
+  "function": "canPermutePalindrome",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "code",
+      "expected": null
+    },
+    {
+      "s": "aab",
+      "expected": null
+    },
+    {
+      "s": "carerac",
+      "expected": null
+    }
+  ]
+}

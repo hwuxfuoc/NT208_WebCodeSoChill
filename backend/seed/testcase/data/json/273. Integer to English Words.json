@@ -1,0 +1,28 @@
+{
+  "problem_number": 273,
+  "title": "Integer to English Words",
+  "function": "numberToWords",
+  "params": [
+    {
+      "name": "num",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "num": 123,
+      "expected": "One Hundred Twenty Three"
+    },
+    {
+      "num": 12345,
+      "expected": "Twelve Thousand Three Hundred Forty Five"
+    },
+    {
+      "num": 1234567,
+      "expected": "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+    }
+  ]
+}

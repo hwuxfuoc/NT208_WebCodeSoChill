@@ -1,0 +1,44 @@
+{
+  "problem_number": 27,
+  "title": "Remove Element",
+  "function": "removeElement",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "val",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        3,
+        2,
+        2,
+        3
+      ],
+      "val": 3,
+      "expected": null
+    },
+    {
+      "nums": [
+        0,
+        1,
+        2,
+        2,
+        3,
+        0,
+        4,
+        2
+      ],
+      "val": 2,
+      "expected": "2, nums = [2,2,_,_]"
+    }
+  ]
+}

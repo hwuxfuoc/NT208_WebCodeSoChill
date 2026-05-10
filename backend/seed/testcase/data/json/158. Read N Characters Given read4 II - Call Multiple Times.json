@@ -1,0 +1,38 @@
+{
+  "problem_number": 158,
+  "title": "Read N Characters Given read4 II - Call Multiple Times",
+  "function": "read",
+  "params": [
+    {
+      "name": "file",
+      "type": "string"
+    },
+    {
+      "name": "queries",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "list<string>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "file": "abc",
+      "queries": [
+        1,
+        2,
+        1
+      ],
+      "expected": null
+    },
+    {
+      "file": "abc",
+      "queries": [
+        4,
+        1
+      ],
+      "expected": null
+    }
+  ]
+}

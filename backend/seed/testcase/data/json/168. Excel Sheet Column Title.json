@@ -1,0 +1,28 @@
+{
+  "problem_number": 168,
+  "title": "Excel Sheet Column Title",
+  "function": "convertToTitle",
+  "params": [
+    {
+      "name": "columnNumber",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "columnNumber": 1,
+      "expected": null
+    },
+    {
+      "columnNumber": 28,
+      "expected": "A"
+    },
+    {
+      "columnNumber": 701,
+      "expected": "AB"
+    }
+  ]
+}

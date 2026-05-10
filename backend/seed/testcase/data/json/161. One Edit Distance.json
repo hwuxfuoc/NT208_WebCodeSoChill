@@ -1,0 +1,30 @@
+{
+  "problem_number": 161,
+  "title": "One Edit Distance",
+  "function": "isOneEditDistance",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "ab",
+      "t": "acb",
+      "expected": null
+    },
+    {
+      "s": "",
+      "t": "",
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "problem_number": 131,
+  "title": "Palindrome Partitioning",
+  "function": "partition",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "list<list<string>>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "s": "aab",
+      "expected": [
+        [
+          "a",
+          "a",
+          "b"
+        ],
+        [
+          "aa",
+          "b"
+        ]
+      ]
+    },
+    {
+      "s": "a",
+      "expected": [
+        [
+          "a"
+        ]
+      ]
+    }
+  ]
+}

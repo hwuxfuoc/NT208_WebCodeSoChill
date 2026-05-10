@@ -1,0 +1,36 @@
+{
+  "problem_number": 55,
+  "title": "Jump Game",
+  "function": "canJump",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "nums": [
+        2,
+        3,
+        1,
+        1,
+        4
+      ],
+      "expected": "true"
+    },
+    {
+      "nums": [
+        3,
+        2,
+        1,
+        0,
+        4
+      ],
+      "expected": "false"
+    }
+  ]
+}

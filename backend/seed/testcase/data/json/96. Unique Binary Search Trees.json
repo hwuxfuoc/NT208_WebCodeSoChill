@@ -1,0 +1,24 @@
+{
+  "problem_number": 96,
+  "title": "Unique Binary Search Trees",
+  "function": "numTrees",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "expected": 5
+    },
+    {
+      "n": 1,
+      "expected": 1
+    }
+  ]
+}

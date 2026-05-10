@@ -1,0 +1,46 @@
+{
+  "problem_number": 284,
+  "title": "Peeking Iterator",
+  "function": "PeekingIterator",
+  "params": [
+    {
+      "name": "nums",
+      "type": "list<integer>"
+    },
+    {
+      "name": "commands",
+      "type": "list<integer>"
+    }
+  ],
+  "return": {
+    "type": "list<string>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "nums": [
+        "PeekingIterator",
+        "next",
+        "peek",
+        "next",
+        "next",
+        "hasNext"
+      ],
+      "commands": [
+        [
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "expected": null
+    }
+  ]
+}

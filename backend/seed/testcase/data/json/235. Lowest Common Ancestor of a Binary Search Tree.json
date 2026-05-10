@@ -1,0 +1,45 @@
+{
+  "problem_number": 235,
+  "title": "Lowest Common Ancestor of a Binary Search Tree",
+  "function": "lowestCommonAncestor",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    },
+    {
+      "name": "p",
+      "type": "integer"
+    },
+    {
+      "name": "q",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "TreeNode"
+  },
+  "testcases": [
+    {
+      "root": "[6,2,8,0,4,7,9,null,null,3,5]",
+      "p": 2,
+      "q": 8,
+      "expected": 6
+    },
+    {
+      "root": "[6,2,8,0,4,7,9,null,null,3,5]",
+      "p": 2,
+      "q": 4,
+      "expected": 2
+    },
+    {
+      "root": [
+        2,
+        1
+      ],
+      "p": 2,
+      "q": 1,
+      "expected": 2
+    }
+  ]
+}

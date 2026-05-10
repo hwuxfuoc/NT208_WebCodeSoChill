@@ -1,0 +1,70 @@
+{
+  "problem_number": 221,
+  "title": "Maximal Square",
+  "function": "maximalSquare",
+  "params": [
+    {
+      "name": "matrix",
+      "type": "character[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "matrix": [
+        [
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        [
+          "1",
+          "0",
+          "0",
+          "1",
+          "0"
+        ]
+      ],
+      "expected": 4
+    },
+    {
+      "matrix": [
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0"
+        ]
+      ],
+      "expected": 1
+    },
+    {
+      "matrix": [
+        [
+          "0"
+        ]
+      ],
+      "expected": 0
+    }
+  ]
+}

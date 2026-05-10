@@ -1,0 +1,24 @@
+{
+  "problem_number": 5,
+  "title": "Longest Palindromic Substring",
+  "function": "longestPalindrome",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "s": "babad",
+      "expected": "bab"
+    },
+    {
+      "s": "cbbd",
+      "expected": "bb"
+    }
+  ]
+}

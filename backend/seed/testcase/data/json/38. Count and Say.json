@@ -1,0 +1,24 @@
+{
+  "problem_number": 38,
+  "title": "Count and Say",
+  "function": "countAndSay",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "n": 1,
+      "expected": null
+    },
+    {
+      "n": 4,
+      "expected": null
+    }
+  ]
+}

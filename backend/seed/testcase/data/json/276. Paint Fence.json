@@ -1,0 +1,35 @@
+{
+  "problem_number": 276,
+  "title": "Paint Fence",
+  "function": "numWays",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "k": 2,
+      "expected": null
+    },
+    {
+      "n": 1,
+      "k": 1,
+      "expected": null
+    },
+    {
+      "n": 7,
+      "k": 2,
+      "expected": null
+    }
+  ]
+}

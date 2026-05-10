@@ -1,0 +1,28 @@
+{
+  "problem_number": 58,
+  "title": "Length of Last Word",
+  "function": "lengthOfLastWord",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "Hello World",
+      "expected": 5
+    },
+    {
+      "s": "   fly me   to   the moon  ",
+      "expected": 4
+    },
+    {
+      "s": "luffy is still joyboy",
+      "expected": 6
+    }
+  ]
+}

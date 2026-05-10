@@ -1,0 +1,37 @@
+{
+  "problem_number": 249,
+  "title": "Group Shifted Strings",
+  "function": "groupStrings",
+  "params": [
+    {
+      "name": "strings",
+      "type": "string[]",
+      "dealloc": false
+    }
+  ],
+  "return": {
+    "type": "list<list<string>>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "strings": [
+        "abc",
+        "bcd",
+        "acef",
+        "xyz",
+        "az",
+        "ba",
+        "a",
+        "z"
+      ],
+      "expected": null
+    },
+    {
+      "strings": [
+        "a"
+      ],
+      "expected": null
+    }
+  ]
+}

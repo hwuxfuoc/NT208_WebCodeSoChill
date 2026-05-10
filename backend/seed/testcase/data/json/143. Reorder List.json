@@ -1,0 +1,35 @@
+{
+  "problem_number": 143,
+  "title": "Reorder List",
+  "function": "reorderList",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    }
+  ],
+  "return": {
+    "type": "void"
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "expected": null
+    },
+    {
+      "head": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected": null
+    }
+  ]
+}

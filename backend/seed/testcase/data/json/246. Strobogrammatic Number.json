@@ -1,0 +1,28 @@
+{
+  "problem_number": 246,
+  "title": "Strobogrammatic Number",
+  "function": "isStrobogrammatic",
+  "params": [
+    {
+      "name": "num",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "num": "69",
+      "expected": null
+    },
+    {
+      "num": "88",
+      "expected": null
+    },
+    {
+      "num": "962",
+      "expected": null
+    }
+  ]
+}

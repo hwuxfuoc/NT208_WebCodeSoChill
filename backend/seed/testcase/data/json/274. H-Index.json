@@ -1,0 +1,34 @@
+{
+  "problem_number": 274,
+  "title": "H-Index",
+  "function": "hIndex",
+  "params": [
+    {
+      "name": "citations",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "citations": [
+        3,
+        0,
+        6,
+        1,
+        5
+      ],
+      "expected": 3
+    },
+    {
+      "citations": [
+        1,
+        3,
+        1
+      ],
+      "expected": 1
+    }
+  ]
+}

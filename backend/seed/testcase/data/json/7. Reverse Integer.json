@@ -1,0 +1,28 @@
+{
+  "problem_number": 7,
+  "title": "Reverse Integer",
+  "function": "reverse",
+  "params": [
+    {
+      "name": "x",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "x": 123,
+      "expected": 321
+    },
+    {
+      "x": -123,
+      "expected": -321
+    },
+    {
+      "x": 120,
+      "expected": 21
+    }
+  ]
+}

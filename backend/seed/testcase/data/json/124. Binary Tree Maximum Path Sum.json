@@ -1,0 +1,28 @@
+{
+  "problem_number": 124,
+  "title": "Binary Tree Maximum Path Sum",
+  "function": "maxPathSum",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "root": [
+        1,
+        2,
+        3
+      ],
+      "expected": 6
+    },
+    {
+      "root": "[-10,9,20,null,null,15,7]",
+      "expected": 42
+    }
+  ]
+}

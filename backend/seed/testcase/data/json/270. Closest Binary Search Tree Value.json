@@ -1,0 +1,38 @@
+{
+  "problem_number": 270,
+  "title": "Closest Binary Search Tree Value",
+  "function": "closestValue",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    },
+    {
+      "name": "target",
+      "type": "double"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "root": [
+        4,
+        2,
+        5,
+        1,
+        3
+      ],
+      "target": 3.714286,
+      "expected": null
+    },
+    {
+      "root": [
+        1
+      ],
+      "target": 4.428571,
+      "expected": null
+    }
+  ]
+}

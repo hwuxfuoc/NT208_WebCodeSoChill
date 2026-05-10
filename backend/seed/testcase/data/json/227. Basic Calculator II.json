@@ -1,0 +1,28 @@
+{
+  "problem_number": 227,
+  "title": "Basic Calculator II",
+  "function": "calculate",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "3+2*2",
+      "expected": 7
+    },
+    {
+      "s": " 3/2 ",
+      "expected": 1
+    },
+    {
+      "s": " 3+5 / 2 ",
+      "expected": 5
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "problem_number": 127,
+  "title": "Word Ladder",
+  "function": "ladderLength",
+  "params": [
+    {
+      "name": "beginWord",
+      "type": "string"
+    },
+    {
+      "name": "endWord",
+      "type": "string"
+    },
+    {
+      "name": "wordList",
+      "type": "list<string>"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "beginWord": "hit",
+      "endWord": "cog",
+      "wordList": [
+        "hot",
+        "dot",
+        "dog",
+        "lot",
+        "log",
+        "cog"
+      ],
+      "expected": 5
+    },
+    {
+      "beginWord": "hit",
+      "endWord": "cog",
+      "wordList": [
+        "hot",
+        "dot",
+        "dog",
+        "lot",
+        "log"
+      ],
+      "expected": 0
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "problem_number": 138,
+  "title": "Copy List with Random Pointer",
+  "function": "copyRandomList",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    }
+  ],
+  "return": {
+    "type": "ListNode"
+  },
+  "testcases": [
+    {
+      "head": "[[7,null],[13,0],[11,4],[10,2],[1,0]]",
+      "expected": "[[7,null],[13,0],[11,4],[10,2],[1,0]]"
+    },
+    {
+      "head": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "head": "[[3,null],[3,0],[3,null]]",
+      "expected": "[[3,null],[3,0],[3,null]]"
+    }
+  ]
+}

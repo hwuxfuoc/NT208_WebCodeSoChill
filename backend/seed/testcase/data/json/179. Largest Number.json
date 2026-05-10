@@ -1,0 +1,33 @@
+{
+  "problem_number": 179,
+  "title": "Largest Number",
+  "function": "largestNumber",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "nums": [
+        10,
+        2
+      ],
+      "expected": "210"
+    },
+    {
+      "nums": [
+        3,
+        30,
+        34,
+        5,
+        9
+      ],
+      "expected": "9534330"
+    }
+  ]
+}

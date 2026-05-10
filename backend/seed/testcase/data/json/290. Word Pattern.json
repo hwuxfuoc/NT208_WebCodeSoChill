@@ -1,0 +1,35 @@
+{
+  "problem_number": 290,
+  "title": "Word Pattern",
+  "function": "wordPattern",
+  "params": [
+    {
+      "name": "pattern",
+      "type": "string"
+    },
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "pattern": "abba",
+      "s": "dog cat cat dog",
+      "expected": "true"
+    },
+    {
+      "pattern": "abba",
+      "s": "dog cat cat fish",
+      "expected": "false"
+    },
+    {
+      "pattern": "aaaa",
+      "s": "dog cat cat dog",
+      "expected": "false"
+    }
+  ]
+}

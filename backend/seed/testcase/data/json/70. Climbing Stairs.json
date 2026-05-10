@@ -1,0 +1,24 @@
+{
+  "problem_number": 70,
+  "title": "Climbing Stairs",
+  "function": "climbStairs",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 2,
+      "expected": 2
+    },
+    {
+      "n": 3,
+      "expected": 3
+    }
+  ]
+}
