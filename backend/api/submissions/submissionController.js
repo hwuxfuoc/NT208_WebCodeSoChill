@@ -101,7 +101,7 @@ const run = async (req, res) => {
             timeLimit: problem.timeLimit,
             memoryLimit: problem.memoryLimit,
             sampleOnly: true,
-            testCases: problem.samples,
+            testCases: problem.testCases,
         });
 
         res.json({ result });

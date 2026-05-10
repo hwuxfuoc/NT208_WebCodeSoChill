@@ -1,51 +1,46 @@
 // backend/judge/runner.js
-// Hệ thống chấm bài tự động.
-// Giai đoạn này dùng Judge0 API (cloud sandbox) thay vì tự chạy code trực tiếp trên server,
-// đảm bảo an toàn tuyệt đối – code của user không bao giờ chạy trên server chính.
-//
-// Để dùng file này cần:
-//   1. Đăng ký tài khoản miễn phí tại https://rapidapi.com/judge0-official/api/judge0-ce
-//   2. Thêm vào .env:
-//      JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com
-//      JUDGE0_API_KEY=your_rapidapi_key_here
+// Hệ thống chấm bài tự động (Local Execution)
+// Code được chạy bằng child_process của Node.js
 
-const axios = require('axios');
+const { spawn, exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 const TestCase = require('../models/testCase');
+const Problem = require('../models/problem');
 
-// Map ngôn ngữ → language_id của Judge0
-// Danh sách đầy đủ: https://ce.judge0.com/languages
-const LANGUAGE_MAP = {
-    'c':          49,
-    'cpp':        54,
-    'java':       62,
-    'python':     71,  // Python 3
-    'javascript': 63,  // Node.js
-    'typescript': 74,
-    'go':         60,
-    'rust':       73,
-    'kotlin':     78,
-    'csharp':     51,
-    'swift':      83,
-    'php':        68,
-    'ruby':       72,
-};
+// Đảm bảo thư mục temp_code tồn tại
+const tempDir = path.join(__dirname, '../temp_code');
+if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+}
 
-// Map status_id của Judge0 → status trong schema của mình
-const STATUS_MAP = {
-    1:  'pending',                  // In Queue
-    2:  'pending',                  // Processing
-    3:  'accepted',                 // Accepted
-    4:  'wrong_answer',             // Wrong Answer
-    5:  'time_limit_exceeded',      // Time Limit Exceeded
-    6:  'compile_error',            // Compilation Error
-    7:  'runtime_error',            // Runtime Error (SIGSEGV)
-    8:  'runtime_error',            // Runtime Error (SIGXFSZ)
-    9:  'runtime_error',            // Runtime Error (SIGFPE)
-    10: 'runtime_error',            // Runtime Error (SIGABRT)
-    11: 'runtime_error',            // Runtime Error (NZEC)
-    12: 'runtime_error',            // Runtime Error (Other)
-    13: 'runtime_error',            // Internal Error
-    14: 'memory_limit_exceeded',    // Exec Format Error
+// Cấu hình ngôn ngữ hỗ trợ
+const SUPPORTED_LANGUAGES = {
+    'cpp': {
+        ext: 'cpp',
+        compile: (filePath, baseName) => {
+            return new Promise((resolve, reject) => {
+                const exePath = path.join(tempDir, `${baseName}.exe`);
+                // Biên dịch C++
+                exec(`g++ "${filePath}" -O2 -o "${exePath}"`, (error, stdout, stderr) => {
+                    if (error) {
+                        return reject(stderr || stdout || error.message);
+                    }
+                    resolve(exePath);
+                });
+            });
+        },
+        getRunCmd: (exePath) => ({ cmd: exePath, args: [] })
+    },
+    'python': {
+        ext: 'py',
+        getRunCmd: (filePath) => ({ cmd: 'python', args: [filePath] })
+    },
+    'javascript': {
+        ext: 'js',
+        getRunCmd: (filePath) => ({ cmd: 'node', args: [filePath] })
+    }
 };
 
 const normalizeTestCases = (testCases = []) => {
@@ -59,85 +54,82 @@ const normalizeTestCases = (testCases = []) => {
         .filter((tc) => tc.input !== undefined && tc.output !== undefined);
 };
 
-/**
- * Gửi 1 submission lên Judge0 và chờ kết quả
- * @param {string} sourceCode
- * @param {number} languageId
- * @param {string} stdin
- * @param {string} expectedOutput
- * @param {number} timeLimitMs
- * @param {number} memoryLimitMB
- * @returns {{ status, executionTime, memoryUsed, output }}
- */
-const judgeOne = async (sourceCode, languageId, stdin, expectedOutput, timeLimitMs, memoryLimitMB) => {
-    const apiUrl = process.env.JUDGE0_API_URL;
-    const apiKey = process.env.JUDGE0_API_KEY;
+// Hàm so sánh chuỗi linh hoạt (bỏ qua khác biệt khoảng trắng dư thừa)
+const compareOutput = (actual, expected) => {
+    const normalize = str => str.trim().split('\n').map(l => l.trim()).join('\n');
+    return normalize(actual || '') === normalize(expected || '');
+};
 
-    // Bước 1: Submit lên Judge0
-    const submitRes = await axios.post(
-        `${apiUrl}/submissions?base64_encoded=false&wait=false`,
-        {
-            source_code: sourceCode,
-            language_id: languageId,
-            stdin: stdin,
-            expected_output: expectedOutput,
-            cpu_time_limit: timeLimitMs / 1000,     // Judge0 dùng đơn vị giây
-            memory_limit: memoryLimitMB * 1024,     // Judge0 dùng đơn vị KB
-        },
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-RapidAPI-Key': apiKey,
-                'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
-            }
+// Hàm thực thi code cho 1 testcase
+const executeCode = (cmd, args, stdin, timeLimitMs) => {
+    return new Promise((resolve) => {
+        const start = Date.now();
+        const child = spawn(cmd, args);
+        let stdout = '';
+        let stderr = '';
+
+        child.stdout.on('data', (data) => {
+            stdout += data.toString();
+        });
+
+        child.stderr.on('data', (data) => {
+            stderr += data.toString();
+        });
+
+        const timer = setTimeout(() => {
+            child.kill('SIGKILL');
+            resolve({
+                status: 'time_limit_exceeded',
+                executionTime: timeLimitMs,
+                output: (stdout || stderr || 'Time Limit Exceeded').slice(0, 5000)
+            });
+        }, timeLimitMs);
+
+        if (stdin) {
+            child.stdin.write(stdin);
         }
-    );
+        child.stdin.end();
 
-    const token = submitRes.data.token;
-
-    // Bước 2: Polling kết quả (tối đa 10 lần, mỗi 1 giây)
-    let result = null;
-    for (let i = 0; i < 10; i++) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        const statusRes = await axios.get(
-            `${apiUrl}/submissions/${token}?base64_encoded=false&fields=status,time,memory,stdout,stderr,compile_output`,
-            {
-                headers: {
-                    'X-RapidAPI-Key': apiKey,
-                    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
-                }
+        child.on('close', (code, signal) => {
+            clearTimeout(timer);
+            const executionTime = Date.now() - start;
+            if (signal === 'SIGKILL') return; // Đã xử lý ở timeout
+            
+            if (code !== 0) {
+                return resolve({
+                    status: 'runtime_error',
+                    executionTime,
+                    output: (stderr || stdout || `Exited with code ${code}`).slice(0, 5000)
+                });
             }
-        );
+            resolve({
+                status: 'success',
+                executionTime,
+                output: stdout.trim()
+            });
+        });
 
-        result = statusRes.data;
-        // status_id 1 hoặc 2 = đang xử lý, tiếp tục chờ
-        if (result.status.id > 2) break;
-    }
-
-    if (!result) {
-        return { status: 'runtime_error', executionTime: 0, memoryUsed: 0, output: '' };
-    }
-
-    return {
-        status: STATUS_MAP[result.status.id] || 'runtime_error',
-        executionTime: result.time ? Math.round(parseFloat(result.time) * 1000) : 0,  // Chuyển về ms
-        memoryUsed: result.memory ? Math.round(result.memory / 1024) : 0,             // Chuyển về MB
-        output: result.stdout || result.stderr || result.compile_output || '',
-    };
+        child.on('error', (err) => {
+            clearTimeout(timer);
+            resolve({
+                status: 'runtime_error',
+                executionTime: Date.now() - start,
+                output: err.message
+            });
+        });
+    });
 };
 
 /**
  * Chạy toàn bộ testcase cho một bài nộp
- * @param {{ problemId, language, code, timeLimit, memoryLimit, sampleOnly? }}
- * @returns {{ status, testResult, timeUsed, memoryUsed, passedTests, totalTests }}
  */
 const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, sampleOnly = false, testCases: providedTestCases = [] }) => {
-    const languageId = LANGUAGE_MAP[language];
-    if (!languageId) {
+    // 1. Kiểm tra ngôn ngữ
+    const langConfig = SUPPORTED_LANGUAGES[language];
+    if (!langConfig) {
         return {
             status: 'compile_error',
-            testResult: [],
+            testResult: [{ testCaseOrder: 1, status: 'compile_error', output: `Ngôn ngữ ${language} chưa được hệ thống hỗ trợ.` }],
             timeUsed: 0,
             memoryUsed: 0,
             passedTests: 0,
@@ -145,6 +137,7 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
         };
     }
 
+    // 2. Lấy testcase
     let testCases = [];
     if (Array.isArray(providedTestCases) && providedTestCases.length > 0) {
         testCases = providedTestCases;
@@ -157,11 +150,62 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
         testCases = await TestCase.find(query).sort({ order: 1 }).lean();
     }
 
-    const normalizedTestCases = normalizeTestCases(testCases);
+    let normalizedTestCases = normalizeTestCases(testCases);
+
+    // [FALLBACK] Đọc từ JSON file nếu DB không có testcase
+    if (normalizedTestCases.length === 0) {
+        try {
+            const problem = await Problem.findById(problemId);
+            if (problem) {
+                // Định dạng tên file: "1. Two Sum.json"
+                const jsonFileName = `${problem.problemId}. ${problem.title}.json`;
+                const jsonPath = path.join(__dirname, '../seed/leetcode-testcase-extractor/data/json', jsonFileName);
+                if (fs.existsSync(jsonPath)) {
+                    const fileContent = fs.readFileSync(jsonPath, 'utf-8');
+                    const parsed = JSON.parse(fileContent);
+                    if (parsed.testcases && Array.isArray(parsed.testcases)) {
+                        let parsedTcs = parsed.testcases;
+                        if (sampleOnly && parsedTcs.length > 0) {
+                            parsedTcs = [parsedTcs[0]];
+                        }
+                        
+                        testCases = parsedTcs.map((tc, index) => {
+                            const expected = tc.expected;
+                            const inputs = { ...tc };
+                            delete inputs.expected;
+                            
+                            const formatVal = (v) => {
+                                if (Array.isArray(v)) {
+                                    // Chuyển mảng [2, 7] thành "2 7" để các ngôn ngữ dễ đọc qua split()
+                                    return v.map(item => typeof item === 'object' ? JSON.stringify(item) : String(item)).join(' ');
+                                }
+                                if (typeof v === 'object' && v !== null) return JSON.stringify(v);
+                                return String(v);
+                            };
+
+                            const inputValues = Object.values(inputs).map(formatVal).join('\n');
+                            const outputValue = formatVal(expected);
+                            
+                            return {
+                                order: index + 1,
+                                input: inputValues,
+                                output: outputValue,
+                                isSample: sampleOnly
+                            };
+                        });
+                        normalizedTestCases = normalizeTestCases(testCases);
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Lỗi khi đọc file testcase JSON dự phòng:', e);
+        }
+    }
+
     if (normalizedTestCases.length === 0) {
         return {
             status: 'runtime_error',
-            testResult: [],
+            testResult: [{ testCaseOrder: 1, status: 'runtime_error', output: 'Không tìm thấy testcase nào.' }],
             timeUsed: 0,
             memoryUsed: 0,
             passedTests: 0,
@@ -169,48 +213,102 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
         };
     }
 
-    const testResult = [];
-    let passedTests = 0;
-    let maxTime = 0;
-    let maxMemory = 0;
-    let overallStatus = 'accepted'; // Sẽ cập nhật nếu có test fail
+    // 3. Chuẩn bị file
+    const baseName = crypto.randomUUID();
+    const filePath = path.join(tempDir, `${baseName}.${langConfig.ext}`);
+    let exePath = null;
+    let runTarget = filePath;
 
-    for (const tc of normalizedTestCases) {
-        let oneResult;
+    try {
+        fs.writeFileSync(filePath, code);
+
+        // 4. Biên dịch (nếu có)
+        if (langConfig.compile) {
+            try {
+                exePath = await langConfig.compile(filePath, baseName);
+                runTarget = exePath;
+            } catch (compileError) {
+                // Xoá file nguồn nếu lỗi biên dịch
+                if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+                return {
+                    status: 'compile_error',
+                    testResult: [{ testCaseOrder: 1, status: 'compile_error', output: compileError }],
+                    timeUsed: 0,
+                    memoryUsed: 0, // Local execution khó tính chính xác bộ nhớ bằng child_process
+                    passedTests: 0,
+                    totalTests: normalizedTestCases.length
+                };
+            }
+        }
+
+        const testResult = [];
+        let passedTests = 0;
+        let maxTime = 0;
+        let overallStatus = 'accepted';
+
+        const { cmd, args } = langConfig.getRunCmd(runTarget);
+
+        // 5. Chạy từng testcase
+        for (const tc of normalizedTestCases) {
+            // Giới hạn thời gian (mặc định 2000ms nếu ko có)
+            const tlMs = timeLimit ? timeLimit * 1000 : 2000;
+            const res = await executeCode(cmd, args, tc.input, tlMs);
+
+            let finalStatus = res.status;
+            let outputToShow = res.output;
+
+            if (finalStatus === 'success') {
+                if (compareOutput(res.output, tc.output)) {
+                    finalStatus = 'accepted';
+                } else {
+                    finalStatus = 'wrong_answer';
+                }
+            }
+
+            testResult.push({
+                testCaseOrder: tc.order,
+                status: finalStatus,
+                executionTime: res.executionTime,
+                memoryUsed: 0, 
+                output: outputToShow,
+            });
+
+            if (finalStatus === 'accepted') {
+                passedTests++;
+            } else if (overallStatus === 'accepted') {
+                overallStatus = finalStatus;
+            }
+
+            if (res.executionTime > maxTime) maxTime = res.executionTime;
+        }
+
+        // 6. Dọn dẹp file
         try {
-            oneResult = await judgeOne(code, languageId, tc.input, tc.output, timeLimit, memoryLimit);
-        } catch (err) {
-            console.error('Judge0 error:', err.message);
-            oneResult = { status: 'runtime_error', executionTime: 0, memoryUsed: 0, output: '' };
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+            if (exePath && fs.existsSync(exePath)) fs.unlinkSync(exePath);
+        } catch (e) {
+            console.error('Error cleaning up temp files:', e);
         }
 
-        testResult.push({
-            testCaseOrder: tc.order,
-            status: oneResult.status,
-            executionTime: oneResult.executionTime,
-            memoryUsed: oneResult.memoryUsed,
-            output: oneResult.output,
-        });
-
-        if (oneResult.status === 'accepted') {
-            passedTests++;
-        } else if (overallStatus === 'accepted') {
-            // Lưu lại status của test đầu tiên bị fail
-            overallStatus = oneResult.status;
-        }
-
-        if (oneResult.executionTime > maxTime) maxTime = oneResult.executionTime;
-        if (oneResult.memoryUsed > maxMemory) maxMemory = oneResult.memoryUsed;
+        return {
+            status: overallStatus,
+            testResult,
+            timeUsed: maxTime,
+            memoryUsed: 0,
+            passedTests,
+            totalTests: normalizedTestCases.length,
+        };
+    } catch (err) {
+        console.error('System error during local execution:', err);
+        return {
+            status: 'runtime_error',
+            testResult: [{ testCaseOrder: 1, status: 'runtime_error', output: err.message }],
+            timeUsed: 0,
+            memoryUsed: 0,
+            passedTests: 0,
+            totalTests: normalizedTestCases.length,
+        };
     }
-
-    return {
-        status: overallStatus,
-        testResult,
-        timeUsed: maxTime,
-        memoryUsed: maxMemory,
-        passedTests,
-        totalTests: normalizedTestCases.length,
-    };
 };
 
 module.exports = { runCode };
