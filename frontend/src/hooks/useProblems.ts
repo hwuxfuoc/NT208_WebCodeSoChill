@@ -3,12 +3,12 @@ import { getProblems, GetProblemsParams } from '../services/problemService';
 import { ProblemsResponse } from '../types/problem';
 
 export const useProblems = (params: GetProblemsParams = {}) => {
-  const { page = 1, limit = 20, search, difficulty, tag } = params;
+  const { page = 1, limit = 20, search, difficulty, tag, solved } = params;
 
   const { data, isPending, error } = useQuery({
-    queryKey: ['problems', page, limit, search, difficulty, tag],
+    queryKey: ['problems', page, limit, search, difficulty, tag, solved],
     queryFn: async () => {
-      const response = await getProblems({ page, limit, search, difficulty, tag });
+      const response = await getProblems({ page, limit, search, difficulty, tag, solved });
       return response.data as ProblemsResponse;
     },
     staleTime: 5 * 60 * 1000,

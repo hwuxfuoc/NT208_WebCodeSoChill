@@ -31,12 +31,14 @@ export default function ProblemsPage() {
 
   // Build server-side filter params
   const tag = topic !== "All Topics" ? topic : undefined;
+  const solved = tab === "solved" ? true : tab === "unsolved" ? false : undefined;
 
   const { problems, loading, error, total, totalPages } = useProblems({
     page,
     limit: PAGE_SIZE,
     search: debouncedQuery || undefined,
     tag,
+    solved,
   });
 
   if (loading && problems.length === 0) return <div>Loading...</div>;

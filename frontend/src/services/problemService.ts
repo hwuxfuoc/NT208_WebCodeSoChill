@@ -7,12 +7,20 @@ export interface GetProblemsParams {
   search?: string;
   difficulty?: string;
   tag?: string;
+  solved?: boolean;
 }
 
 export const getProblems = (params: GetProblemsParams = {}) => {
-  const { page = 1, limit = 20, search, difficulty, tag } = params;
+  const { page = 1, limit = 20, search, difficulty, tag, solved } = params;
   return api.get("/api/problems", {
-    params: { page, limit, ...(search && { search }), ...(difficulty && { difficulty }), ...(tag && { tag }) },
+    params: {
+      page,
+      limit,
+      ...(search && { search }),
+      ...(difficulty && { difficulty }),
+      ...(tag && { tag }),
+      ...(solved !== undefined && { solved }),
+    },
   });
 };
 
