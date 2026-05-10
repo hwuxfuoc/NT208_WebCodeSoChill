@@ -6,15 +6,21 @@ const Submission = require('../../models/submission');
 // @route   GET /api/problems
 const getProblems = async (req, res) => {
     try {
-        const { difficulty, tag, search, page = 1, limit = 20 } = req.query;
+        const { difficulty, tag, search, page = 1, limit = 20, solved: solvedQuery } = req.query;
         const pageNum = Math.max(1, parseInt(page));
         const limitNum = Math.min(100, Math.max(1, parseInt(limit))); // cap at 100
         const skip = (pageNum - 1) * limitNum;
+        const solved = solvedQuery === 'true' ? true : solvedQuery === 'false' ? false : undefined;
 
         // Build match filter
         const matchFilter = { isActive: true };
         if (difficulty) matchFilter.difficulty = difficulty;
-        if (tag) matchFilter.tags = tag;
+        if (tag) {
+            matchFilter.$or = [
+                { tags: tag },
+                { topics: tag }
+            ];
+        }
         if (search) matchFilter.title = { $regex: search, $options: 'i' };
 
         // Build aggregation pipeline
@@ -32,8 +38,6 @@ const getProblems = async (req, res) => {
                 }
             },
             { $sort: { problemIdNumber: 1, slug: 1, createdAt: 1 } },
-            { $skip: skip },
-            { $limit: limitNum },
             // Exclude heavy fields
             { $project: { testCases: 0, problemIdNumber: 0 } },
             // Lookup submissions to calculate acceptance in one go
@@ -107,15 +111,23 @@ const getProblems = async (req, res) => {
             }
         });
 
+        if (solved !== undefined) {
+            pipeline.push({ $match: { solved } });
+        }
+
         // Remove internal fields
         pipeline.push({
             $project: { _submissionStats: 0, _userSolved: 0 }
         });
 
-        const [problems, total] = await Promise.all([
-            Problem.aggregate(pipeline),
-            Problem.countDocuments(matchFilter)
+        const countPipeline = [...pipeline, { $count: 'count' }];
+
+        const [problems, totalCountResult] = await Promise.all([
+            Problem.aggregate([...pipeline, { $skip: skip }, { $limit: limitNum }]),
+            Problem.aggregate(countPipeline),
         ]);
+
+        const total = totalCountResult.length > 0 ? totalCountResult[0].count : 0;
 
         res.json({
             problems,
