@@ -1,0 +1,36 @@
+{
+  "problem_number": 71,
+  "title": "Simplify Path",
+  "function": "simplifyPath",
+  "params": [
+    {
+      "name": "path",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "path": "/home/",
+      "expected": "/home"
+    },
+    {
+      "path": "/home//foo/",
+      "expected": "/home/foo"
+    },
+    {
+      "path": "/home/user/Documents/../Pictures",
+      "expected": "/home/user/Pictures"
+    },
+    {
+      "path": "/../",
+      "expected": "/"
+    },
+    {
+      "path": "/.../a/../b/c/../d/./",
+      "expected": "/.../b/d"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "problem_number": 159,
+  "title": "Longest Substring with At Most Two Distinct Characters",
+  "function": "lengthOfLongestSubstringTwoDistinct",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "eceba",
+      "expected": null
+    },
+    {
+      "s": "ccaabbb",
+      "expected": null
+    }
+  ]
+}

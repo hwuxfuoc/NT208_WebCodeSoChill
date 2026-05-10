@@ -1,0 +1,44 @@
+{
+  "problem_number": 229,
+  "title": "Majority Element II",
+  "function": "majorityElement",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "list<integer>"
+  },
+  "testcases": [
+    {
+      "nums": [
+        3,
+        2,
+        3
+      ],
+      "expected": [
+        3
+      ]
+    },
+    {
+      "nums": [
+        1
+      ],
+      "expected": [
+        1
+      ]
+    },
+    {
+      "nums": [
+        1,
+        2
+      ],
+      "expected": [
+        1,
+        2
+      ]
+    }
+  ]
+}

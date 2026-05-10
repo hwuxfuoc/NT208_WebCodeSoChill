@@ -1,0 +1,54 @@
+{
+  "problem_number": 30,
+  "title": "Substring with Concatenation of All Words",
+  "function": "findSubstring",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "words",
+      "type": "string[]"
+    }
+  ],
+  "return": {
+    "type": "list<integer>"
+  },
+  "testcases": [
+    {
+      "s": "barfoothefoobarman",
+      "words": [
+        "foo",
+        "bar"
+      ],
+      "expected": [
+        0,
+        9
+      ]
+    },
+    {
+      "s": "wordgoodgoodgoodbestword",
+      "words": [
+        "word",
+        "good",
+        "best",
+        "word"
+      ],
+      "expected": []
+    },
+    {
+      "s": "barfoofoobarthefoobarman",
+      "words": [
+        "bar",
+        "foo",
+        "the"
+      ],
+      "expected": [
+        6,
+        9,
+        12
+      ]
+    }
+  ]
+}

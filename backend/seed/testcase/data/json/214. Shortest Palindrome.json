@@ -1,0 +1,24 @@
+{
+  "problem_number": 214,
+  "title": "Shortest Palindrome",
+  "function": "shortestPalindrome",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "s": "aacecaaa",
+      "expected": "aaacecaaa"
+    },
+    {
+      "s": "abcd",
+      "expected": "dcbabcd"
+    }
+  ]
+}

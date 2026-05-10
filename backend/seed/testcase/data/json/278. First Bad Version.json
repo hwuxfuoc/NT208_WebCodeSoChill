@@ -1,0 +1,30 @@
+{
+  "problem_number": 278,
+  "title": "First Bad Version",
+  "function": "firstBadVersion",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    },
+    {
+      "name": "bad",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 5,
+      "bad": 4,
+      "expected": 4
+    },
+    {
+      "n": 1,
+      "bad": 1,
+      "expected": 1
+    }
+  ]
+}

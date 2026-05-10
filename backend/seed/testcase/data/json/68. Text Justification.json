@@ -1,0 +1,69 @@
+{
+  "problem_number": 68,
+  "title": "Text Justification",
+  "function": "fullJustify",
+  "params": [
+    {
+      "name": "words",
+      "type": "string[]"
+    },
+    {
+      "name": "maxWidth",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "words": [
+        "This",
+        "is",
+        "an",
+        "example",
+        "of",
+        "text",
+        "justification."
+      ],
+      "maxWidth": 16,
+      "expected": "["
+    },
+    {
+      "words": [
+        "What",
+        "must",
+        "be",
+        "acknowledgment",
+        "shall",
+        "be"
+      ],
+      "maxWidth": 16,
+      "expected": "["
+    },
+    {
+      "words": [
+        "Science",
+        "is",
+        "what",
+        "we",
+        "understand",
+        "well",
+        "enough",
+        "to",
+        "explain",
+        "to",
+        "a",
+        "computer.",
+        "Art",
+        "is",
+        "everything",
+        "else",
+        "we",
+        "do"
+      ],
+      "maxWidth": 20,
+      "expected": "["
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "problem_number": 245,
+  "title": "Shortest Word Distance III",
+  "function": "shortestWordDistance",
+  "params": [
+    {
+      "name": "wordsDict",
+      "type": "string[]"
+    },
+    {
+      "name": "word1",
+      "type": "string"
+    },
+    {
+      "name": "word2",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "wordsDict": [
+        "practice",
+        "makes",
+        "perfect",
+        "coding",
+        "makes"
+      ],
+      "word1": "makes",
+      "word2": "coding",
+      "expected": null
+    },
+    {
+      "wordsDict": [
+        "practice",
+        "makes",
+        "perfect",
+        "coding",
+        "makes"
+      ],
+      "word1": "makes",
+      "word2": "makes",
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "problem_number": 51,
+  "title": "N-Queens",
+  "function": "solveNQueens",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<list<string>>",
+    "colsize": "param_1",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "n": 4,
+      "expected": [
+        [
+          ".Q..",
+          "...Q",
+          "Q...",
+          "..Q."
+        ],
+        [
+          "..Q.",
+          "Q...",
+          "...Q",
+          ".Q.."
+        ]
+      ]
+    },
+    {
+      "n": 1,
+      "expected": [
+        [
+          "Q"
+        ]
+      ]
+    }
+  ]
+}

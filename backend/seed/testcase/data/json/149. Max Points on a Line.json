@@ -1,0 +1,62 @@
+{
+  "problem_number": 149,
+  "title": "Max Points on a Line",
+  "function": "maxPoints",
+  "params": [
+    {
+      "name": "points",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "points": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "expected": 3
+    },
+    {
+      "points": [
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "expected": 4
+    }
+  ]
+}

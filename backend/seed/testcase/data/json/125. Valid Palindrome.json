@@ -1,0 +1,28 @@
+{
+  "problem_number": 125,
+  "title": "Valid Palindrome",
+  "function": "isPalindrome",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "A man, a plan, a canal: Panama",
+      "expected": "true"
+    },
+    {
+      "s": "race a car",
+      "expected": "false"
+    },
+    {
+      "s": " ",
+      "expected": "true"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "problem_number": 34,
+  "title": "Find First and Last Position of Element in Sorted Array",
+  "function": "searchRange",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer[]"
+  },
+  "testcases": [
+    {
+      "nums": [
+        5,
+        7,
+        7,
+        8,
+        8,
+        10
+      ],
+      "target": 8,
+      "expected": [
+        3,
+        4
+      ]
+    },
+    {
+      "nums": [
+        5,
+        7,
+        7,
+        8,
+        8,
+        10
+      ],
+      "target": 6,
+      "expected": [
+        -1,
+        -1
+      ]
+    },
+    {
+      "nums": [],
+      "target": 0,
+      "expected": [
+        -1,
+        -1
+      ]
+    }
+  ]
+}

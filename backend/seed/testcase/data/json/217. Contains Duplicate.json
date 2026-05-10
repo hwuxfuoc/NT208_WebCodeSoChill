@@ -1,0 +1,49 @@
+{
+  "problem_number": 217,
+  "title": "Contains Duplicate",
+  "function": "containsDuplicate",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "nums": [
+        1,
+        2,
+        3,
+        1
+      ],
+      "expected": "true"
+    },
+    {
+      "nums": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "expected": "false"
+    },
+    {
+      "nums": [
+        1,
+        1,
+        1,
+        3,
+        3,
+        4,
+        3,
+        2,
+        4,
+        2
+      ],
+      "expected": "true"
+    }
+  ]
+}

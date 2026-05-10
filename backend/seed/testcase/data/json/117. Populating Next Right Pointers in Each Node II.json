@@ -1,0 +1,24 @@
+{
+  "problem_number": 117,
+  "title": "Populating Next Right Pointers in Each Node II",
+  "function": "connect",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "TreeNode"
+  },
+  "testcases": [
+    {
+      "root": "[1,2,3,4,5,null,7]",
+      "expected": null
+    },
+    {
+      "root": [],
+      "expected": "[1,#,2,3,#,4,5,7,#]"
+    }
+  ]
+}

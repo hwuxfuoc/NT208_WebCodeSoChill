@@ -1,0 +1,36 @@
+{
+  "problem_number": 8,
+  "title": "String to Integer (atoi)",
+  "function": "myAtoi",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "42",
+      "expected": null
+    },
+    {
+      "s": "   -042",
+      "expected": null
+    },
+    {
+      "s": "1337c0d3",
+      "expected": null
+    },
+    {
+      "s": "0-1",
+      "expected": null
+    },
+    {
+      "s": "words and 987",
+      "expected": null
+    }
+  ]
+}

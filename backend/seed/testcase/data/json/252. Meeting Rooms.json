@@ -1,0 +1,46 @@
+{
+  "problem_number": 252,
+  "title": "Meeting Rooms",
+  "function": "canAttendMeetings",
+  "params": [
+    {
+      "name": "intervals",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "intervals": [
+        [
+          0,
+          30
+        ],
+        [
+          5,
+          10
+        ],
+        [
+          15,
+          20
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "intervals": [
+        [
+          7,
+          10
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "expected": null
+    }
+  ]
+}

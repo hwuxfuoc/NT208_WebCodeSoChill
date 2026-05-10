@@ -1,0 +1,42 @@
+{
+  "problem_number": 259,
+  "title": "3Sum Smaller",
+  "function": "threeSumSmaller",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        -2,
+        0,
+        1,
+        3
+      ],
+      "target": 2,
+      "expected": null
+    },
+    {
+      "nums": [],
+      "target": 0,
+      "expected": null
+    },
+    {
+      "nums": [
+        0
+      ],
+      "target": 0,
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "problem_number": 157,
+  "title": "Read N Characters Given Read4",
+  "function": "read",
+  "params": [
+    {
+      "name": "file",
+      "type": "string"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "file": "abc",
+      "n": 4,
+      "expected": null
+    },
+    {
+      "file": "abcde",
+      "n": 5,
+      "expected": null
+    },
+    {
+      "file": "abcdABCD1234",
+      "n": 12,
+      "expected": null
+    }
+  ]
+}

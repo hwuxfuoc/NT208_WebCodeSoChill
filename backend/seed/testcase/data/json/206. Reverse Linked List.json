@@ -1,0 +1,48 @@
+{
+  "problem_number": 206,
+  "title": "Reverse Linked List",
+  "function": "reverseList",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected": [
+        5,
+        4,
+        3,
+        2,
+        1
+      ]
+    },
+    {
+      "head": [
+        1,
+        2
+      ],
+      "expected": [
+        2,
+        1
+      ]
+    },
+    {
+      "head": [],
+      "expected": []
+    }
+  ]
+}

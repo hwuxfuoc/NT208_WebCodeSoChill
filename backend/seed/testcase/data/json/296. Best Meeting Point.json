@@ -1,0 +1,51 @@
+{
+  "problem_number": 296,
+  "title": "Best Meeting Point",
+  "function": "minTotalDistance",
+  "params": [
+    {
+      "name": "grid",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "grid": [
+        [
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "grid": [
+        [
+          1,
+          1
+        ]
+      ],
+      "expected": null
+    }
+  ]
+}

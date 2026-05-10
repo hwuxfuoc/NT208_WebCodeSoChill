@@ -1,0 +1,52 @@
+{
+  "problem_number": 86,
+  "title": "Partition List",
+  "function": "partition",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    },
+    {
+      "name": "x",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        4,
+        3,
+        2,
+        5,
+        2
+      ],
+      "x": 3,
+      "expected": [
+        1,
+        2,
+        2,
+        4,
+        3,
+        5
+      ]
+    },
+    {
+      "head": [
+        2,
+        1
+      ],
+      "x": 2,
+      "expected": [
+        1,
+        2
+      ]
+    }
+  ]
+}

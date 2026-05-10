@@ -1,0 +1,82 @@
+{
+  "problem_number": 130,
+  "title": "Surrounded Regions",
+  "function": "solve",
+  "params": [
+    {
+      "name": "board",
+      "type": "character[][]"
+    }
+  ],
+  "return": {
+    "type": "void"
+  },
+  "testcases": [
+    {
+      "board": [
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "O",
+          "O",
+          "X"
+        ],
+        [
+          "X",
+          "X",
+          "O",
+          "X"
+        ],
+        [
+          "X",
+          "O",
+          "X",
+          "X"
+        ]
+      ],
+      "expected": [
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "X",
+          "X",
+          "X"
+        ],
+        [
+          "X",
+          "O",
+          "X",
+          "X"
+        ]
+      ]
+    },
+    {
+      "board": [
+        [
+          "X"
+        ]
+      ],
+      "expected": [
+        [
+          "X"
+        ]
+      ]
+    }
+  ]
+}

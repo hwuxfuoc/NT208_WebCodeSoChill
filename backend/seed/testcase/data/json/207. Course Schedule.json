@@ -1,0 +1,44 @@
+{
+  "problem_number": 207,
+  "title": "Course Schedule",
+  "function": "canFinish",
+  "params": [
+    {
+      "name": "numCourses",
+      "type": "integer"
+    },
+    {
+      "name": "prerequisites",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "numCourses": 2,
+      "prerequisites": [
+        [
+          1,
+          0
+        ]
+      ],
+      "expected": "true"
+    },
+    {
+      "numCourses": 2,
+      "prerequisites": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected": "false"
+    }
+  ]
+}

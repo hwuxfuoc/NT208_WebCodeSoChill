@@ -1,0 +1,55 @@
+{
+  "problem_number": 19,
+  "title": "Remove Nth Node From End of List",
+  "function": "removeNthFromEnd",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "n": 2,
+      "expected": [
+        1,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "head": [
+        1
+      ],
+      "n": 1,
+      "expected": []
+    },
+    {
+      "head": [
+        1,
+        2
+      ],
+      "n": 1,
+      "expected": [
+        1
+      ]
+    }
+  ]
+}

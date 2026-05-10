@@ -1,0 +1,47 @@
+{
+  "problem_number": 122,
+  "title": "Best Time to Buy and Sell Stock II",
+  "function": "maxProfit",
+  "params": [
+    {
+      "name": "prices",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "prices": [
+        7,
+        1,
+        5,
+        3,
+        6,
+        4
+      ],
+      "expected": 7
+    },
+    {
+      "prices": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "expected": 4
+    },
+    {
+      "prices": [
+        7,
+        6,
+        4,
+        3,
+        1
+      ],
+      "expected": 0
+    }
+  ]
+}

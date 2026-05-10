@@ -1,0 +1,71 @@
+{
+  "problem_number": 18,
+  "title": "4Sum",
+  "function": "fourSum",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<list<integer>>",
+    "colsize": 4,
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "nums": [
+        1,
+        0,
+        -1,
+        0,
+        -2,
+        2
+      ],
+      "target": 0,
+      "expected": [
+        [
+          -2,
+          -1,
+          1,
+          2
+        ],
+        [
+          -2,
+          0,
+          0,
+          2
+        ],
+        [
+          -1,
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "nums": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "target": 8,
+      "expected": [
+        [
+          2,
+          2,
+          2,
+          2
+        ]
+      ]
+    }
+  ]
+}

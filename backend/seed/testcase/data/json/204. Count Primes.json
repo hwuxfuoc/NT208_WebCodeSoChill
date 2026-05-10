@@ -1,0 +1,28 @@
+{
+  "problem_number": 204,
+  "title": "Count Primes",
+  "function": "countPrimes",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 10,
+      "expected": 4
+    },
+    {
+      "n": 0,
+      "expected": 0
+    },
+    {
+      "n": 1,
+      "expected": 0
+    }
+  ]
+}

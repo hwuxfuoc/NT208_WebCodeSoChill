@@ -1,0 +1,28 @@
+{
+  "problem_number": 3,
+  "title": "Longest Substring Without Repeating Characters",
+  "function": "lengthOfLongestSubstring",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "abcabcbb",
+      "expected": 3
+    },
+    {
+      "s": "bbbbb",
+      "expected": 1
+    },
+    {
+      "s": "pwwkew",
+      "expected": 3
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "problem_number": 22,
+  "title": "Generate Parentheses",
+  "function": "generateParenthesis",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "expected": [
+        "((()))",
+        "(()())",
+        "(())()",
+        "()(())",
+        "()()()"
+      ]
+    },
+    {
+      "n": 1,
+      "expected": [
+        "()"
+      ]
+    }
+  ]
+}

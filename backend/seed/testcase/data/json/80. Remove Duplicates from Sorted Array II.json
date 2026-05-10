@@ -1,0 +1,41 @@
+{
+  "problem_number": 80,
+  "title": "Remove Duplicates from Sorted Array II",
+  "function": "removeDuplicates",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        3
+      ],
+      "expected": null
+    },
+    {
+      "nums": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        2,
+        3,
+        3
+      ],
+      "expected": "5, nums = [1,1,2,2,3,_]"
+    }
+  ]
+}

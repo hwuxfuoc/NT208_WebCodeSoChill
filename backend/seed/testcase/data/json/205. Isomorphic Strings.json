@@ -1,0 +1,35 @@
+{
+  "problem_number": 205,
+  "title": "Isomorphic Strings",
+  "function": "isIsomorphic",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "t",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "egg",
+      "t": "add",
+      "expected": "true"
+    },
+    {
+      "s": "foo",
+      "t": "bar",
+      "expected": "false"
+    },
+    {
+      "s": "paper",
+      "t": "title",
+      "expected": "true"
+    }
+  ]
+}

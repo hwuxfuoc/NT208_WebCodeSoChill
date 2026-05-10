@@ -1,0 +1,24 @@
+{
+  "problem_number": 190,
+  "title": "Reverse Bits",
+  "function": "reverseBits",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 43261596,
+      "expected": 964176192
+    },
+    {
+      "n": 2147483644,
+      "expected": 1073741822
+    }
+  ]
+}

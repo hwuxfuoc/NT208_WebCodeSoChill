@@ -1,0 +1,41 @@
+{
+  "problem_number": 269,
+  "title": "Alien Dictionary",
+  "function": "alienOrder",
+  "params": [
+    {
+      "name": "words",
+      "type": "string[]"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "words": [
+        "wrt",
+        "wrf",
+        "er",
+        "ett",
+        "rftt"
+      ],
+      "expected": null
+    },
+    {
+      "words": [
+        "z",
+        "x"
+      ],
+      "expected": null
+    },
+    {
+      "words": [
+        "z",
+        "x",
+        "z"
+      ],
+      "expected": null
+    }
+  ]
+}

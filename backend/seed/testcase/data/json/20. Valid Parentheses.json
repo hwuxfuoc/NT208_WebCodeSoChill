@@ -1,0 +1,36 @@
+{
+  "problem_number": 20,
+  "title": "Valid Parentheses",
+  "function": "isValid",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "()",
+      "expected": "true"
+    },
+    {
+      "s": "()[]{}",
+      "expected": "true"
+    },
+    {
+      "s": "(]",
+      "expected": "false"
+    },
+    {
+      "s": "([])",
+      "expected": "true"
+    },
+    {
+      "s": "([)]",
+      "expected": "false"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "problem_number": 49,
+  "title": "Group Anagrams",
+  "function": "groupAnagrams",
+  "params": [
+    {
+      "name": "strs",
+      "type": "string[]"
+    }
+  ],
+  "return": {
+    "type": "list<list<string>>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "strs": [
+        "eat",
+        "tea",
+        "tan",
+        "ate",
+        "nat",
+        "bat"
+      ],
+      "expected": [
+        [
+          "bat"
+        ],
+        [
+          "nat",
+          "tan"
+        ],
+        [
+          "ate",
+          "eat",
+          "tea"
+        ]
+      ]
+    },
+    {
+      "strs": [
+        ""
+      ],
+      "expected": [
+        [
+          ""
+        ]
+      ]
+    },
+    {
+      "strs": [
+        "a"
+      ],
+      "expected": [
+        [
+          "a"
+        ]
+      ]
+    }
+  ]
+}

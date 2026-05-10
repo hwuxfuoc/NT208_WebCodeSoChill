@@ -1,0 +1,31 @@
+{
+  "problem_number": 164,
+  "title": "Maximum Gap",
+  "function": "maximumGap",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        3,
+        6,
+        9,
+        1
+      ],
+      "expected": 3
+    },
+    {
+      "nums": [
+        10
+      ],
+      "expected": 0
+    }
+  ]
+}

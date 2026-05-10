@@ -1,0 +1,35 @@
+{
+  "problem_number": 291,
+  "title": "Word Pattern II",
+  "function": "wordPatternMatch",
+  "params": [
+    {
+      "name": "pattern",
+      "type": "string"
+    },
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "pattern": "abab",
+      "s": "redblueredblue",
+      "expected": null
+    },
+    {
+      "pattern": "aaaa",
+      "s": "asdasdasdasd",
+      "expected": null
+    },
+    {
+      "pattern": "aabb",
+      "s": "xyzabcxzyabc",
+      "expected": null
+    }
+  ]
+}

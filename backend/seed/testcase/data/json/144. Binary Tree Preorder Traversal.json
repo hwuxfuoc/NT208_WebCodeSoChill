@@ -1,0 +1,51 @@
+{
+  "problem_number": 144,
+  "title": "Binary Tree Preorder Traversal",
+  "function": "preorderTraversal",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "list<integer>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "root": "[1,null,2,3]",
+      "expected": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "root": "[1,2,3,4,5,null,8,null,null,6,7,9]",
+      "expected": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        3,
+        8,
+        9
+      ]
+    },
+    {
+      "root": [],
+      "expected": []
+    },
+    {
+      "root": [
+        1
+      ],
+      "expected": [
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "problem_number": 250,
+  "title": "Count Univalue Subtrees",
+  "function": "countUnivalSubtrees",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "root": "[5,1,5,5,5,null,5]",
+      "expected": null
+    },
+    {
+      "root": [],
+      "expected": null
+    },
+    {
+      "root": "[5,5,5,5,5,null,5]",
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "problem_number": 95,
+  "title": "Unique Binary Search Trees II",
+  "function": "generateTrees",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "list<TreeNode>"
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "expected": "[[1,null,2,null,3],[1,null,3,2],[2,1,3],[3,1,null,null,2],[3,2,null,1]]"
+    },
+    {
+      "n": 1,
+      "expected": [
+        [
+          1
+        ]
+      ]
+    }
+  ]
+}

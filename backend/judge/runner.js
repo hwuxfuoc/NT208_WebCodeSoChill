@@ -159,7 +159,7 @@ const runCode = async ({ problemId, language, code, timeLimit, memoryLimit, samp
             if (problem) {
                 // Định dạng tên file: "1. Two Sum.json"
                 const jsonFileName = `${problem.problemId}. ${problem.title}.json`;
-                const jsonPath = path.join(__dirname, '../seed/leetcode-testcase-extractor/data/json', jsonFileName);
+                const jsonPath = path.join(__dirname, '../seed/testcase/data/json', jsonFileName);
                 if (fs.existsSync(jsonPath)) {
                     const fileContent = fs.readFileSync(jsonPath, 'utf-8');
                     const parsed = JSON.parse(fileContent);

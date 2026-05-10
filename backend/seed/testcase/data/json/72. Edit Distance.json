@@ -1,0 +1,30 @@
+{
+  "problem_number": 72,
+  "title": "Edit Distance",
+  "function": "minDistance",
+  "params": [
+    {
+      "name": "word1",
+      "type": "string"
+    },
+    {
+      "name": "word2",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "word1": "horse",
+      "word2": "ros",
+      "expected": 3
+    },
+    {
+      "word1": "intention",
+      "word2": "execution",
+      "expected": 5
+    }
+  ]
+}

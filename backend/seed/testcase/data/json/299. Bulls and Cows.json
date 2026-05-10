@@ -1,0 +1,30 @@
+{
+  "problem_number": 299,
+  "title": "Bulls and Cows",
+  "function": "getHint",
+  "params": [
+    {
+      "name": "secret",
+      "type": "string"
+    },
+    {
+      "name": "guess",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "secret": "1807",
+      "guess": "7810",
+      "expected": "1A3B"
+    },
+    {
+      "secret": "1123",
+      "guess": "0111",
+      "expected": "1A1B"
+    }
+  ]
+}

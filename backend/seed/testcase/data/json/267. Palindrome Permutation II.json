@@ -1,0 +1,24 @@
+{
+  "problem_number": 267,
+  "title": "Palindrome Permutation II",
+  "function": "generatePalindromes",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "list<string>"
+  },
+  "testcases": [
+    {
+      "s": "aabb",
+      "expected": null
+    },
+    {
+      "s": "abc",
+      "expected": null
+    }
+  ]
+}

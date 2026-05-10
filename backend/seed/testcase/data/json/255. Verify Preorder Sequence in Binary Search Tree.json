@@ -1,0 +1,36 @@
+{
+  "problem_number": 255,
+  "title": "Verify Preorder Sequence in Binary Search Tree",
+  "function": "verifyPreorder",
+  "params": [
+    {
+      "name": "preorder",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "preorder": [
+        5,
+        2,
+        1,
+        3,
+        6
+      ],
+      "expected": null
+    },
+    {
+      "preorder": [
+        5,
+        2,
+        6,
+        1,
+        3
+      ],
+      "expected": null
+    }
+  ]
+}

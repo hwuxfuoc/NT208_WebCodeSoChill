@@ -1,0 +1,35 @@
+{
+  "problem_number": 201,
+  "title": "Bitwise AND of Numbers Range",
+  "function": "rangeBitwiseAnd",
+  "params": [
+    {
+      "name": "left",
+      "type": "integer"
+    },
+    {
+      "name": "right",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "left": 5,
+      "right": 7,
+      "expected": 4
+    },
+    {
+      "left": 0,
+      "right": 0,
+      "expected": 0
+    },
+    {
+      "left": 1,
+      "right": 2147483647,
+      "expected": 0
+    }
+  ]
+}

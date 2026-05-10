@@ -1,0 +1,56 @@
+{
+  "problem_number": 203,
+  "title": "Remove Linked List Elements",
+  "function": "removeElements",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    },
+    {
+      "name": "val",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        6,
+        3,
+        4,
+        5,
+        6
+      ],
+      "val": 6,
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "head": [],
+      "val": 1,
+      "expected": []
+    },
+    {
+      "head": [
+        7,
+        7,
+        7,
+        7
+      ],
+      "val": 7,
+      "expected": []
+    }
+  ]
+}

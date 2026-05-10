@@ -1,0 +1,30 @@
+{
+  "problem_number": 62,
+  "title": "Unique Paths",
+  "function": "uniquePaths",
+  "params": [
+    {
+      "name": "m",
+      "type": "integer"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "m": 3,
+      "n": 7,
+      "expected": 28
+    },
+    {
+      "m": 3,
+      "n": 2,
+      "expected": 3
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "problem_number": 24,
+  "title": "Swap Nodes in Pairs",
+  "function": "swapPairs",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    }
+  ],
+  "return": {
+    "type": "ListNode"
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "expected": [
+        2,
+        1,
+        4,
+        3
+      ]
+    },
+    {
+      "head": [],
+      "expected": []
+    },
+    {
+      "head": [
+        1
+      ],
+      "expected": [
+        1
+      ]
+    },
+    {
+      "head": [
+        1,
+        2,
+        3
+      ],
+      "expected": [
+        2,
+        1,
+        3
+      ]
+    }
+  ]
+}

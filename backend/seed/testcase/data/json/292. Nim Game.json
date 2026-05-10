@@ -1,0 +1,28 @@
+{
+  "problem_number": 292,
+  "title": "Nim Game",
+  "function": "canWinNim",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "n": 4,
+      "expected": "false"
+    },
+    {
+      "n": 1,
+      "expected": "true"
+    },
+    {
+      "n": 2,
+      "expected": "true"
+    }
+  ]
+}

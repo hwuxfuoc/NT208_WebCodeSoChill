@@ -1,0 +1,47 @@
+{
+  "problem_number": 139,
+  "title": "Word Break",
+  "function": "wordBreak",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "wordDict",
+      "type": "list<string>"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "leetcode",
+      "wordDict": [
+        "leet",
+        "code"
+      ],
+      "expected": "true"
+    },
+    {
+      "s": "applepenapple",
+      "wordDict": [
+        "apple",
+        "pen"
+      ],
+      "expected": "true"
+    },
+    {
+      "s": "catsandog",
+      "wordDict": [
+        "cats",
+        "dog",
+        "sand",
+        "and",
+        "cat"
+      ],
+      "expected": "false"
+    }
+  ]
+}

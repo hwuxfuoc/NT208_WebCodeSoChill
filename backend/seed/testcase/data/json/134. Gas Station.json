@@ -1,0 +1,50 @@
+{
+  "problem_number": 134,
+  "title": "Gas Station",
+  "function": "canCompleteCircuit",
+  "params": [
+    {
+      "name": "gas",
+      "type": "integer[]"
+    },
+    {
+      "name": "cost",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "gas": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "cost": [
+        3,
+        4,
+        5,
+        1,
+        2
+      ],
+      "expected": 3
+    },
+    {
+      "gas": [
+        2,
+        3,
+        4
+      ],
+      "cost": [
+        3,
+        4,
+        3
+      ],
+      "expected": -1
+    }
+  ]
+}

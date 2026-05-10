@@ -1,0 +1,28 @@
+{
+  "problem_number": 12,
+  "title": "Integer to Roman",
+  "function": "intToRoman",
+  "params": [
+    {
+      "name": "num",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "num": 3749,
+      "expected": null
+    },
+    {
+      "num": 58,
+      "expected": null
+    },
+    {
+      "num": 1994,
+      "expected": null
+    }
+  ]
+}

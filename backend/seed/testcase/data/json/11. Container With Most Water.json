@@ -1,0 +1,37 @@
+{
+  "problem_number": 11,
+  "title": "Container With Most Water",
+  "function": "maxArea",
+  "params": [
+    {
+      "name": "height",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "height": [
+        1,
+        8,
+        6,
+        2,
+        5,
+        4,
+        8,
+        3,
+        7
+      ],
+      "expected": 49
+    },
+    {
+      "height": [
+        1,
+        1
+      ],
+      "expected": 1
+    }
+  ]
+}

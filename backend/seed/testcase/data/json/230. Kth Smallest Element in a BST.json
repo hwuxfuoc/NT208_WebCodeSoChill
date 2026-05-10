@@ -1,0 +1,30 @@
+{
+  "problem_number": 230,
+  "title": "Kth Smallest Element in a BST",
+  "function": "kthSmallest",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    },
+    {
+      "name": "k",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "root": "[3,1,4,null,2]",
+      "k": 1,
+      "expected": 1
+    },
+    {
+      "root": "[5,3,6,2,4,null,null,1]",
+      "k": 3,
+      "expected": 3
+    }
+  ]
+}

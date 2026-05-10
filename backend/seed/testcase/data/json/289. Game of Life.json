@@ -1,0 +1,84 @@
+{
+  "problem_number": 289,
+  "title": "Game of Life",
+  "function": "gameOfLife",
+  "params": [
+    {
+      "name": "board",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "void"
+  },
+  "testcases": [
+    {
+      "board": [
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "board": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ]
+}

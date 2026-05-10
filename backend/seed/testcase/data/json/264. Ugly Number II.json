@@ -1,0 +1,24 @@
+{
+  "problem_number": 264,
+  "title": "Ugly Number II",
+  "function": "nthUglyNumber",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 10,
+      "expected": 12
+    },
+    {
+      "n": 1,
+      "expected": 1
+    }
+  ]
+}

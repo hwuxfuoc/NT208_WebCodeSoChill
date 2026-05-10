@@ -1,0 +1,28 @@
+{
+  "problem_number": 132,
+  "title": "Palindrome Partitioning II",
+  "function": "minCut",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "s": "aab",
+      "expected": 1
+    },
+    {
+      "s": "a",
+      "expected": 0
+    },
+    {
+      "s": "ab",
+      "expected": 1
+    }
+  ]
+}

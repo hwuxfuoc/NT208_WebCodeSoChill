@@ -1,0 +1,28 @@
+{
+  "problem_number": 151,
+  "title": "Reverse Words in a String",
+  "function": "reverseWords",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "s": "the sky is blue",
+      "expected": "blue is sky the"
+    },
+    {
+      "s": "  hello world  ",
+      "expected": "world hello"
+    },
+    {
+      "s": "a good   example",
+      "expected": "example good a"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "problem_number": 294,
+  "title": "Flip Game II",
+  "function": "canWin",
+  "params": [
+    {
+      "name": "currentState",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "currentState": "++++",
+      "expected": null
+    },
+    {
+      "currentState": "+",
+      "expected": null
+    }
+  ]
+}

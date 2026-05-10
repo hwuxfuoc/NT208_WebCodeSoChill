@@ -1,0 +1,37 @@
+{
+  "problem_number": 222,
+  "title": "Count Complete Tree Nodes",
+  "function": "countNodes",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "root": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "expected": 6
+    },
+    {
+      "root": [],
+      "expected": 0
+    },
+    {
+      "root": [
+        1
+      ],
+      "expected": 1
+    }
+  ]
+}

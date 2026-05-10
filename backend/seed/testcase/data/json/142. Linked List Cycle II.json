@@ -1,0 +1,45 @@
+{
+  "problem_number": 142,
+  "title": "Linked List Cycle II",
+  "function": "detectCycle",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    },
+    {
+      "name": "pos",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "ListNode"
+  },
+  "testcases": [
+    {
+      "head": [
+        3,
+        2,
+        0,
+        -4
+      ],
+      "pos": 1,
+      "expected": "tail connects to node index 1"
+    },
+    {
+      "head": [
+        1,
+        2
+      ],
+      "pos": 0,
+      "expected": "tail connects to node index 0"
+    },
+    {
+      "head": [
+        1
+      ],
+      "pos": -1,
+      "expected": "no cycle"
+    }
+  ]
+}

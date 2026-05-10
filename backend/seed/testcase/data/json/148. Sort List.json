@@ -1,0 +1,52 @@
+{
+  "problem_number": 148,
+  "title": "Sort List",
+  "function": "sortList",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode",
+      "dealloc": false
+    }
+  ],
+  "return": {
+    "type": "ListNode",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "head": [
+        4,
+        2,
+        1,
+        3
+      ],
+      "expected": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "head": [
+        -1,
+        5,
+        3,
+        4,
+        0
+      ],
+      "expected": [
+        -1,
+        0,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "head": [],
+      "expected": []
+    }
+  ]
+}

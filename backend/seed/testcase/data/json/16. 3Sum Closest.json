@@ -1,0 +1,39 @@
+{
+  "problem_number": 16,
+  "title": "3Sum Closest",
+  "function": "threeSumClosest",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    },
+    {
+      "name": "target",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        -1,
+        2,
+        1,
+        -4
+      ],
+      "target": 1,
+      "expected": 2
+    },
+    {
+      "nums": [
+        0,
+        0,
+        0
+      ],
+      "target": 1,
+      "expected": 0
+    }
+  ]
+}

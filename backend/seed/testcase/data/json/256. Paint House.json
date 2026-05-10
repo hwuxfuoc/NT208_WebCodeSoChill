@@ -1,0 +1,46 @@
+{
+  "problem_number": 256,
+  "title": "Paint House",
+  "function": "minCost",
+  "params": [
+    {
+      "name": "costs",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "costs": [
+        [
+          17,
+          2,
+          17
+        ],
+        [
+          16,
+          16,
+          5
+        ],
+        [
+          14,
+          3,
+          19
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "costs": [
+        [
+          7,
+          6,
+          2
+        ]
+      ],
+      "expected": null
+    }
+  ]
+}

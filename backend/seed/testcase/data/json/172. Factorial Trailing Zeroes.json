@@ -1,0 +1,28 @@
+{
+  "problem_number": 172,
+  "title": "Factorial Trailing Zeroes",
+  "function": "trailingZeroes",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "n": 3,
+      "expected": 0
+    },
+    {
+      "n": 5,
+      "expected": 1
+    },
+    {
+      "n": 0,
+      "expected": 0
+    }
+  ]
+}

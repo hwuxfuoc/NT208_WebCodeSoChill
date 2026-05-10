@@ -1,0 +1,25 @@
+{
+  "problem_number": 293,
+  "title": "Flip Game",
+  "function": "generatePossibleNextMoves",
+  "params": [
+    {
+      "name": "currentState",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "list<string>",
+    "dealloc": true
+  },
+  "testcases": [
+    {
+      "currentState": "++++",
+      "expected": null
+    },
+    {
+      "currentState": "+",
+      "expected": null
+    }
+  ]
+}

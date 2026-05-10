@@ -1,0 +1,28 @@
+{
+  "problem_number": 231,
+  "title": "Power of Two",
+  "function": "isPowerOfTwo",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "n": 1,
+      "expected": "true"
+    },
+    {
+      "n": 16,
+      "expected": "true"
+    },
+    {
+      "n": 3,
+      "expected": "false"
+    }
+  ]
+}

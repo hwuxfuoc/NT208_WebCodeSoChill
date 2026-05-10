@@ -1,0 +1,28 @@
+{
+  "problem_number": 110,
+  "title": "Balanced Binary Tree",
+  "function": "isBalanced",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "root": "[3,9,20,null,null,15,7]",
+      "expected": "true"
+    },
+    {
+      "root": "[1,2,2,3,3,null,null,4,4]",
+      "expected": "false"
+    },
+    {
+      "root": [],
+      "expected": "true"
+    }
+  ]
+}

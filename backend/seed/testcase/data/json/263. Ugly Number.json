@@ -1,0 +1,28 @@
+{
+  "problem_number": 263,
+  "title": "Ugly Number",
+  "function": "isUgly",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "n": 6,
+      "expected": "true"
+    },
+    {
+      "n": 1,
+      "expected": "true"
+    },
+    {
+      "n": 14,
+      "expected": "false"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "problem_number": 174,
+  "title": "Dungeon Game",
+  "function": "calculateMinimumHP",
+  "params": [
+    {
+      "name": "dungeon",
+      "type": "integer[][]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "dungeon": [
+        [
+          -2,
+          -3,
+          3
+        ],
+        [
+          -5,
+          -10,
+          1
+        ],
+        [
+          10,
+          30,
+          -5
+        ]
+      ],
+      "expected": 7
+    },
+    {
+      "dungeon": [
+        [
+          0
+        ]
+      ],
+      "expected": 1
+    }
+  ]
+}

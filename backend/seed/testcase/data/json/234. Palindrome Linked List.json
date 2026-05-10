@@ -1,0 +1,32 @@
+{
+  "problem_number": 234,
+  "title": "Palindrome Linked List",
+  "function": "isPalindrome",
+  "params": [
+    {
+      "name": "head",
+      "type": "ListNode"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "head": [
+        1,
+        2,
+        2,
+        1
+      ],
+      "expected": "true"
+    },
+    {
+      "head": [
+        1,
+        2
+      ],
+      "expected": "false"
+    }
+  ]
+}

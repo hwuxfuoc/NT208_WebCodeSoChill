@@ -1,0 +1,24 @@
+{
+  "problem_number": 202,
+  "title": "Happy Number",
+  "function": "isHappy",
+  "params": [
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "n": 19,
+      "expected": "true"
+    },
+    {
+      "n": 2,
+      "expected": "false"
+    }
+  ]
+}

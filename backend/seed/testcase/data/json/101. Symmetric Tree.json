@@ -1,0 +1,32 @@
+{
+  "problem_number": 101,
+  "title": "Symmetric Tree",
+  "function": "isSymmetric",
+  "params": [
+    {
+      "name": "root",
+      "type": "TreeNode"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "root": [
+        1,
+        2,
+        2,
+        3,
+        4,
+        4,
+        3
+      ],
+      "expected": "true"
+    },
+    {
+      "root": "[1,2,2,null,3,null,3]",
+      "expected": "false"
+    }
+  ]
+}

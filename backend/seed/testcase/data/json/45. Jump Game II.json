@@ -1,0 +1,36 @@
+{
+  "problem_number": 45,
+  "title": "Jump Game II",
+  "function": "jump",
+  "params": [
+    {
+      "name": "nums",
+      "type": "integer[]"
+    }
+  ],
+  "return": {
+    "type": "integer"
+  },
+  "testcases": [
+    {
+      "nums": [
+        2,
+        3,
+        1,
+        1,
+        4
+      ],
+      "expected": 2
+    },
+    {
+      "nums": [
+        2,
+        3,
+        0,
+        1,
+        4
+      ],
+      "expected": 2
+    }
+  ]
+}

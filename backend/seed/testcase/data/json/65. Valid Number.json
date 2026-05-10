@@ -1,0 +1,28 @@
+{
+  "problem_number": 65,
+  "title": "Valid Number",
+  "function": "isNumber",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    }
+  ],
+  "return": {
+    "type": "boolean"
+  },
+  "testcases": [
+    {
+      "s": "0",
+      "expected": "true"
+    },
+    {
+      "s": "e",
+      "expected": "false"
+    },
+    {
+      "s": ".",
+      "expected": "false"
+    }
+  ]
+}

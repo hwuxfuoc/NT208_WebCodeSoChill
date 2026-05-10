@@ -1,0 +1,35 @@
+{
+  "problem_number": 50,
+  "title": "Pow(x, n)",
+  "function": "myPow",
+  "params": [
+    {
+      "name": "x",
+      "type": "double"
+    },
+    {
+      "name": "n",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "double"
+  },
+  "testcases": [
+    {
+      "x": 2.0,
+      "n": 10,
+      "expected": 1024.0
+    },
+    {
+      "x": 2.1,
+      "n": 3,
+      "expected": 9.261
+    },
+    {
+      "x": 2.0,
+      "n": -2,
+      "expected": 0.25
+    }
+  ]
+}

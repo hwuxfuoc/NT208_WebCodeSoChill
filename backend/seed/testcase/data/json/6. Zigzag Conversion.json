@@ -1,0 +1,35 @@
+{
+  "problem_number": 6,
+  "title": "Zigzag Conversion",
+  "function": "convert",
+  "params": [
+    {
+      "name": "s",
+      "type": "string"
+    },
+    {
+      "name": "numRows",
+      "type": "integer"
+    }
+  ],
+  "return": {
+    "type": "string"
+  },
+  "testcases": [
+    {
+      "s": "PAYPALISHIRING",
+      "numRows": 3,
+      "expected": null
+    },
+    {
+      "s": "PAYPALISHIRING",
+      "numRows": 4,
+      "expected": null
+    },
+    {
+      "s": "A",
+      "numRows": 1,
+      "expected": "PAHNAPLSIIGYIR"
+    }
+  ]
+}
