@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const auth = require('../../middleware/auth');
-const { uploadAvatar } = require('./uploadController');
+const { uploadAvatar, uploadImage } = require('./uploadController');
 // Cloudinary configuration (moved here for clarity, could be centralized)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,5 +18,6 @@ const upload = multer({
 });
 
 router.post('/avatar', auth, upload.single('avatar'), uploadAvatar);
+router.post('/image', auth, upload.single('image'), uploadImage);
 
 module.exports = router;
