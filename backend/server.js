@@ -37,6 +37,7 @@ async function startServer() {
   app.use('/api/notifications', require('./api/notifications/notificationRoutes'));
   app.use('/api/settings',      require('./api/settings/settingRoutes'));
   app.use('/api/admin',         require('./api/admin/adminRoutes'));
+  app.use('/api/ai',            require('./api/ai/aiRoutes'));
   console.log('✓ Routes registered');
 
   app.get('/', (req, res) => res.send('Server is running...'));
