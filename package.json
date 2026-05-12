@@ -1,0 +1,23 @@
+{
+  "name": "nt208-webcodesochill-root",
+  "version": "1.0.0",
+  "description": "Root workspace for NT208 WebCodeSoChill project",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "ai-service"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:ai": "npm run dev -w ai-service",
+    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "clean": "npx rimraf **/node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  }
+}

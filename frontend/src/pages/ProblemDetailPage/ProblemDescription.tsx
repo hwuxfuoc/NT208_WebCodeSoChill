@@ -110,29 +110,84 @@ export default function ProblemDescription({
           </div>
         )}
 
+        {/* ── AI Hint Panel ── */}
         <div>
-          <p className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-gray-700 mb-3">
-            <span className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon>
-              </svg>
-              Video Tutorial
-            </span>
-            <span className="bg-green-500 text-white text-[9px] px-2 py-0.5 rounded-full tracking-wider">NEW</span>
+          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-700 mb-3">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--main-orange-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            AI Hint
+            <span
+              className="ml-auto text-[9px] px-2 py-0.5 rounded-full tracking-wider font-bold"
+              style={{ backgroundColor: "color-mix(in srgb, var(--main-orange-color) 15%, white)", color: "var(--main-orange-color)" }}
+            >BETA</span>
           </p>
-          <div className="relative rounded-xl overflow-hidden bg-gray-900 aspect-video cursor-pointer group">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+
+          <div
+            className="rounded-2xl p-5 flex flex-col gap-4"
+            style={{
+              border: "1.5px dashed color-mix(in srgb, var(--main-orange-color) 35%, white)",
+              background: "linear-gradient(135deg, color-mix(in srgb, var(--main-orange-color) 8%, white) 0%, white 100%)",
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "linear-gradient(135deg, var(--main-orange-color) 0%, var(--main-orange-color) 100%)" }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
               </div>
+              <div>
+                <p className="text-[13px] font-bold text-gray-800 mb-0.5">Get a hint from AI</p>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  The AI will analyze your current code and suggest a direction — without giving away the full answer.
+                </p>
+              </div>
             </div>
-            <div className="absolute bottom-3 left-3 text-white">
-              <p className="text-sm font-bold">Optimizing Hash Maps</p>
-              <p className="text-xs text-white/70">12:45 · Architectural Pulse Team</p>
+
+            <div className="flex flex-wrap gap-2">
+              {["Analyze your code", "Step-by-step hint", "No spoilers"].map((tag) => (
+                <span
+                  key={tag}
+                  className="flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full"
+                  style={{
+                    backgroundColor: "color-mix(in srgb, var(--main-orange-color) 15%, white)",
+                    color: "var(--main-orange-color)",
+                  }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  {tag}
+                </span>
+              ))}
             </div>
+
+            <button
+              type="button"
+              disabled
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold cursor-not-allowed"
+              style={{
+                background: "var(--main-orange-color)",
+                color: "#fff",
+                opacity: 0.45,
+              }}
+              title="AI Hint — coming soon"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              Ask AI for a Hint
+              <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Coming soon</span>
+            </button>
           </div>
         </div>
       </div>

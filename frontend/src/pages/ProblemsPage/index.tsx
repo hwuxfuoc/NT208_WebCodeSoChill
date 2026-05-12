@@ -20,7 +20,6 @@ export default function ProblemsPage() {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  // Debounce search query (400ms)
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
@@ -29,7 +28,6 @@ export default function ProblemsPage() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Build server-side filter params
   const tag = topic !== "All Topics" ? topic : undefined;
   const solved = tab === "solved" ? true : tab === "unsolved" ? false : undefined;
 
