@@ -16,21 +16,34 @@ const DIFF: Record<string, { bg: string; color: string; barColor: string }> = {
   hard: { bg: "#fee2e2", color: "#dc2626", barColor: "#dc2626" },
 };
 
+
+const COL = {
+  status: "44px",
+  title: "1",
+  acceptance: "130px",
+  difficulty: "82px",
+  action: "110px",
+};
+
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
   const d = difficulty.toLowerCase();
   const s = DIFF[d] ?? DIFF.hard;
   return (
     <span
-      className="inline-flex items-center justify-center rounded-md font-black tracking-widest uppercase"
       style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "6px",
+        fontWeight: 900,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        fontSize: "10px",
+        width: "52px",
+        padding: "3px 0",
         backgroundColor: s.bg,
         color: s.color,
-        fontSize: "9px",
-        width: "50px",
-        padding: "2px 0",
-        marginBottom: "7px",
       }}
-      data-difficulty={d}
     >
       {difficulty}
     </span>
@@ -41,14 +54,11 @@ function AcceptanceBar({ value, difficulty }: { value: number; difficulty: strin
   const d = difficulty.toLowerCase();
   const s = DIFF[d] ?? DIFF.hard;
   return (
-    <div className="flex items-center gap-2">
-      <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${value}%`, backgroundColor: s.barColor }}
-        />
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div style={{ width: "52px", height: "6px", backgroundColor: "#f3f4f6", borderRadius: "99px", overflow: "hidden", flexShrink: 0 }}>
+        <div style={{ height: "100%", width: `${value}%`, backgroundColor: s.barColor, borderRadius: "99px" }} />
       </div>
-      <span className="text-[13px] text-gray-500">{value}%</span>
+      <span style={{ fontSize: "13.5px", color: "#6b7280" }}>{value}%</span>
     </div>
   );
 }
@@ -57,18 +67,39 @@ function SolveButton({ id, solved }: { id: string; solved: boolean }) {
   return (
     <Link
       to={`/problems/${id}`}
-      className="inline-flex items-center justify-center font-bold text-[13px] rounded-xl transition-colors"
       style={{
-        minWidth: "88px",
-        padding: "6px 18px",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: 700,
+        fontSize: "14px",
+        borderRadius: "12px",
+        minWidth: "84px",
+        padding: "7px 16px",
         backgroundColor: solved ? "#f3f4f6" : "var(--main-orange-color)",
         color: solved ? "#6b7280" : "#fff",
         textDecoration: "none",
+        whiteSpace: "nowrap",
       }}
-      data-solved={solved}
     >
-      {solved ? "Solve" : "Solve"}
+      {solved ? "Solved" : "Solve"}
     </Link>
+  );
+}
+
+function Row({ children, isHeader = false }: { children: React.ReactNode; isHeader?: boolean }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        borderBottom: "1px solid #f3f4f6",
+        padding: isHeader ? "0 0 10px 0" : "14px 0",
+      }}
+      className={!isHeader ? "hover:bg-gray-50/60 transition-colors" : ""}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -77,7 +108,6 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
   const startItem = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
   const endItem = Math.min(page * pageSize, totalCount);
 
-  // Build smart page numbers: [1, ..., page-1, page, page+1, ..., last]
   const getPageNumbers = () => {
     const pages: (number | '...')[] = [];
     if (pageCount <= 7) {
@@ -98,59 +128,53 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
 
   return (
     <>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-gray-100 text-gray-400 text-[10px] uppercase tracking-widest">
-              <th className="pb-3 font-semibold w-14 text-center">Status</th>
-              <th className="pb-3 font-semibold">Title</th>
-              <th className="pb-3 font-semibold">Acceptance</th>
-              <th className="pb-3 font-semibold">Difficulty</th>
-              <th className="pb-3 font-semibold text-right pr-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p, idx) => {
-              const key = p.slug ?? p._id ?? idx;
-              return (
-                <tr
-                  key={key}
-                  className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors"
-                  data-problem-id={p._id}
-                >
-                <td className="py-4 text-center">
-                  {p.solved ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto" style={{ color: "var(--main-green-color)" }}>
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                  ) : (
-                    <span className="w-[18px] h-[18px] rounded-full border-2 border-gray-300 inline-block"></span>
-                  )}
-                </td>
+      <Row isHeader>
+        <div style={{ width: COL.status, flexShrink: 0, textAlign: "center", fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "3px" }}>
+          Status
+        </div>
+        <div style={{ flex: COL.title, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "10px" }}>
+          Title
+        </div>
+        <div style={{ width: COL.acceptance, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: "20px" }}>
+          Acceptance
+        </div>
+        <div style={{ width: COL.difficulty, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginRight: "7px" }}>
+          Difficulty
+        </div>
+        <div style={{ width: COL.action, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "right", paddingRight: "20px" }}>
+          Action
+        </div>
+      </Row>
 
-                <td className="py-4 text-center text-sm text-gray-500">{startItem + idx}</td>
-                <td className="py-4">
-                  <span className="font-bold text-[14px] text-[#1A1D2B]">{p.title}</span>
-                </td>
-
-                <td className="py-4">
-                  <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
-                </td>
-
-                <td className="py-4">
-                  <DifficultyBadge difficulty={p.difficulty} />
-                </td>
-
-                <td className="py-4 text-right pr-2">
-                  <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} />
-                </td>
-              </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      {rows.map((p, idx) => {
+        const key = p.slug ?? p._id ?? idx;
+        return (
+          <Row key={key}>
+            <div style={{ width: COL.status, flexShrink: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
+              {p.solved ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--main-green-color)" }}>
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              ) : (
+                <span style={{ width: "16px", height: "16px", borderRadius: "50%", border: "2px solid #d1d5db", display: "inline-block" }} />
+              )}
+            </div>
+            <div style={{ flex: COL.title, display: "flex", alignItems: "center" }}>
+              <span style={{ fontWeight: 700, fontSize: "13.5px", color: "#1A1D2B", lineHeight: 1.4 }}>{p.title}</span>
+            </div>
+            <div style={{ width: COL.acceptance, flexShrink: 0, display: "flex", alignItems: "center" }}>
+              <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
+            </div>
+            <div style={{ width: COL.difficulty, flexShrink: 0, display: "flex", alignItems: "center" }}>
+              <DifficultyBadge difficulty={p.difficulty} />
+            </div>
+            <div style={{ width: COL.action, flexShrink: 0, display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+              <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} />
+            </div>
+          </Row>
+        );
+      })}
 
       <div className="flex justify-between items-center mt-5 pt-4 border-t border-gray-100">
         <span className="text-[11px] text-gray-400 font-medium">
@@ -198,4 +222,3 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
     </>
   );
 }
-

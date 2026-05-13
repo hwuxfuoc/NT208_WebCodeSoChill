@@ -1,5 +1,6 @@
 import { useModal } from "../../context/ModalContext";
 import { useAuth } from "../../hooks/useAuth";
+import { motion } from "framer-motion";
 
 export default function RightToolbar() {
   const { openModal } = useModal();
@@ -7,7 +8,13 @@ export default function RightToolbar() {
   const avatarUrl = user?.avatarUrl || "https://via.placeholder.com/80";
 
   return (
-    <aside className="right-toolbar">
+    <motion.aside
+      className="right-toolbar"
+      initial={{ x: 60, opacity: 0, filter: "blur(8px)" }}
+      animate={{ x: 0,  opacity: 1, filter: "blur(0px)" }}
+      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.06 }}
+      style={{ willChange: "transform, opacity, filter" }}
+    >
       <div className="avt-container overflow-hidden bg-white">
         <img src={avatarUrl} alt="avt" className="object-cover w-full h-full rounded-xl" />
       </div>
@@ -23,6 +30,6 @@ export default function RightToolbar() {
           <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

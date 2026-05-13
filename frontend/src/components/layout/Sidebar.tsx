@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/images/logo.jpg";
+import { motion } from "framer-motion";
 
 const links = [
   { to: "/", label: "Homepage", icon: <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> },
@@ -19,7 +20,13 @@ export default function Sidebar() {
     : null;
   const allLinks = adminLink ? [...links, adminLink] : links;
   return (
-    <aside className="sidebar">
+    <motion.aside
+      className="sidebar"
+      initial={{ x: -60, opacity: 0, filter: "blur(8px)" }}
+      animate={{ x: 0,   opacity: 1, filter: "blur(0px)" }}
+      transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+      style={{ willChange: "transform, opacity, filter" }}
+    >
       <div className="brand mb-6">
         <div className="flex flex-row items-center">
           <span className="logo mr-2">
@@ -38,16 +45,7 @@ export default function Sidebar() {
           </div>
         ))}
       </div>
-      <div className="upgrade-card mt-auto text-center relative">
-        <div className="absolute -top-10 -right-10 w-24 h-24 bg-orange-100 rounded-full opacity-50 blur-xl"></div>
-        <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-orange-100 rounded-full opacity-50 blur-xl"></div>
-        <div className="relative z-5 flex flex-col items-center">
-          <div className="text-3xl mb-3 mt-1">🏅</div>
-          <h4 className="text-[15px] font-bold text-gray-800 leading-tight mb-2">Upgrade your<br />Account to Pro</h4>
-          <p className="text-xs text-gray-500 mb-4 px-2">Upgrade to premium to get premium features</p>
-          <button className="btn-primary w-full py-2.5 text-sm shadow-md shadow-orange-200">Upgrade</button>
-        </div>
-      </div>
-    </aside>
+
+    </motion.aside>
   );
 }
