@@ -93,7 +93,7 @@ export default function SeasonalLeaderboard() {
           ))}
 
           {/* Your rank row — pinned at bottom */}
-          {user && (
+          {user && !leaders.some(l => l._id === user.id || l._id === (user as any)._id) && (
             <div className="flex items-center justify-between py-3 mt-2 bg-orange-50 rounded-xl px-3 border border-orange-100">
               <div className="flex items-center gap-3">
                 <span className="w-5 text-center font-bold text-sm text-orange-500">-</span>

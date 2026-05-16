@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { createPost } from "../../services/communityService";
 import { uploadImage } from "../../services/uploadService";
+import { useAuth } from "../../hooks/useAuth";
 
 const LANGS = ["JavaScript", "Python 3", "Java", "C++", "Go", "Rust"];
 const DEFAULT_CODE: Record<string, string> = {
@@ -13,6 +14,7 @@ const DEFAULT_CODE: Record<string, string> = {
 };
 
 export default function CreatePostBox() {
+  const { user } = useAuth();
   const [content, setContent] = useState("");
   const [showCode, setShowCode] = useState(false);
   const [lang, setLang] = useState("JavaScript");
@@ -101,7 +103,7 @@ export default function CreatePostBox() {
       />
 
       <div className="flex items-center gap-4 mb-4 bg-gray-50 p-2 rounded-xl border border-gray-100 focus-within:border-orange-400 transition-colors">
-        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="user" className="w-10 h-10 rounded-full" />
+        <img src={user?.avatarUrl || "https://randomuser.me/api/portraits/men/1.jpg"} alt="user" className="w-10 h-10 rounded-full object-cover" />
         <input 
           className="bg-transparent border-none outline-none w-full text-sm text-gray-700" 
           placeholder="What's the architecture today?"

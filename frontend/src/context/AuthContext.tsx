@@ -10,6 +10,8 @@ export interface User {
   bio?: string;
   phone?: string;
   role?: string;
+  contestRating?: number;
+  totalSolved?: number;
 }
 
 export interface AuthContextType {
