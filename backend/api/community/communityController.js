@@ -48,10 +48,21 @@ const likePost = async (req, res) => {
         const post = await CommunityPost.findById(req.params.id);
         if (!post) return res.status(404).json({ message: 'Bài đăng không tồn tại' });
 
-        // Toggle like (đơn giản: chỉ tăng/giảm count, không track ai đã like)
-        post.likeCount += 1;
+        const userId = req.user.id;
+        const index = post.likes.indexOf(userId);
+
+        if (index === -1) {
+            // User hasn't liked it yet
+            post.likes.push(userId);
+            post.likeCount += 1;
+        } else {
+            // User already liked it, so unlike
+            post.likes.splice(index, 1);
+            post.likeCount = Math.max(0, post.likeCount - 1);
+        }
+
         await post.save();
-        res.json({ likeCount: post.likeCount });
+        res.json({ likeCount: post.likeCount, likes: post.likes });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });

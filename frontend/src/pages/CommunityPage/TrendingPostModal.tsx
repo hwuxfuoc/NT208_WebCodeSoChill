@@ -1,19 +1,61 @@
-import { useState } from "react";
-
-const MOCK_COMMENTS = [
-  { id: 1, author: "Alex Code",  avatar: "https://randomuser.me/api/portraits/men/32.jpg",  timeAgo: "1h ago", text: "Great insights! We made the switch last quarter and haven't looked back since." },
-  { id: 2, author: "DevGuru",    avatar: "https://randomuser.me/api/portraits/women/68.jpg", timeAgo: "2h ago", text: "Interesting perspective. What about monorepo tooling like Nx or Turborepo though?" },
-  { id: 3, author: "Jordan Byte",avatar: "https://randomuser.me/api/portraits/men/22.jpg",  timeAgo: "3h ago", text: "The coordination overhead in polyrepos is real. Teams need mature CI/CD pipelines to handle cross-repo changes gracefully." },
-];
+import { useState, useEffect } from "react";
+import { getComments, addComment } from "../../services/communityService";
+import { useAuth } from "../../hooks/useAuth";
 
 interface TrendPost {
-  id: number; tag: string; tagColor: string; title: string; pulses: string;
+  id: string; tag: string; tagColor: string; title: string; pulses: string;
   author: string; role: string; avatar: string; timeAgo: string;
   text: string; likes: number; comments: number;
 }
 
 export default function TrendingPostModal({ post, onClose }: { post: TrendPost; onClose: () => void }) {
+  const { user } = useAuth();
   const [liked, setLiked] = useState(false);
+  const [comments, setComments] = useState<any[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [newComment, setNewComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetchComments();
+  }, [post.id]);
+
+  const fetchComments = async () => {
+    try {
+      setLoadingComments(true);
+      const response = await getComments(post.id);
+      setComments(response.data.comments || []);
+    } catch (err) {
+      console.error("Failed to fetch comments:", err);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+    try {
+      setSubmitting(true);
+      await addComment(post.id, { content: newComment });
+      setNewComment("");
+      fetchComments();
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const formatTimeAgo = (date: string) => {
+    const now = new Date();
+    const postDate = new Date(date);
+    const diffInSeconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  };
 
   return (
     <div
@@ -50,8 +92,8 @@ export default function TrendingPostModal({ post, onClose }: { post: TrendPost; 
                 className={`flex items-center gap-1.5 transition-colors ${liked ? "text-orange-500" : "hover:text-orange-500"}`}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24"
-                  fill={liked ? "var(--main-orange-color)" : "none"}
-                  stroke={liked ? "var(--main-orange-color)" : "currentColor"} strokeWidth="2">
+                  fill={liked ? "currentColor" : "none"}
+                  stroke="currentColor" strokeWidth="2">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
                 {liked ? post.likes + 1 : post.likes}
@@ -69,24 +111,50 @@ export default function TrendingPostModal({ post, onClose }: { post: TrendPost; 
 
           <p className="text-[10px] font-black tracking-widest uppercase text-gray-400 mb-3">Comments</p>
           <div className="flex flex-col gap-4 mb-4">
-            {MOCK_COMMENTS.map(c => (
-              <div key={c.id} className="flex gap-3">
-                <img src={c.avatar} alt={c.author} className="w-8 h-8 rounded-full object-cover flex-shrink-0 mt-0.5" />
-                <div className="bg-gray-50 rounded-2xl px-4 py-3 flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-[13px] text-gray-800">{c.author}</span>
-                    <span className="text-[10px] text-gray-400">{c.timeAgo}</span>
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">{c.text}</p>
-                </div>
+            {loadingComments ? (
+              <div className="py-4 text-center text-gray-400">
+                <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500"></div>
               </div>
-            ))}
+            ) : comments.length > 0 ? (
+              comments.map(c => (
+                <div key={c._id} className="flex gap-3">
+                  <img src={c.authorId?.avatarUrl || "https://randomuser.me/api/portraits/men/32.jpg"} alt={c.authorId?.displayname} className="w-8 h-8 rounded-full object-cover flex-shrink-0 mt-0.5" />
+                  <div className="bg-gray-50 rounded-2xl px-4 py-3 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-[13px] text-gray-800">{c.authorId?.displayname || "Anonymous"}</span>
+                      <span className="text-[10px] text-gray-400">{formatTimeAgo(c.createdAt)}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed">{c.content}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-400 text-sm py-4">No comments yet. Be the first!</p>
+            )}
           </div>
 
           <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-2.5 border border-gray-100">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="you" className="w-7 h-7 rounded-full flex-shrink-0" />
-            <input className="flex-1 bg-transparent text-sm outline-none text-gray-600" placeholder="Write a comment..." />
-            <button className="text-[11px] font-bold px-3 py-1 rounded-full text-white hover:opacity-90" style={{ backgroundColor: "var(--main-orange-color)" }}>Send</button>
+            <img src={user?.avatarUrl || "https://randomuser.me/api/portraits/men/1.jpg"} alt="you" className="w-7 h-7 rounded-full flex-shrink-0 object-cover" />
+            <input 
+              className="flex-1 bg-transparent text-sm outline-none text-gray-600" 
+              placeholder="Write a comment..." 
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleAddComment();
+                }
+              }}
+            />
+            <button 
+              onClick={handleAddComment}
+              disabled={submitting || !newComment.trim()}
+              className="text-[11px] font-bold px-3 py-1 rounded-full text-white hover:opacity-90 disabled:opacity-50" 
+              style={{ backgroundColor: "var(--main-orange-color)" }}
+            >
+              {submitting ? "..." : "Send"}
+            </button>
           </div>
         </div>
       </div>
