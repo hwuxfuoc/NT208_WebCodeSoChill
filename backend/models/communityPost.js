@@ -8,6 +8,7 @@ const communityPostSchema = new mongoose.Schema({
     imageUrl:       { type: String },
     tags:           [{ type: String }],
     likeCount:      { type: Number, default: 0 },
+    likes:          [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     commentCount:   { type: Number, default: 0 },
 
 }, { timestamps: true });

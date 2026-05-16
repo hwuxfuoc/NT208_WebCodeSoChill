@@ -3,7 +3,8 @@ const axios = require("axios");
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://localhost:8000";
 
-// ── POST /api/ai/chat – Non-streaming ────────────────────────────────────────
+// @desc    Gửi câu hỏi đến AI
+// @route   POST /api/ai/chat
 const chat = async (req, res) => {
   const {
     question,
@@ -45,7 +46,8 @@ const chat = async (req, res) => {
   }
 };
 
-// ── POST /api/ai/chat/stream – Streaming (SSE) ───────────────────────────────
+// @desc    Gửi câu hỏi đến AI (streaming)
+// @route   POST /api/ai/chat/stream
 const chatStream = async (req, res) => {
   const {
     question,
