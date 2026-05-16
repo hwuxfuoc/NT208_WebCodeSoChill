@@ -32,8 +32,16 @@ export const getDailyProblem = () => {
   return api.get("/api/problems/daily");
 };
 
+export const getDailyProblems = () => {
+  return api.get("/api/problems/daily");
+};
+
 export const createProblem = (data: any) => {
   return api.post("/api/problems", data);
+};
+
+export const getTopicCounts = () => {
+  return api.get("/api/problems/topic-counts");
 };
 
 export const updateProblem = (id: string, data: any) => {

@@ -41,7 +41,11 @@ export default function ProfilePage() {
         ]);
 
         setProfile(profileData);
-        setStats(statsRes.data.stats);
+        setStats({
+          ...statsRes.data.stats,
+          solvedByDifficulty: statsRes.data.solvedByDifficulty,
+          totalProblemsByDifficulty: statsRes.data.totalProblemsByDifficulty
+        });
         setSubmissions(submissionsRes.data.submissions);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Failed to load profile');
@@ -85,7 +89,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="grid grid-cols-2 gap-6">
-        <SolvedProblems stats={stats} solvedByDifficulty={stats?.solvedByDifficulty} />
+        <SolvedProblems stats={stats} solvedByDifficulty={stats?.solvedByDifficulty} totalProblemsByDifficulty={stats?.totalProblemsByDifficulty} />
         <RecentBadges />
       </div>
 

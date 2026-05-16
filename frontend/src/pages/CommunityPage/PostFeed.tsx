@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getPosts, likePost } from "../../services/communityService";
 import CommentModal from "./CommentModal";
+import ImageModal from "./ImageModal";
 import { useAuth } from "../../hooks/useAuth";
 
 interface Post {
@@ -29,6 +30,7 @@ export default function PostFeed() {
   const [error, setError] = useState<string | null>(null);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [commentPost, setCommentPost] = useState<Post | null>(null);
+  const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPosts();
@@ -151,8 +153,11 @@ export default function PostFeed() {
               </div>
             )}
             {post.imageUrl && (
-              <div className="mt-4 rounded-xl overflow-hidden border border-gray-100">
-                <img src={post.imageUrl} alt="post visual" className="w-full h-auto object-cover opacity-90" />
+              <div 
+                className="mt-4 rounded-xl overflow-hidden border border-gray-100 cursor-pointer"
+                onClick={() => setFullScreenImage(post.imageUrl!)}
+              >
+                <img src={post.imageUrl} alt="post visual" className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity" />
               </div>
             )}
 
@@ -192,6 +197,13 @@ export default function PostFeed() {
           isLiked={likedPosts.has(commentPost._id)}
           onToggleLike={() => toggleLike(commentPost._id)}
           onClose={() => setCommentPost(null)} 
+        />
+      )}
+
+      {fullScreenImage && (
+        <ImageModal 
+          imageUrl={fullScreenImage} 
+          onClose={() => setFullScreenImage(null)} 
         />
       )}
     </>

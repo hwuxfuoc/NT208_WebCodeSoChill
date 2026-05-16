@@ -1,11 +1,24 @@
-const TOPIC_COUNTS: Record<string, number> = {
-  "All Topics": 0,
-  "Array": 462,
-  "String": 300,
-  "Hash Table": 182,
-  "Math": 46,
-  "Dynamic Programming": 150,
-};
+import { useState, useEffect } from "react";
+import { getTopicCounts } from "../../services/problemService";
+
+// Danh sách topic hiển thị (thứ tự và tên)
+const TOPICS = [
+  "All Topics",
+  "Array",
+  "String",
+  "Hash Table",
+  "Math",
+  "Dynamic Programming",
+  "Sorting",
+  "Greedy",
+  "Binary Search",
+  "Tree",
+  "Depth-First Search",
+  "Breadth-First Search",
+  "Graph",
+  "Two Pointers",
+  "Sliding Window",
+];
 
 interface TopicFilterBarProps {
   topic: string;
@@ -14,10 +27,24 @@ interface TopicFilterBarProps {
 }
 
 export default function TopicFilterBar({ topic, setTopic, setPage }: TopicFilterBarProps) {
+  const [counts, setCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    getTopicCounts()
+      .then((res) => setCounts(res.data.counts || {}))
+      .catch((err) => console.error("Failed to load topic counts", err));
+  }, []);
+
+  // Only show topics that exist in DB (count > 0) + "All Topics"
+  const visibleTopics = TOPICS.filter(
+    (t) => t === "All Topics" || counts[t] !== undefined
+  );
+
   return (
     <div className="flex flex-wrap gap-2 mb-5">
-      {Object.entries(TOPIC_COUNTS).map(([item, count]) => {
+      {visibleTopics.map((item) => {
         const isActive = topic === item;
+        const count = counts[item];
         return (
           <button
             key={item}
@@ -36,7 +63,7 @@ export default function TopicFilterBar({ topic, setTopic, setPage }: TopicFilter
               </svg>
             )}
             {item}
-            {item !== "All Topics" && (
+            {item !== "All Topics" && count !== undefined && (
               <span
                 className="text-[10px] font-black px-1.5 py-0.5 rounded-full"
                 style={{

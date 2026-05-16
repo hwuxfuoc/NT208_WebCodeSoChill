@@ -1,6 +1,6 @@
-// backend/api/user/userController.js
 const User = require('../../models/user');
 const Submission = require('../../models/submission');
+const Problem = require('../../models/problem');
 
 // @desc    Xem profile công khai của user
 // @route   GET /api/users/:username
@@ -64,7 +64,11 @@ const getUserStats = async (req, res) => {
             { $group: { _id: '$problem.difficulty', count: { $sum: 1 } } }
         ]);
 
-        res.json({ stats: user, solvedByDifficulty });
+        const totalProblemsByDifficulty = await Problem.aggregate([
+            { $group: { _id: '$difficulty', count: { $sum: 1 } } }
+        ]);
+
+        res.json({ stats: user, solvedByDifficulty, totalProblemsByDifficulty });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });
