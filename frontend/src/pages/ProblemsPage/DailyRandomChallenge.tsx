@@ -1,6 +1,17 @@
+import { Link } from "react-router-dom";
+import { useDailyProblems } from "../../hooks/useDailyProblems";
+
+const DIFF_COLOR: Record<string, { bg: string; text: string }> = {
+  easy:   { bg: "#dcfce7", text: "var(--main-green-color)" },
+  medium: { bg: "#ffedd5", text: "var(--main-orange-color)" },
+  hard:   { bg: "#fee2e2", text: "#dc2626" },
+};
+
 export default function DailyRandomChallenge() {
-  const solved = 0;
-  const total = 5;
+  const { problems, loading } = useDailyProblems();
+
+  const total = 3;
+  const solved = 0; // TODO: wire up user solved state
   const pct = Math.round((solved / total) * 100);
 
   return (
@@ -18,12 +29,12 @@ export default function DailyRandomChallenge() {
           </svg>
         </div>
         <div>
-          <h3 className="font-extrabold text-[15px] text-[#1A1D2B] leading-tight">Daily Random<br/>Challenge</h3>
+          <h3 className="font-extrabold text-[15px] text-[#1A1D2B] leading-tight">Daily<br/>Challenge</h3>
         </div>
       </div>
 
       <p className="text-[13px] text-gray-500 leading-relaxed -mt-1">
-        Solve 5 random problems today to collect EXP.
+        Solve 3 problems today (Easy · Medium · Hard) to collect EXP.
       </p>
 
       <div>
@@ -39,22 +50,43 @@ export default function DailyRandomChallenge() {
         </div>
       </div>
 
-      <button
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[13px] text-white transition-opacity hover:opacity-90"
-        style={{ backgroundColor: "var(--main-orange-color)" }}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
-        Start Random
-      </button>
+      <div className="flex flex-col gap-2">
+        {loading ? (
+          <div className="flex items-center justify-center py-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2" style={{ borderColor: "var(--main-orange-color)" }}></div>
+          </div>
+        ) : problems.map((p) => {
+          const dc = DIFF_COLOR[p.difficulty] || DIFF_COLOR.easy;
+          return (
+            <Link
+              key={p._id}
+              to={`/problems/${p.problemId}`}
+              className="flex items-center justify-between rounded-xl px-3 py-2 border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-colors group"
+            >
+              <span className="text-[13px] font-semibold text-gray-700 group-hover:text-orange-600 truncate max-w-[130px]">{p.title}</span>
+              <span
+                className="text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest flex-shrink-0"
+                style={{ backgroundColor: dc.bg, color: dc.text }}
+              >
+                {p.difficulty}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
 
-      <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-[13px] text-gray-500 bg-[#f4f6f8] hover:bg-gray-200 transition-colors">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-        </svg>
-        Earn 50 EXP
-      </button>
+      {problems.length > 0 && (
+        <Link
+          to={`/problems/${problems[0].problemId}`}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[13px] text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "var(--main-orange-color)" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Start Challenge
+        </Link>
+      )}
     </section>
   );
 }

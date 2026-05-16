@@ -166,22 +166,58 @@ const getProblem = async (req, res) => {
     }
 };;;;;
 
-// @desc    Bài tập hàng ngày (random từ easy/medium)
+// @desc    Bài tập hàng ngày — 3 bài/ngày (1 Easy, 1 Medium, 1 Hard), seed theo ngày
 // @route   GET /api/problems/daily
 const getDailyProblem = async (req, res) => {
     try {
-        // Dùng ngày hiện tại làm seed để mỗi ngày ra 1 bài cố định
+        // Seed theo ngày: mỗi ngày cho ra 3 bài cố định
         const today = new Date().toISOString().split('T')[0]; // "2025-01-15"
-        const seed = today.split('-').join('');
+        const seed = parseInt(today.split('-').join(''));
 
-        const count = await Problem.countDocuments({ isActive: true, difficulty: { $in: ['easy', 'medium'] } });
-        const index = parseInt(seed) % count;
+        const difficulties = ['easy', 'medium', 'hard'];
+        const dailyProblems = [];
 
-        const problem = await Problem.findOne({ isActive: true, difficulty: { $in: ['easy', 'medium'] } })
-            .skip(index)
-            .select('-constraints');
+        for (let i = 0; i < difficulties.length; i++) {
+            const diff = difficulties[i];
+            const count = await Problem.countDocuments({ isActive: true, difficulty: diff });
+            if (count === 0) continue;
 
-        res.json({ problem });
+            // Dùng seed khác nhau mỗi độ khó để không trùng index
+            const index = (seed + i * 7919) % count;
+            const problem = await Problem.findOne({ isActive: true, difficulty: diff })
+                .skip(index)
+                .select('_id problemId title slug difficulty');
+
+            if (problem) dailyProblems.push(problem);
+        }
+
+        res.json({ problems: dailyProblems });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+};
+
+// @desc    Đếm số bài theo từng topic/tag
+// @route   GET /api/problems/topic-counts
+const getTopicCounts = async (req, res) => {
+    try {
+        const result = await Problem.aggregate([
+            { $match: { isActive: true } },
+            {
+                $project: {
+                    allTags: { $concatArrays: [{ $ifNull: ['$tags', []] }, { $ifNull: ['$topics', []] }] }
+                }
+            },
+            { $unwind: '$allTags' },
+            { $group: { _id: '$allTags', count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]);
+
+        const counts = {};
+        result.forEach((item) => { counts[item._id] = item.count; });
+
+        res.json({ counts });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });
@@ -215,4 +251,4 @@ const updateProblem = async (req, res) => {
     }
 };
 
-module.exports = { getProblems, getProblem, getDailyProblem, createProblem, updateProblem };
+module.exports = { getProblems, getProblem, getDailyProblem, getTopicCounts, createProblem, updateProblem };

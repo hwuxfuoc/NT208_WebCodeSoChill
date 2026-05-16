@@ -21,13 +21,19 @@ function Ring({ pct, color, label, solved, total }: { pct: number; color: string
 interface SolvedProblemsProps {
   stats?: any;
   solvedByDifficulty?: any[];
+  totalProblemsByDifficulty?: any[];
 }
 
-export default function SolvedProblems({ stats, solvedByDifficulty = [] }: SolvedProblemsProps) {
+export default function SolvedProblems({ stats, solvedByDifficulty = [], totalProblemsByDifficulty = [] }: SolvedProblemsProps) {
+  const getTotalCount = (difficulty: string) => {
+    const item = totalProblemsByDifficulty.find(d => d._id === difficulty);
+    return item ? item.count : 0; 
+  };
+
   const calculatePercentage = (difficulty: string) => {
-    const item = solvedByDifficulty.find(d => d._id === difficulty);
-    const total = { easy: 780, medium: 1200, hard: 640 }[difficulty] || 1000;
-    return item ? Math.round((item.count / total) * 100) : 0;
+    const solved = getSolvedCount(difficulty);
+    const total = getTotalCount(difficulty);
+    return total > 0 ? Math.round((solved / total) * 100) : 0;
   };
 
   const getSolvedCount = (difficulty: string) => {
@@ -35,9 +41,9 @@ export default function SolvedProblems({ stats, solvedByDifficulty = [] }: Solve
     return item?.count || 0;
   };
 
-  const easyTotal = 780;
-  const mediumTotal = 1200;
-  const hardTotal = 640;
+  const easyTotal = getTotalCount('easy');
+  const mediumTotal = getTotalCount('medium');
+  const hardTotal = getTotalCount('hard');
 
   return (
     <section className="card flex flex-col">

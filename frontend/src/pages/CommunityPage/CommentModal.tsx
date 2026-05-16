@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getComments, addComment } from "../../services/communityService";
+import ImageModal from "./ImageModal";
 
 interface Author {
   _id: string;
@@ -43,6 +44,7 @@ export default function CommentModal({
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchComments();
@@ -114,7 +116,12 @@ export default function CommentModal({
               <div className="mt-3 p-3 bg-gray-900 rounded-xl"><pre className="text-[11px] text-gray-300 font-mono overflow-x-auto">{post.codeSnippet}</pre></div>
             )}
             {post.imageUrl && (
-              <div className="mt-3 rounded-xl overflow-hidden"><img src={post.imageUrl} alt="post" className="w-full h-48 object-cover opacity-90" /></div>
+              <div 
+                className="mt-3 rounded-xl overflow-hidden cursor-pointer"
+                onClick={() => setFullScreenImage(post.imageUrl!)}
+              >
+                <img src={post.imageUrl} alt="post" className="w-full h-48 object-cover opacity-90 hover:opacity-100 transition-opacity" />
+              </div>
             )}
             <div className="flex gap-5 mt-4 text-xs text-gray-400">
               <button
@@ -190,6 +197,12 @@ export default function CommentModal({
           </div>
         </div>
       </div>
+      {fullScreenImage && (
+        <ImageModal 
+          imageUrl={fullScreenImage} 
+          onClose={() => setFullScreenImage(null)} 
+        />
+      )}
     </div>
   );
 }
