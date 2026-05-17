@@ -1,5 +1,6 @@
 import Editor from "@monaco-editor/react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getLastSubmission, runSubmission, submitSolution } from "../../services/submissionService";
 
 const LANGUAGE_OPTIONS = [
@@ -67,6 +68,9 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
   const [submitResult, setSubmitResult] = useState<JudgeResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const [searchParams] = useSearchParams();
+  const contestId = searchParams.get("contestId") || undefined;
+
   // Load last submission khi vào bài để restore code + language + status
   useEffect(() => {
     setLoadingLast(true);
@@ -128,7 +132,7 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
     setIsSubmitting(true);
 
     try {
-      const response = await submitSolution({ problemId, language: language.value, code });
+      const response = await submitSolution({ problemId, language: language.value, code, contestId });
       const submission = response.data.submission;
       const newStatus = submission.status;
       setSubmitResult({

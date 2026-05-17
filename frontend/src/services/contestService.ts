@@ -1,12 +1,29 @@
-//frontend/src/services/contestService.ts
 import api from "./api";
 
+export interface Contest {
+  _id: string;
+  title: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  participants: string[];
+  status: "upcoming" | "ongoing" | "ended";
+  ratedFor: string;
+  isRated: boolean;
+  createdBy: {
+    _id: string;
+    username: string;
+    displayname: string;
+  };
+}
+
 export const getContests = () => {
-  return api.get("/api/contests");
+  return api.get<{ contests: Contest[] }>("/api/contests");
 };
 
 export const getContest = (id: string) => {
-  return api.get(`/api/contests/${id}`);
+  return api.get<{ contest: Contest }>(`/api/contests/${id}`);
 };
 
 export const getContestProblems = (id: string) => {
@@ -19,8 +36,4 @@ export const getContestLeaderboard = (id: string) => {
 
 export const registerContest = (id: string) => {
   return api.post(`/api/contests/${id}/register`);
-};
-
-export const createContest = (data: any) => {
-  return api.post("/api/contests", data);
 };

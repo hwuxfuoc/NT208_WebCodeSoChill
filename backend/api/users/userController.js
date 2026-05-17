@@ -44,8 +44,9 @@ const getUserSubmissions = async (req, res) => {
 // @route   GET /api/users/:userId/stats
 const getUserStats = async (req, res) => {
     try {
+        // rank và level là virtual — tự tính từ experiencePoints khi serialize
         const user = await User.findById(req.params.userId)
-            .select('totalSolved streak contestRating experiencePoints rank');
+            .select('totalSolved streak contestRating experiencePoints');
         if (!user) return res.status(404).json({ message: 'User không tồn tại' });
 
         // Đếm số bài AC theo từng độ khó
@@ -126,4 +127,59 @@ const updateProfile = async (req, res) => {
     }
 };
 
-module.exports = { getProfile, getUserSubmissions, getUserStats, getLeaderboard, updateProfile };
+// @desc    Lịch sử hoạt động và streak của user (Profile & Calendar)
+// @route   GET /api/users/:userId/calendar
+const getUserCalendar = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const submissions = await Submission.find({ userId }).select('createdAt');
+        
+        const toLocalISODate = (date) => {
+            const d = new Date(date);
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        };
+
+        const activeDatesSet = new Set();
+        submissions.forEach(sub => {
+            if (sub.createdAt) {
+                activeDatesSet.add(toLocalISODate(sub.createdAt));
+            }
+        });
+        
+        const activeDates = Array.from(activeDatesSet).sort((a, b) => b.localeCompare(a));
+        
+        let currentStreak = 0;
+        if (activeDates.length > 0) {
+            const today = new Date();
+            const todayStr = toLocalISODate(today);
+            
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = toLocalISODate(yesterday);
+            
+            if (activeDatesSet.has(todayStr) || activeDatesSet.has(yesterdayStr)) {
+                let checkingDate = new Date(activeDatesSet.has(todayStr) ? today : yesterday);
+                
+                while (true) {
+                    const dateStr = toLocalISODate(checkingDate);
+                    if (activeDatesSet.has(dateStr)) {
+                        currentStreak++;
+                        checkingDate.setDate(checkingDate.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        res.json({ activeDates, currentStreak });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+};
+
+module.exports = { getProfile, getUserSubmissions, getUserStats, getLeaderboard, updateProfile, getUserCalendar };

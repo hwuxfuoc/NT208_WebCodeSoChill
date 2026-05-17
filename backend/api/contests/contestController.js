@@ -39,7 +39,7 @@ const getContest = async (req, res) => {
 const getContestProblems = async (req, res) => {
     try {
         const contest = await Contest.findById(req.params.id)
-            .populate('problems', 'problemId title difficulty timeLimit memoryLimit tags');
+            .populate('problems', 'problemId title slug difficulty timeLimit memoryLimit tags');
         if (!contest) return res.status(404).json({ message: 'Contest không tồn tại' });
 
         const isParticipant = contest.participants.some(uid => uid.toString() === req.user.id);

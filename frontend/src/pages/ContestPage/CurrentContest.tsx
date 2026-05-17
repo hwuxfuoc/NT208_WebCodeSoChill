@@ -1,9 +1,38 @@
+import { Contest } from "../../services/contestService";
+import { useEffect, useState } from "react";
+
 interface CurrentContestProps {
-  onEnter: () => void;
-  onViewProblems: () => void;
+  contest: Contest;
+  onEnter: (contest: Contest) => void;
+  onViewProblems: (contest: Contest) => void;
 }
 
-export default function CurrentContest({ onEnter, onViewProblems }: CurrentContestProps) {
+export default function CurrentContest({ contest, onEnter, onViewProblems }: CurrentContestProps) {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, mins: 0, secs: 0 });
+
+  useEffect(() => {
+    const end = new Date(contest.endTime).getTime();
+    
+    const updateTime = () => {
+      const now = new Date().getTime();
+      const diff = end - now;
+      if (diff <= 0) {
+        setTimeLeft({ hours: 0, mins: 0, secs: 0 });
+        return;
+      }
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeLeft({ hours, mins, secs });
+    };
+
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, [contest.endTime]);
+
+  const startDate = new Date(contest.startTime);
+
   return (
     <>
       <p className="text-xs font-bold text-orange-600 tracking-wider mt-2 mb-2 uppercase">Current Contests</p>
@@ -17,22 +46,24 @@ export default function CurrentContest({ onEnter, onViewProblems }: CurrentConte
             <span className="flex items-center gap-2 bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide border border-teal-100">
               <span className="w-2 h-2 rounded-full bg-teal-500"></span> LIVE NOW
             </span>
-            <span className="text-xs font-medium text-gray-500">Started at 7:00 PM</span>
+            <span className="text-xs font-medium text-gray-500">
+              Started at {startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-3 leading-tight">CodeSoChill Biweekly Architectural Challenge #42</h2>
-          <p className="text-gray-500 text-sm mb-8 leading-relaxed pr-8">
-            A high-performance system design and algorithmic challenge focused on asynchronous scaling patterns and distributed consensus.
+          <h2 className="text-2xl font-bold text-gray-900 mb-3 leading-tight">{contest.title}</h2>
+          <p className="text-gray-500 text-sm mb-8 leading-relaxed pr-8 line-clamp-2">
+            {contest.description}
           </p>
 
           <div className="flex gap-4">
             <button
-              onClick={onEnter}
+              onClick={() => onEnter(contest)}
               className="text-white font-bold py-2.5 px-6 rounded-full text-sm transition-colors shadow-lg hover:opacity-85"
               style={{ backgroundColor: "var(--main-orange-color)" }}
             >Enter Contest</button>
             <button 
-              onClick={onViewProblems}
+              onClick={() => onViewProblems(contest)}
               className="bg-white hover:bg-gray-50 text-gray-700 font-bold py-2.5 px-6 rounded-full text-sm border border-gray-200 transition-colors shadow-sm"
             >View Problems</button>
           </div>
@@ -41,12 +72,12 @@ export default function CurrentContest({ onEnter, onViewProblems }: CurrentConte
         <div className="w-[35%] bg-gray-100/50 rounded-3xl p-8 flex flex-col items-center justify-center relative z-10 border border-white/60 shadow-sm backdrop-blur-sm">
           <span className="text-[10px] font-bold text-gray-500 tracking-wider uppercase mb-2">Ends In</span>
           <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2 text-4xl font-bold text-gray-800 tracking-tight">
-              <span>01</span>
+            <div className="flex items-center gap-2 text-4xl font-bold text-gray-800 tracking-tight tabular-nums">
+              <span>{String(timeLeft.hours).padStart(2, '0')}</span>
               <span className="text-orange-500 leading-none">:</span>
-              <span>42</span>
+              <span>{String(timeLeft.mins).padStart(2, '0')}</span>
               <span className="text-orange-500 leading-none">:</span>
-              <span>18</span>
+              <span>{String(timeLeft.secs).padStart(2, '0')}</span>
             </div>
             <div className="flex items-center text-[8px] text-gray-400 tracking-wide uppercase" style={{ gap: "0" }}>
               <span className="w-10 text-center">Hours</span>

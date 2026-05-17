@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ContestRegisterModal from "./ContestRegisterModal";
 import ViewProblemsModal from "./ViewProblemsModal";
 import ContestRankingsModal from "./ContestRankingsModal";
@@ -6,20 +6,34 @@ import ContestArchiveModal from "./ContestArchiveModal";
 import CurrentContest from "./CurrentContest";
 import UpcomingContestsTable from "./UpcomingContestsTable";
 import RecentContestsGrid from "./RecentContestsGrid";
+import * as contestService from "../../services/contestService";
+import { Contest } from "../../services/contestService";
 
 export default function ContestPage() {
   const [activeModal, setActiveModal] = useState<"register" | "view_problems" | "rankings" | "archive" | null>(null);
-  const [selectedContest, setSelectedContest] = useState("");
-  const [isLiveContest, setIsLiveContest] = useState(false);
-  const [contestStartTime, setContestStartTime] = useState("");
-  const [contestDate, setContestDate] = useState("");
-  const [contestTotalSolved, setContestTotalSolved] = useState("");
-  const [isPastContest, setIsPastContest] = useState(false);
+  const [selectedContest, setSelectedContest] = useState<Contest | null>(null);
+  
+  const [contests, setContests] = useState<Contest[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const upcomingContests = [
-    { name: "Spring Microservices Sprint", startDate: "Oct 24, 2023", startTime: "18:00 UTC", duration: "2.5 hrs", participants: "+842" },
-    { name: "Rust Memory Safety Duel",     startDate: "Oct 26, 2023", startTime: "04:00 UTC", duration: "1.5 hrs", participants: "+1.2k" },
-  ];
+  useEffect(() => {
+    fetchContests();
+  }, []);
+
+  const fetchContests = async () => {
+    try {
+      const res = await contestService.getContests();
+      setContests(res.data.contests);
+    } catch (err) {
+      console.error("Failed to fetch contests", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const ongoingContests = contests.filter(c => c.status === "ongoing");
+  const upcomingContests = contests.filter(c => c.status === "upcoming");
+  const pastContests = contests.filter(c => c.status === "ended");
 
   return (
     <div className="page-stack">
@@ -31,76 +45,70 @@ export default function ContestPage() {
         </div>
       </div>
 
-      <CurrentContest 
-        onEnter={() => {
-          setSelectedContest("CodeSoChill Biweekly Architectural Challenge #42");
-          setIsLiveContest(true);
-          setContestStartTime("");
-          setActiveModal("register");
-        }}
-        onViewProblems={() => {
-          setSelectedContest("CodeSoChill Biweekly Architectural Challenge #42");
-          setActiveModal("view_problems");
-        }}
-      />
+      {loading ? (
+        <div className="py-8 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div></div>
+      ) : (
+        <>
+          {ongoingContests.length > 0 && (
+            <CurrentContest 
+              contest={ongoingContests[0]}
+              onEnter={(contest) => {
+                setSelectedContest(contest);
+                setActiveModal("register");
+              }}
+              onViewProblems={(contest) => {
+                setSelectedContest(contest);
+                setActiveModal("view_problems");
+              }}
+            />
+          )}
 
-      <UpcomingContestsTable 
-        contests={upcomingContests}
-        onRegister={(c) => {
-          setSelectedContest(c.name);
-          setIsLiveContest(false);
-          setContestStartTime(`${c.startDate} at ${c.startTime}`);
-          setActiveModal("register");
-        }}
-      />
+          <UpcomingContestsTable 
+            contests={upcomingContests}
+            onRegister={(contest) => {
+              setSelectedContest(contest);
+              setActiveModal("register");
+            }}
+          />
 
-      <RecentContestsGrid 
-        onViewArchive={() => setActiveModal("archive")}
-        onViewRankings={(c) => {
-          setSelectedContest(c.title);
-          setContestDate(c.date);
-          setContestTotalSolved(c.solved);
-          setActiveModal("rankings");
-        }}
-      />
+          <RecentContestsGrid 
+            contests={pastContests.slice(0, 3)}
+            onViewArchive={() => setActiveModal("archive")}
+            onViewRankings={(contest) => {
+              setSelectedContest(contest);
+              setActiveModal("rankings");
+            }}
+          />
+        </>
+      )}
 
-      {activeModal === "register" && (
+      {activeModal === "register" && selectedContest && (
         <ContestRegisterModal
-          contestName={selectedContest}
-          isLive={isLiveContest}
-          startTime={contestStartTime}
+          contest={selectedContest}
+          onClose={() => { setActiveModal(null); fetchContests(); }}
+        />
+      )}
+      {activeModal === "view_problems" && selectedContest && (
+        <ViewProblemsModal
+          contest={selectedContest}
           onClose={() => setActiveModal(null)}
         />
       )}
-      {activeModal === "view_problems" && (
-        <ViewProblemsModal
-          contestName={selectedContest}
-          isPastContest={isPastContest}
-          onClose={() => { setActiveModal(null); setIsPastContest(false); }}
-        />
-      )}
-      {activeModal === "rankings" && (
+      {activeModal === "rankings" && selectedContest && (
         <ContestRankingsModal
-          contestName={selectedContest}
-          contestDate={contestDate}
-          totalSolved={contestTotalSolved}
+          contest={selectedContest}
           onClose={() => setActiveModal(null)}
         />
       )}
       {activeModal === "archive" && (
         <ContestArchiveModal
           onClose={() => setActiveModal(null)}
-          onViewProblems={(name, date, solved) => {
-            setSelectedContest(name);
-            setContestDate(date);
-            setContestTotalSolved(solved);
-            setIsPastContest(true);
+          onViewProblems={(contest) => {
+            setSelectedContest(contest);
             setActiveModal("view_problems");
           }}
-          onViewRankings={(name, date, solved) => {
-            setSelectedContest(name);
-            setContestDate(date);
-            setContestTotalSolved(solved);
+          onViewRankings={(contest) => {
+            setSelectedContest(contest);
             setActiveModal("rankings");
           }}
         />

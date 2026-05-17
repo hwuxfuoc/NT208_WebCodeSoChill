@@ -21,15 +21,23 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
   const displayUser = user || currentUser;
   const joinDate = user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Jan 2022';
 
-  const getRankBadge = (rank: string | undefined) => {
-    const ranks: Record<string, string> = {
-      'Master': '#FFD700',
-      'Expert': '#C0C0C0',
-      'Pro': '#CD7F32',
-      'Noob': '#666666',
-    };
-    return ranks[rank || 'Noob'] || '#666666';
+  const RANK_CONFIG: Record<string, { bg: string; text: string }> = {
+    'Grandmaster': { bg: '#eab308', text: '#fff' },
+    'Master':      { bg: '#ef4444', text: '#fff' },
+    'Expert':      { bg: '#f97316', text: '#fff' },
+    'Pro':         { bg: '#a855f7', text: '#fff' },
+    'Skilled':     { bg: '#3b82f6', text: '#fff' },
+    'Amateur':     { bg: '#14b8a6', text: '#fff' },
+    'Beginner':    { bg: '#22c55e', text: '#fff' },
+    'Noob':        { bg: '#6b7280', text: '#fff' },
   };
+  const rankCfg = RANK_CONFIG[stats?.rank || 'Noob'] ?? RANK_CONFIG['Noob'];
+
+  // Level progress bar
+  const exp = stats?.experiencePoints ?? 0;
+  const level = stats?.level ?? (Math.floor(exp / 100) + 1);
+  const expInLevel = exp % 100;          // 0–99 EXP trong level hiện tại
+  const progressPct = expInLevel;        // 0–100 %
 
   return (
     <section className="card flex items-center gap-6 relative overflow-visible z-50" onClick={() => setShowShare(false)}>
@@ -45,8 +53,34 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
       <div className="relative z-10 flex-1">
         <div className="flex items-center gap-3 mb-1">
           <h2 className="text-2xl font-extrabold text-[#1A1D2B]">{displayUser?.displayname}</h2>
-          <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider text-white" style={{ backgroundColor: getRankBadge(stats?.rank) }}>
+          <span
+            className="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider"
+            style={{ backgroundColor: rankCfg.bg, color: rankCfg.text }}
+          >
             {stats?.rank || 'Noob'}
+          </span>
+          {/* EXP kế rank */}
+          <span className="flex items-center gap-1 text-[11px] font-bold text-gray-500">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ color: '#f97316' }}>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            {exp.toLocaleString()} EXP
+          </span>
+        </div>
+
+        {/* Level + Progress bar */}
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-[11px] font-black text-gray-400 shrink-0 uppercase tracking-wide">
+            Lv.{level}
+          </span>
+          <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${progressPct}%`, backgroundColor: '#22c55e' }}
+            />
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 shrink-0 tabular-nums">
+            {expInLevel}/100
           </span>
         </div>
         <p className="text-sm text-gray-500 font-medium flex items-center gap-3">
