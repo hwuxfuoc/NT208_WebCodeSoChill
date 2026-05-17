@@ -157,4 +157,71 @@ const getMySubmissions = async (req, res) => {
     }
 };
 
-module.exports = { submit, run, getSubmission, getMySubmissions };
+// @desc    Lấy submission cuối cùng (có code) của user cho 1 bài
+// @route   GET /api/submissions/problem/:problemId/last
+const getLastSubmissionForProblem = async (req, res) => {
+    try {
+        const { problemId } = req.params;
+
+        // Ưu tiên lấy accepted trước, nếu không có thì lấy cái mới nhất
+        let submission = await Submission.findOne({
+            userId: req.user.id,
+            problemId,
+            status: 'accepted'
+        })
+            .sort({ createdAt: -1 })
+            .select('code language status createdAt');
+
+        if (!submission) {
+            submission = await Submission.findOne({
+                userId: req.user.id,
+                problemId,
+            })
+                .sort({ createdAt: -1 })
+                .select('code language status createdAt');
+        }
+
+        if (!submission) {
+            return res.json({ submission: null });
+        }
+
+        res.json({ submission });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+};
+
+// @desc    Kiểm tra batch: những bài nào user đã accepted trong danh sách
+// @route   POST /api/submissions/check-solved
+const checkSolvedProblems = async (req, res) => {
+    try {
+        const { problemIds } = req.body;
+        if (!Array.isArray(problemIds) || problemIds.length === 0) {
+            return res.json({ solved: {} });
+        }
+
+        const mongoose = require('mongoose');
+        const objectIds = problemIds
+            .filter(id => mongoose.Types.ObjectId.isValid(id))
+            .map(id => new mongoose.Types.ObjectId(id));
+
+        const accepted = await Submission.find({
+            userId: req.user.id,
+            problemId: { $in: objectIds },
+            status: 'accepted'
+        }).distinct('problemId');
+
+        const solvedMap = {};
+        accepted.forEach(id => {
+            solvedMap[id.toString()] = true;
+        });
+
+        res.json({ solved: solvedMap });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+};
+
+module.exports = { submit, run, getSubmission, getMySubmissions, getLastSubmissionForProblem, checkSolvedProblems };

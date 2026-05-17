@@ -2,17 +2,19 @@ import { Link } from "react-router-dom";
 import { useDailyProblems } from "../../hooks/useDailyProblems";
 
 const DIFF_COLOR: Record<string, { bg: string; text: string }> = {
-  easy:   { bg: "#dcfce7", text: "var(--main-green-color)" },
+  easy: { bg: "#dcfce7", text: "var(--main-green-color)" },
   medium: { bg: "#ffedd5", text: "var(--main-orange-color)" },
-  hard:   { bg: "#fee2e2", text: "#dc2626" },
+  hard: { bg: "#fee2e2", text: "#dc2626" },
 };
 
 export default function DailyRandomChallenge() {
-  const { problems, loading } = useDailyProblems();
+  const { problems, loading, solvedIds, solvedCount, solvedLoading } = useDailyProblems();
 
-  const total = 3;
-  const solved = 0; // TODO: wire up user solved state
-  const pct = Math.round((solved / total) * 100);
+  const total = problems.length || 3;
+  const pct = total > 0 ? Math.round((solvedCount / total) * 100) : 0;
+
+  const firstUnsolved = problems.find(p => !solvedIds.has(p._id));
+  const targetProblemId = firstUnsolved ? firstUnsolved.problemId : (problems[0]?.problemId || "");
 
   return (
     <section className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4">
@@ -29,7 +31,7 @@ export default function DailyRandomChallenge() {
           </svg>
         </div>
         <div>
-          <h3 className="font-extrabold text-[15px] text-[#1A1D2B] leading-tight">Daily<br/>Challenge</h3>
+          <h3 className="font-extrabold text-[15px] text-[#1A1D2B] leading-tight">Daily<br />Challenge</h3>
         </div>
       </div>
 
@@ -40,7 +42,9 @@ export default function DailyRandomChallenge() {
       <div>
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Progress</span>
-          <span className="text-[12px] font-bold text-gray-400">{solved}/{total}</span>
+          <span className="text-[12px] font-bold text-gray-400">
+            {solvedLoading ? "..." : `${solvedCount}/${total}`}
+          </span>
         </div>
         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
           <div
@@ -57,19 +61,36 @@ export default function DailyRandomChallenge() {
           </div>
         ) : problems.map((p) => {
           const dc = DIFF_COLOR[p.difficulty] || DIFF_COLOR.easy;
+          const isSolved = solvedIds.has(p._id);
           return (
             <Link
               key={p._id}
               to={`/problems/${p.problemId}`}
-              className="flex items-center justify-between rounded-xl px-3 py-2 border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-colors group"
+              className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-colors group overflow-hidden"
             >
-              <span className="text-[13px] font-semibold text-gray-700 group-hover:text-orange-600 truncate max-w-[130px]">{p.title}</span>
-              <span
-                className="text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest flex-shrink-0"
-                style={{ backgroundColor: dc.bg, color: dc.text }}
-              >
-                {p.difficulty}
-              </span>
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                {isSolved && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--main-green-color)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+                <span className={`text-[13px] font-semibold text-gray-700 group-hover:text-orange-600 truncate ${isSolved ? 'line-through opacity-60' : ''}`}>
+                  {p.title}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                {isSolved && (
+                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-widest bg-green-100 text-green-600">
+                    Done
+                  </span>
+                )}
+                <span
+                  className="text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest flex-shrink-0"
+                  style={{ backgroundColor: dc.bg, color: dc.text }}
+                >
+                  {p.difficulty}
+                </span>
+              </div>
             </Link>
           );
         })}
@@ -77,14 +98,20 @@ export default function DailyRandomChallenge() {
 
       {problems.length > 0 && (
         <Link
-          to={`/problems/${problems[0].problemId}`}
+          to={`/problems/${targetProblemId}`}
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[13px] text-white transition-opacity hover:opacity-90"
           style={{ backgroundColor: "var(--main-orange-color)" }}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-          </svg>
-          Start Challenge
+          {solvedCount === total ? (
+            <>ALL DONE! 🎉</>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Start Challenge
+            </>
+          )}
         </Link>
       )}
     </section>

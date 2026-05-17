@@ -1,6 +1,6 @@
 import Editor from "@monaco-editor/react";
-import { useMemo, useState } from "react";
-import { runSubmission, submitSolution } from "../../services/submissionService";
+import { useEffect, useMemo, useState } from "react";
+import { getLastSubmission, runSubmission, submitSolution } from "../../services/submissionService";
 
 const LANGUAGE_OPTIONS = [
   { label: "Python 3", value: "python", monaco: "python" },
@@ -32,6 +32,15 @@ const DEFAULT_SNIPPETS: Record<string, string> = {
   ruby: "# write your code here\n",
 };
 
+const STATUS_STYLE: Record<string, { bg: string; text: string; label: string }> = {
+  accepted:              { bg: "bg-emerald-500/20", text: "text-emerald-300", label: "Accepted" },
+  wrong_answer:          { bg: "bg-rose-500/20",    text: "text-rose-300",    label: "Wrong Answer" },
+  time_limit_exceeded:   { bg: "bg-yellow-500/20",  text: "text-yellow-300",  label: "TLE" },
+  memory_limit_exceeded: { bg: "bg-orange-500/20",  text: "text-orange-300",  label: "MLE" },
+  runtime_error:         { bg: "bg-purple-500/20",  text: "text-purple-300",  label: "Runtime Error" },
+  compile_error:         { bg: "bg-red-500/20",      text: "text-red-300",     label: "Compile Error" },
+};
+
 interface CodeEditorProps {
   problemId: string;
   timeLimit: number;
@@ -49,18 +58,40 @@ interface JudgeResult {
 
 export default function CodeEditor({ problemId }: CodeEditorProps) {
   const [language, setLanguage] = useState(LANGUAGE_OPTIONS[0]);
-  const [code, setCode] = useState(DEFAULT_SNIPPETS[language.value]);
+  const [code, setCode] = useState(DEFAULT_SNIPPETS[LANGUAGE_OPTIONS[0].value]);
+  const [lastStatus, setLastStatus] = useState<string | null>(null);
+  const [loadingLast, setLoadingLast] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [runResult, setRunResult] = useState<JudgeResult | null>(null);
   const [submitResult, setSubmitResult] = useState<JudgeResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Load last submission khi vào bài để restore code + language + status
+  useEffect(() => {
+    setLoadingLast(true);
+    setLastStatus(null);
+    getLastSubmission(problemId)
+      .then((res) => {
+        const sub = res.data.submission;
+        if (sub) {
+          const matchedLang = LANGUAGE_OPTIONS.find((l) => l.value === sub.language);
+          if (matchedLang) setLanguage(matchedLang);
+          setCode(sub.code);
+          setLastStatus(sub.status);
+        }
+      })
+      .catch(() => {
+        // Nếu chưa login hoặc lỗi → giữ nguyên default snippet
+      })
+      .finally(() => setLoadingLast(false));
+  }, [problemId]);
+
   const editorLanguage = language.monaco;
 
   const progressMessage = useMemo(() => {
-    if (isRunning) return 'Đang chạy sample test...';
-    if (isSubmitting) return 'Đang nộp bài...';
+    if (isRunning) return "Đang chạy sample test...";
+    if (isSubmitting) return "Đang nộp bài...";
     return null;
   }, [isRunning, isSubmitting]);
 
@@ -68,8 +99,9 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
     const selected = LANGUAGE_OPTIONS.find((item) => item.value === value);
     if (!selected) return;
     setLanguage(selected);
+    // Chỉ reset code nếu đang là default snippet của language cũ
     if (!code || code.trim() === DEFAULT_SNIPPETS[language.value]?.trim()) {
-      setCode(DEFAULT_SNIPPETS[selected.value] ?? '');
+      setCode(DEFAULT_SNIPPETS[selected.value] ?? "");
     }
   };
 
@@ -83,7 +115,7 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
       const response = await runSubmission({ problemId, language: language.value, code });
       setRunResult(response.data.result);
     } catch (err: any) {
-      setErrorMessage(err.response?.data?.message || err.message || 'Lỗi khi chạy code');
+      setErrorMessage(err.response?.data?.message || err.message || "Lỗi khi chạy code");
     } finally {
       setIsRunning(false);
     }
@@ -98,27 +130,32 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
     try {
       const response = await submitSolution({ problemId, language: language.value, code });
       const submission = response.data.submission;
+      const newStatus = submission.status;
       setSubmitResult({
-        status: submission.status,
+        status: newStatus,
         testResult: submission.testResult || [],
         timeUsed: submission.timeUsed || 0,
         memoryUsed: submission.memoryUsed || 0,
         passedTests: submission.passedTests || 0,
         totalTests: submission.totalTests || 0,
       });
+      // Cập nhật badge status sau khi submit mới
+      setLastStatus(newStatus);
     } catch (err: any) {
-      setErrorMessage(err.response?.data?.message || err.message || 'Lỗi khi nộp bài');
+      setErrorMessage(err.response?.data?.message || err.message || "Lỗi khi nộp bài");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const lastResult = submitResult || runResult;
+  const statusStyle = lastStatus ? STATUS_STYLE[lastStatus] : null;
 
   return (
     <section className="flex flex-col h-full bg-[#1e2130] rounded-2xl overflow-hidden shadow-sm">
+      {/* Header: language selector + status badge */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <select
             value={language.value}
             onChange={(event) => handleLanguageChange(event.target.value)}
@@ -130,26 +167,61 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
               </option>
             ))}
           </select>
-          <span className="flex items-center gap-1 text-[11px] font-semibold text-green-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse"></span>
-            READY TO SUBMIT
-          </span>
+
+          {/* Status badge — last submission hoặc "READY TO SUBMIT" */}
+          {!loadingLast && statusStyle ? (
+            <span
+              className={`flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg ${statusStyle.bg} ${statusStyle.text}`}
+            >
+              {lastStatus === "accepted" ? (
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              )}
+              {statusStyle.label}
+            </span>
+          ) : (
+            !loadingLast && (
+              <span className="flex items-center gap-1 text-[11px] font-semibold text-green-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse"></span>
+                READY TO SUBMIT
+              </span>
+            )
+          )}
         </div>
+
         <div className="flex items-center gap-2">
-          <button type="button" className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 transition-colors" disabled>
+          <button
+            type="button"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 transition-colors"
+            disabled
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3"></circle><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"></path>
             </svg>
           </button>
-          <button type="button" className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 transition-colors" disabled>
+          <button
+            type="button"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 transition-colors"
+            disabled
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
-              <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
             </svg>
           </button>
         </div>
       </div>
 
+      {/* Monaco Editor */}
       <div className="flex-1 min-h-0">
         <Editor
           height="100%"
@@ -169,12 +241,16 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
         />
       </div>
 
+      {/* Footer: actions + results */}
       <div className="px-4 py-3 border-t border-white/10 bg-[#1a1d2b]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2 text-xs text-white/70">
             <span className="px-2 py-1 rounded-lg bg-white/10">Language: {language.label}</span>
-            <span className="px-2 py-1 rounded-lg bg-white/10">Run & Submit use Judge0</span>
-            {progressMessage && <span className="px-2 py-1 rounded-lg bg-yellow-500/15 text-yellow-300">{progressMessage}</span>}
+            {progressMessage && (
+              <span className="px-2 py-1 rounded-lg bg-yellow-500/15 text-yellow-300">
+                {progressMessage}
+              </span>
+            )}
           </div>
           <div className="flex gap-2">
             <button
@@ -208,10 +284,14 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <div className="text-xs text-white/60">Result</div>
-                  <div className="mt-1 text-lg font-semibold text-white">{lastResult.status.replace('_', ' ').toUpperCase()}</div>
+                  <div className="mt-1 text-lg font-semibold text-white">
+                    {lastResult.status.replace(/_/g, " ").toUpperCase()}
+                  </div>
                 </div>
                 <div className="flex flex-wrap gap-2 text-xs text-white/70">
-                  <span className="px-2 py-1 rounded-lg bg-white/10">Passed {lastResult.passedTests}/{lastResult.totalTests}</span>
+                  <span className="px-2 py-1 rounded-lg bg-white/10">
+                    Passed {lastResult.passedTests}/{lastResult.totalTests}
+                  </span>
                   <span className="px-2 py-1 rounded-lg bg-white/10">Time {lastResult.timeUsed}ms</span>
                   <span className="px-2 py-1 rounded-lg bg-white/10">Memory {lastResult.memoryUsed}MB</span>
                 </div>
@@ -220,11 +300,20 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
               {lastResult.testResult?.length > 0 && (
                 <div className="mt-4 grid gap-3">
                   {lastResult.testResult.slice(0, 4).map((item) => (
-                    <div key={item.testCaseOrder} className="rounded-xl border border-white/10 bg-[#11151f] p-3 text-xs text-white/80">
+                    <div
+                      key={item.testCaseOrder}
+                      className="rounded-xl border border-white/10 bg-[#11151f] p-3 text-xs text-white/80"
+                    >
                       <div className="flex items-center justify-between gap-2">
                         <span>Test #{item.testCaseOrder}</span>
-                        <span className={`rounded-full px-2 py-1 text-[11px] ${item.status === 'accepted' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-rose-500/15 text-rose-300'}`}>
-                          {item.status.replace('_', ' ')}
+                        <span
+                          className={`rounded-full px-2 py-1 text-[11px] ${
+                            item.status === "accepted"
+                              ? "bg-emerald-500/15 text-emerald-300"
+                              : "bg-rose-500/15 text-rose-300"
+                          }`}
+                        >
+                          {item.status.replace(/_/g, " ")}
                         </span>
                       </div>
                       <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-white/60">

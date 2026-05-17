@@ -57,7 +57,7 @@ export default function ProblemsPage() {
           </section>
         </div>
 
-        <div className="w-[250px] flex flex-col gap-6">
+        <div className="w-[280px] flex flex-col gap-6">
           <CalendarStreak />
           <DailyRandomChallenge />
         </div>
