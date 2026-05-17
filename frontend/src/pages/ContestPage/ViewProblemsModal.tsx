@@ -1,19 +1,11 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Contest, getContestProblems } from "../../services/contestService";
 
 interface ViewProblemsModalProps {
   onClose: () => void;
-  contestName: string;
-  isPastContest?: boolean;
+  contest: Contest;
 }
-
-const CONTEST_PROBLEMS = [
-  { id: "two-sum",          no: 1, title: "Two Sum Re-imagined",         difficulty: "easy",   score: "500",  secret: false },
-  { id: "recursive-tree",   no: 2, title: "Recursive Tree Architecture",  difficulty: "medium", score: "1000", secret: false },
-  { id: "maximum-flow",     no: 3, title: "Maximum Flow Pulse",           difficulty: "hard",   score: "1500", secret: false },
-  { id: "sudoku",           no: 4, title: "Sudoku Structural Solver",     difficulty: "hard",   score: "2000", secret: false },
-  { id: "graph-coloring",   no: 5, title: "Graph Coloring Supremacy",    difficulty: "hard",   score: "2500", secret: true  },
-  { id: "hidden-matrix",    no: 6, title: "The Hidden Matrix",            difficulty: "hard",   score: "3000", secret: true  },
-];
 
 const DIFF_STYLE: Record<string, { bg: string; color: string }> = {
   easy:   { bg: "#dcfce7", color: "#16a34a" },
@@ -22,7 +14,35 @@ const DIFF_STYLE: Record<string, { bg: string; color: string }> = {
   secret: { bg: "#dbeafe", color: "#2563eb" },
 };
 
-export default function ViewProblemsModal({ onClose, contestName, isPastContest = false }: ViewProblemsModalProps) {
+export default function ViewProblemsModal({ onClose, contest }: ViewProblemsModalProps) {
+  const [problems, setProblems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const isUpcoming = contest.status === "upcoming";
+  const isPastContest = contest.status === "ended";
+
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        const res = await getContestProblems(contest._id);
+        setProblems(res.data.problems);
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to load problems.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProblems();
+  }, [contest._id]);
+
+  const handleProblemClick = (problem: any) => {
+    onClose();
+    // Chuyển sang trang làm bài kèm contestId
+    navigate(`/problems/${problem.slug}?contestId=${contest._id}`);
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -50,64 +70,72 @@ export default function ViewProblemsModal({ onClose, contestName, isPastContest 
               <span className="bg-green-50 text-green-500 px-2 py-0.5 rounded text-[9px] font-black tracking-widest border border-green-100">ALL REVEALED</span>
             )}
           </div>
-          <h2 className="text-xl font-extrabold text-[#1A1D2B] leading-tight">{contestName}</h2>
+          <h2 className="text-xl font-extrabold text-[#1A1D2B] leading-tight">{contest.title}</h2>
         </div>
 
         <div className="flex flex-col gap-3 overflow-y-auto px-8 pb-8" style={{ scrollbarWidth: "thin", scrollbarColor: "#e5e7eb transparent" }}>
-          {CONTEST_PROBLEMS.map((p) => {
-            const isLocked = p.secret && !isPastContest;
-            const displayDiff = isLocked ? "secret" : p.difficulty;
-            const s = DIFF_STYLE[displayDiff];
-            return (
-              <div
-                key={p.id}
-                onClick={isLocked ? undefined : onClose}
-                className={`flex items-center justify-between p-4 rounded-2xl transition-colors group ${
-                  isLocked
-                    ? "bg-blue-50/60 border border-blue-100 cursor-default select-none"
-                    : "bg-[#f8fafc] hover:bg-gray-100 cursor-pointer"
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0 ${
-                    isLocked ? "bg-blue-100 text-blue-400" : "bg-white shadow-sm text-gray-400"
-                  }`}>
-                    {isLocked ? (
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                      </svg>
-                    ) : p.no}
-                  </span>
-                  <div>
-                    <p className={`font-bold text-sm ${
-                      isLocked ? "text-blue-300 tracking-[0.2em]" : "text-[#1A1D2B] group-hover:text-orange-500 transition-colors"
+          {loading ? (
+            <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div></div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-8 font-semibold">{error}</div>
+          ) : problems.length === 0 ? (
+            <div className="text-center text-gray-400 py-8">No problems found for this contest.</div>
+          ) : (
+            problems.map((p, index) => {
+              const isLocked = isUpcoming;
+              const displayDiff = isLocked ? "secret" : p.difficulty;
+              const s = DIFF_STYLE[displayDiff] || DIFF_STYLE.secret;
+              return (
+                <div
+                  key={p._id}
+                  onClick={() => isLocked ? undefined : handleProblemClick(p)}
+                  className={`flex items-center justify-between p-4 rounded-2xl transition-colors group ${
+                    isLocked
+                      ? "bg-blue-50/60 border border-blue-100 cursor-default select-none"
+                      : "bg-[#f8fafc] hover:bg-gray-100 cursor-pointer"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0 ${
+                      isLocked ? "bg-blue-100 text-blue-400" : "bg-white shadow-sm text-gray-400"
                     }`}>
-                      {isLocked ? "????" : p.title}
-                    </p>
-                    <span
-                      className="inline-flex mt-0.5 px-2 py-0.5 rounded-md text-[9px] font-black tracking-widest uppercase"
-                      style={{ backgroundColor: s.bg, color: s.color }}
-                    >
-                      {isLocked ? "secret" : displayDiff}
+                      {isLocked ? (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                      ) : (index + 1)}
                     </span>
+                    <div>
+                      <p className={`font-bold text-sm ${
+                        isLocked ? "text-blue-300 tracking-[0.2em]" : "text-[#1A1D2B] group-hover:text-orange-500 transition-colors"
+                      }`}>
+                        {isLocked ? "????" : p.title}
+                      </p>
+                      <span
+                        className="inline-flex mt-0.5 px-2 py-0.5 rounded-md text-[9px] font-black tracking-widest uppercase"
+                        style={{ backgroundColor: s.bg, color: s.color }}
+                      >
+                        {isLocked ? "secret" : displayDiff}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className={`text-xs font-bold ${
+                      isLocked ? "text-blue-300 tracking-widest" : "text-gray-400"
+                    }`}>
+                      {isLocked ? "??" : "1"} pts
+                    </span>
+                    {!isLocked && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 group-hover:text-orange-400 transition-colors">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className={`text-xs font-bold ${
-                    isLocked ? "text-blue-300 tracking-widest" : "text-gray-400"
-                  }`}>
-                    {isLocked ? "??" : p.score} pts
-                  </span>
-                  {!isLocked && (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 group-hover:text-orange-400 transition-colors">
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </div>

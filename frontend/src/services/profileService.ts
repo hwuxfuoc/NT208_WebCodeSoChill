@@ -17,6 +17,10 @@ export const getUserStats = (userId: string) => {
   return api.get(`/api/users/${userId}/stats`);
 };
 
+export const getUserCalendar = (userId: string) => {
+  return api.get(`/api/users/${userId}/calendar`);
+};
+
 export const updateProfile = (data: any) => {
   return api.put("/api/users/me", data);
 };

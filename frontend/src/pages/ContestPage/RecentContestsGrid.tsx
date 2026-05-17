@@ -1,21 +1,13 @@
-interface RecentContest {
-  id: number;
-  title: string;
-  date: string;
-  solved: string;
-}
+import { Contest } from "../../services/contestService";
 
 interface RecentContestsGridProps {
-  onViewRankings: (contest: RecentContest) => void;
+  contests: Contest[];
+  onViewRankings: (contest: Contest) => void;
   onViewArchive: () => void;
 }
 
-export default function RecentContestsGrid({ onViewRankings, onViewArchive }: RecentContestsGridProps) {
-  const recentContests = [
-    { id: 41, title: "Front-end Performance Architecting", date: "Oct 15, 2023", solved: "1,420" },
-    { id: 40, title: "Database Sharding & Query Tuning",   date: "Oct 10, 2023", solved: "980"   },
-    { id: 39, title: "Cloud-Native Serverless Patterns",   date: "Oct 01, 2023", solved: "2,105" }
-  ];
+export default function RecentContestsGrid({ contests, onViewRankings, onViewArchive }: RecentContestsGridProps) {
+  if (contests.length === 0) return null;
 
   return (
     <>
@@ -28,24 +20,29 @@ export default function RecentContestsGrid({ onViewRankings, onViewArchive }: Re
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        {recentContests.map(c => (
-          <div key={c.id} className="card bg-white p-6 rounded-2xl flex flex-col justify-between">
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Contest #{c.id}</span>
-                <span className="bg-green-50 text-green-500 px-2 py-0.5 rounded text-[9px] font-bold tracking-widest border border-green-100">FINISHED</span>
+        {contests.map((c, index) => {
+          const startDate = new Date(c.startTime);
+          return (
+            <div key={c._id} className="card bg-white p-6 rounded-2xl flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Contest</span>
+                  <span className="bg-green-50 text-green-500 px-2 py-0.5 rounded text-[9px] font-bold tracking-widest border border-green-100">FINISHED</span>
+                </div>
+                <h4 className="font-bold text-gray-800 text-sm mb-2">{c.title}</h4>
+                <p className="text-xs text-gray-400 mb-6">
+                  Held on {startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {c.participants ? c.participants.length : 0} Participants
+                </p>
               </div>
-              <h4 className="font-bold text-gray-800 text-sm mb-2">{c.title}</h4>
-              <p className="text-xs text-gray-400 mb-6">Held on {c.date} • {c.solved} Solved</p>
+              <div className="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
+                <button
+                  onClick={() => onViewRankings(c)}
+                  className="text-xs font-bold text-orange-500 flex items-center gap-1 hover:underline"
+                >Rankings <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></button>
+              </div>
             </div>
-            <div className="flex justify-between items-center border-t border-gray-100 pt-4 mt-auto">
-              <button
-                onClick={() => onViewRankings(c)}
-                className="text-xs font-bold text-orange-500 flex items-center gap-1 hover:underline"
-              >Rankings <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

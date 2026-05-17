@@ -57,7 +57,13 @@ const submit = async (req, res) => {
                 _id: { $ne: submission._id }
             });
             if (!prevAC) {
-                await User.findByIdAndUpdate(req.user.id, { $inc: { totalSolved: 1 } });
+                // Cộng EXP theo độ khó: Easy +25, Medium +50, Hard +100
+                const EXP_MAP = { easy: 25, medium: 50, hard: 100 };
+                const expReward = EXP_MAP[problem.difficulty] || 25;
+
+                await User.findByIdAndUpdate(req.user.id, {
+                    $inc: { totalSolved: 1, experiencePoints: expReward }
+                });
                 await Problem.findByIdAndUpdate(problemId, {
                     $inc: { totalAccepted: 1, totalSubmissions: 1 }
                 });
