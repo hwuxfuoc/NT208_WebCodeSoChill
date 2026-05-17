@@ -1,6 +1,7 @@
 // Shared hook so all components fetch the same daily problems from one place
 import { useState, useEffect } from "react";
 import { getDailyProblems } from "../services/problemService";
+import { checkSolvedProblems } from "../services/submissionService";
 
 export interface DailyProblem {
   _id: string;
@@ -10,42 +11,66 @@ export interface DailyProblem {
   difficulty: "easy" | "medium" | "hard";
 }
 
-let cache: DailyProblem[] | null = null;
+// Module-level cache (survive re-renders, reset on new day)
+let problemsCache: DailyProblem[] | null = null;
 let cacheDate: string | null = null;
 
 export function useDailyProblems() {
-  const [problems, setProblems] = useState<DailyProblem[]>(cache || []);
-  const [loading, setLoading] = useState(!cache);
+  const [problems, setProblems] = useState<DailyProblem[]>(problemsCache || []);
+  const [loading, setLoading] = useState(!problemsCache);
   const [error, setError] = useState<string | null>(null);
+  // solvedIds: set of problem _id strings the current user has already accepted
+  const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set());
+  const [solvedLoading, setSolvedLoading] = useState(true);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
 
+    const fetchAndCheckSolved = async (dailyProblems: DailyProblem[]) => {
+      if (dailyProblems.length === 0) return;
+      setSolvedLoading(true);
+      try {
+        const ids = dailyProblems.map((p) => p._id);
+        const res = await checkSolvedProblems(ids);
+        const solvedMap = res.data.solved || {};
+        setSolvedIds(new Set(Object.keys(solvedMap).filter((k) => solvedMap[k])));
+      } catch {
+        // User not logged in or error — silently keep solvedIds empty
+      } finally {
+        setSolvedLoading(false);
+      }
+    };
+
     // Return cached data if same day
-    if (cache && cacheDate === today) {
-      setProblems(cache);
+    if (problemsCache && cacheDate === today) {
+      setProblems(problemsCache);
       setLoading(false);
+      fetchAndCheckSolved(problemsCache);
       return;
     }
 
-    const fetch = async () => {
+    const fetchProblems = async () => {
       try {
         setLoading(true);
         const res = await getDailyProblems();
         const data: DailyProblem[] = res.data.problems || [];
-        cache = data;
+        problemsCache = data;
         cacheDate = today;
         setProblems(data);
+        await fetchAndCheckSolved(data);
       } catch (err: any) {
         setError(err.response?.data?.message || "Failed to load daily problems");
         console.error("Failed to fetch daily problems", err);
+        setSolvedLoading(false);
       } finally {
         setLoading(false);
       }
     };
 
-    fetch();
+    fetchProblems();
   }, []);
 
-  return { problems, loading, error };
+  const solvedCount = solvedIds.size;
+
+  return { problems, loading, error, solvedIds, solvedCount, solvedLoading };
 }
