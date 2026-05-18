@@ -12,6 +12,8 @@ export interface User {
   role?: string;
   contestRating?: number;
   totalSolved?: number;
+  experiencePoints?: number;
+  level?: number;
 }
 
 export interface AuthContextType {

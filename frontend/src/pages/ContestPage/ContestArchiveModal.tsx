@@ -1,7 +1,11 @@
+import { Contest } from "../../services/contestService";
+
+import ModalPortal from "../../components/ModalPortal";
+
 interface ContestArchiveModalProps {
   onClose: () => void;
-  onViewProblems: (name: string, date: string, solved: string) => void;
-  onViewRankings: (name: string, date: string, solved: string) => void;
+  onViewProblems: (contest: Contest) => void;
+  onViewRankings: (contest: Contest) => void;
 }
 
 const ARCHIVE = [
@@ -21,11 +25,11 @@ const ARCHIVE = [
 
 export default function ContestArchiveModal({ onClose, onViewProblems, onViewRankings }: ContestArchiveModalProps) {
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
-      onClick={onClose}
-    >
+    <ModalPortal>
+      <div
+        className="fixed inset-0 z-[1000] flex items-center justify-center p-4 overflow-y-auto bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      >
       <div
         className="bg-white rounded-3xl shadow-2xl w-full max-w-xl relative flex flex-col"
         style={{ maxHeight: "88vh" }}
@@ -47,45 +51,62 @@ export default function ContestArchiveModal({ onClose, onViewProblems, onViewRan
         </div>
 
         <div className="overflow-y-auto flex-1 px-8 py-4" style={{ scrollbarWidth: "thin", scrollbarColor: "#e5e7eb transparent" }}>
-          {ARCHIVE.map((c) => (
-            <div
-              key={c.id}
-              className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-[#f8fafc] border border-gray-100 hover:border-gray-200 transition-colors"
-            >
-              <span className="text-[10px] font-black text-gray-400 tracking-wider w-10 flex-shrink-0">
-                #{c.id}
-              </span>
+          {ARCHIVE.map((c) => {
+            const contest: Contest = {
+              _id: `archive-${c.id}`,
+              title: c.title,
+              description: c.title,
+              startTime: new Date(c.date).toISOString(),
+              endTime: new Date(c.date).toISOString(),
+              duration: 0,
+              participants: [],
+              status: "ended",
+              ratedFor: "",
+              isRated: false,
+              createdBy: { _id: "archive", username: "archive", displayname: "Archive" },
+            };
 
-              <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm text-[#1A1D2B] truncate">
-                  {c.title}
-                </p>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-[10px] text-gray-400 font-medium">{c.date}</span>
-                  <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                  <span className="text-[10px] text-gray-400 font-medium">{c.participants.toLocaleString()} participants</span>
+            return (
+              <div
+                key={c.id}
+                className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-[#f8fafc] border border-gray-100 hover:border-gray-200 transition-colors"
+              >
+                <span className="text-[10px] font-black text-gray-400 tracking-wider w-10 flex-shrink-0">
+                  #{c.id}
+                </span>
+
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-sm text-[#1A1D2B] truncate">
+                    {c.title}
+                  </p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-[10px] text-gray-400 font-medium">{c.date}</span>
+                    <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                    <span className="text-[10px] text-gray-400 font-medium">{c.participants.toLocaleString()} participants</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={() => onViewProblems(contest)}
+                    className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-500 transition-colors"
+                  >
+                    Problems
+                  </button>
+                  <button
+                    onClick={() => onViewRankings(contest)}
+                    className="text-[11px] font-bold px-3 py-1.5 rounded-lg text-white hover:opacity-85 transition-opacity"
+                    style={{ backgroundColor: "var(--main-orange-color)" }}
+                  >
+                    Rankings
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => onViewProblems(c.title, c.date, c.solved.toLocaleString())}
-                  className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-500 transition-colors"
-                >
-                  Problems
-                </button>
-                <button
-                  onClick={() => onViewRankings(c.title, c.date, c.solved.toLocaleString())}
-                  className="text-[11px] font-bold px-3 py-1.5 rounded-lg text-white hover:opacity-85 transition-opacity"
-                  style={{ backgroundColor: "var(--main-orange-color)" }}
-                >
-                  Rankings
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

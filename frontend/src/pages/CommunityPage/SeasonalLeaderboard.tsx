@@ -9,7 +9,8 @@ interface Leader {
   displayname: string;
   avatarUrl: string;
   rank?: string;
-  contestRating?: number;
+  level?: number;
+  experiencePoints?: number;
   totalSolved?: number;
 }
 
@@ -38,9 +39,9 @@ export default function SeasonalLeaderboard() {
     }
   };
 
-  const formatPoints = (rating?: number) => {
-    if (!rating) return "0";
-    return rating.toLocaleString();
+  const formatPoints = (points?: number) => {
+    if (!points) return "0";
+    return points.toLocaleString();
   };
 
   if (loading) {
@@ -82,12 +83,13 @@ export default function SeasonalLeaderboard() {
                 <img src={u.avatarUrl} alt={u.displayname} className="w-9 h-9 rounded-xl object-cover" />
                 <div>
                   <p className="font-semibold text-[13px] text-gray-800">{u.displayname}</p>
-                  <p className="text-[10px] text-gray-400">@{u.username}</p>
+                  <p className="text-[10px] text-gray-400">{u.rank || (u.level ? `Lv. ${u.level}` : `@${u.username}`)}</p>
+                  {u.rank ? <p className="text-[10px] text-gray-400">@{u.username}</p> : null}
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-[13px] text-gray-800">{formatPoints(u.contestRating)}</p>
-                <p className="text-[8px] text-gray-400 uppercase tracking-wide">Rating Points</p>
+                <p className="font-bold text-[13px] text-gray-800">{formatPoints(u.experiencePoints)}</p>
+                <p className="text-[8px] text-gray-400 uppercase tracking-wide">EXP</p>
               </div>
             </div>
           ))}
@@ -106,8 +108,8 @@ export default function SeasonalLeaderboard() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-[13px] text-orange-600">{formatPoints(user.contestRating)}</p>
-                <p className="text-[8px] text-orange-400 uppercase tracking-wide">Rating Points</p>
+                <p className="font-bold text-[13px] text-orange-600">{formatPoints(user.experiencePoints)}</p>
+                <p className="text-[8px] text-orange-400 uppercase tracking-wide">EXP</p>
               </div>
             </div>
           )}

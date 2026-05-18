@@ -86,6 +86,7 @@ export default function ContestPage() {
         <ContestRegisterModal
           contest={selectedContest}
           onClose={() => { setActiveModal(null); fetchContests(); }}
+          onRegistered={() => setActiveModal("view_problems")}
         />
       )}
       {activeModal === "view_problems" && selectedContest && (

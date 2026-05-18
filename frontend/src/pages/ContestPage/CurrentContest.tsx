@@ -1,5 +1,6 @@
 import { Contest } from "../../services/contestService";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 interface CurrentContestProps {
   contest: Contest;
@@ -8,6 +9,7 @@ interface CurrentContestProps {
 }
 
 export default function CurrentContest({ contest, onEnter, onViewProblems }: CurrentContestProps) {
+  const { user } = useAuth();
   const [timeLeft, setTimeLeft] = useState({ hours: 0, mins: 0, secs: 0 });
 
   useEffect(() => {
@@ -58,7 +60,14 @@ export default function CurrentContest({ contest, onEnter, onViewProblems }: Cur
 
           <div className="flex gap-4">
             <button
-              onClick={() => onEnter(contest)}
+              onClick={() => {
+                const alreadyRegistered = contest.participants.some((pId) => pId === user?.id);
+                if (contest.status === 'ongoing' && alreadyRegistered) {
+                  onViewProblems(contest);
+                } else {
+                  onEnter(contest);
+                }
+              }}
               className="text-white font-bold py-2.5 px-6 rounded-full text-sm transition-colors shadow-lg hover:opacity-85"
               style={{ backgroundColor: "var(--main-orange-color)" }}
             >Enter Contest</button>

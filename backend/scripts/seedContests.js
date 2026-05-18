@@ -5,87 +5,177 @@ const Contest = require('../models/contest');
 const User = require('../models/user');
 const Problem = require('../models/problem');
 
-async function seed() {
-    try {
-        await mongoose.connect(process.env.MONGOOSE_DB_URL);
-        console.log('✅ Connected to MongoDB');
+const SEASON_NUMBER = 1;
+const CONTEST_COUNT = 30;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const CURRENT_CONTEST_INDEX = 10; // Contest đang diễn ra là contest thứ 11
+const CONTEST_START_HOURS = [9, 13, 19];
 
-        // Lấy admin (hoặc user đầu tiên)
-        const user = await User.findOne({ role: 'admin' }) || await User.findOne();
-        if (!user) {
-            console.log('❌ Không tìm thấy user nào để làm người tạo contest.');
-            return;
-        }
+const THEMED_CONTEST_NAMES = [
+  'Array Sprint',
+  'Graph Challenge',
+  'Dynamic Programming Night',
+  'Backend Algorithm Cup',
+  'Data Structure Duel',
+];
 
-        // Lấy 5 bài tập bất kỳ
-        const problems = await Problem.find().limit(5);
-        if (problems.length < 2) {
-            console.log('❌ Không đủ bài tập (cần ít nhất 2 bài) để tạo contest.');
-            return;
-        }
+const MAJOR_CONTEST_NAMES = [
+  'Scaling Algorithms Championship',
+  'Advanced Systems Gauntlet',
+  'Optimized Code Invitational',
+  'Performance Push Contest',
+  'Hardcore Algorithm Showdown',
+];
 
-        const problemIds = problems.map(p => p._id);
+const NORMAL_CONTEST_DESCRIPTIONS = [
+  'Fast-paced contest focusing on mixed algorithmic problems.',
+  'Solve a small set of balanced coding challenges in a sprint format.',
+  'A daily-like contest for building consistency and speed.',
+  'Classic mixed-difficulty contest designed for steady progression.',
+  'A fresh batch of algorithm problems with varied difficulty.',
+];
 
-        // Xóa sạch contest cũ
-        await Contest.deleteMany({});
-        console.log('🗑️  Đã xóa các contest cũ.');
+function shuffleArray(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
-        const now = new Date();
+function pickRandomIds(pool, count, exclude = new Set()) {
+  const choices = pool.filter((id) => !exclude.has(id.toString()));
+  const shuffled = shuffleArray(choices);
+  return shuffled.slice(0, Math.min(count, shuffled.length));
+}
 
-        // 1. Contest đã kết thúc
-        const endedContest = new Contest({
-            title: 'CodeSoChill Inaugural Sprint',
-            description: 'The very first contest to test your logic and algorithmic skills.',
-            startTime: new Date(now.getTime() - 48 * 60 * 60 * 1000), // 2 days ago
-            endTime: new Date(now.getTime() - 46 * 60 * 60 * 1000),   // ended 46 hours ago
-            duration: 120, // 2 hours
-            problems: problemIds.slice(0, 3), // Lấy 3 bài đầu
-            participants: [user._id],
-            ratedFor: 'all',
-            isRated: true,
-            createdBy: user._id
-        });
+function buildProblemSelection(problemsByDifficulty) {
+  return (desiredCount, distribution) => {
+    const selected = new Set();
 
-        // 2. Contest đang diễn ra
-        const ongoingContest = new Contest({
-            title: 'Biweekly Architectural Challenge #42',
-            description: 'Tackle real-world software architecture and algorithmic puzzles in this live challenge.',
-            startTime: new Date(now.getTime() - 30 * 60 * 1000), // Bắt đầu 30 phút trước
-            endTime: new Date(now.getTime() + 90 * 60 * 1000),   // Kết thúc sau 90 phút nữa
-            duration: 120, // 2 hours
-            problems: problemIds.slice(0, 4), // Lấy 4 bài
-            participants: [],
-            ratedFor: 'all',
-            isRated: true,
-            createdBy: user._id
-        });
+    Object.entries(distribution).forEach(([difficulty, amount]) => {
+      const pool = problemsByDifficulty[difficulty] || [];
+      pickRandomIds(pool, amount).forEach((id) => selected.add(id.toString()));
+    });
 
-        // 3. Contest sắp diễn ra
-        const upcomingContest = new Contest({
-            title: 'Spring Microservices Sprint',
-            description: 'Get ready for the ultimate coding sprint focusing on microservices patterns.',
-            startTime: new Date(now.getTime() + 24 * 60 * 60 * 1000), // Bắt đầu ngày mai
-            endTime: new Date(now.getTime() + 26 * 60 * 60 * 1000),
-            duration: 120, // 2 hours
-            problems: problemIds, // Lấy tất cả 5 bài
-            participants: [],
-            ratedFor: 'advanced',
-            isRated: true,
-            createdBy: user._id
-        });
-
-        await Promise.all([
-            endedContest.save(),
-            ongoingContest.save(),
-            upcomingContest.save()
-        ]);
-
-        console.log('✅ Đã tạo thành công 3 contest (Ended, Ongoing, Upcoming).');
-    } catch (err) {
-        console.error('❌ Lỗi:', err);
-    } finally {
-        await mongoose.disconnect();
+    const allPools = [...problemsByDifficulty.easy, ...problemsByDifficulty.medium, ...problemsByDifficulty.hard];
+    let fallbackIndex = 0;
+    while (selected.size < desiredCount && fallbackIndex < allPools.length) {
+      const id = allPools[fallbackIndex].toString();
+      if (!selected.has(id)) selected.add(id);
+      fallbackIndex += 1;
     }
+
+    return Array.from(selected).slice(0, desiredCount).map((id) => new mongoose.Types.ObjectId(id));
+  };
+}
+
+async function seed() {
+  try {
+    await mongoose.connect(process.env.MONGOOSE_DB_URL);
+    console.log('✅ Connected to MongoDB');
+
+    const user = await User.findOne({ role: 'admin' }) || await User.findOne();
+    if (!user) {
+      console.log('❌ Không tìm thấy user nào để làm người tạo contest.');
+      return;
+    }
+
+    const problems = await Problem.find({ isActive: true });
+    if (problems.length < 15) {
+      console.log('❌ Không đủ bài tập (cần ít nhất 15 bài) để seed contest đa dạng.');
+      return;
+    }
+
+    const problemsByDifficulty = {
+      easy: problems.filter((p) => p.difficulty === 'easy').map((p) => p._id),
+      medium: problems.filter((p) => p.difficulty === 'medium').map((p) => p._id),
+      hard: problems.filter((p) => p.difficulty === 'hard').map((p) => p._id),
+    };
+
+    const selectProblems = buildProblemSelection(problemsByDifficulty);
+
+    await Contest.deleteMany({});
+    console.log('🗑️  Đã xóa các contest cũ.');
+
+    const contests = [];
+    const now = new Date();
+
+    for (let index = 0; index < CONTEST_COUNT; index += 1) {
+      let title = `Season ${SEASON_NUMBER} Contest #${index + 1}`;
+      let description = NORMAL_CONTEST_DESCRIPTIONS[index % NORMAL_CONTEST_DESCRIPTIONS.length];
+      let problemCount = 4;
+      let duration = 180;
+      let ratedFor = 'all';
+      let distribution = { easy: 1, medium: 2, hard: 1 };
+
+      if (index >= 20 && index < 25) {
+        // Major contests
+        const majorIndex = index - 20;
+        title = `Season ${SEASON_NUMBER} Major #${majorIndex + 1}: ${MAJOR_CONTEST_NAMES[majorIndex]}`;
+        description = 'A higher-stakes contest with harder problems and extended duration.';
+        problemCount = 6;
+        duration = 180;
+        ratedFor = 'advanced';
+        distribution = { easy: 1, medium: 2, hard: 3 };
+      } else if (index >= 25) {
+        // Themed contests
+        const themeIndex = index - 25;
+        title = `Season ${SEASON_NUMBER} Themed #${themeIndex + 1}: ${THEMED_CONTEST_NAMES[themeIndex]}`;
+        description = `Themed contest focusing on ${THEMED_CONTEST_NAMES[themeIndex].toLowerCase()}.`;
+        problemCount = 5;
+        duration = 150;
+        ratedFor = themeIndex % 2 === 0 ? 'intermediate' : 'all';
+        distribution = { easy: 1, medium: 2, hard: 2 };
+      } else {
+        // Normal contests
+        if (index % 3 === 0) {
+          problemCount = 3;
+          distribution = { easy: 1, medium: 1, hard: 1 };
+        } else if (index % 3 === 1) {
+          problemCount = 4;
+          distribution = { easy: 1, medium: 2, hard: 1 };
+        } else {
+          problemCount = 5;
+          distribution = { easy: 2, medium: 2, hard: 1 };
+        }
+      }
+
+      const dayOffset = Math.floor(index / CONTEST_START_HOURS.length) - Math.floor(CURRENT_CONTEST_INDEX / CONTEST_START_HOURS.length);
+      const slotIndex = index % CONTEST_START_HOURS.length;
+      const startTime = new Date(now.getTime() + dayOffset * ONE_DAY_MS);
+      startTime.setHours(CONTEST_START_HOURS[slotIndex], 0, 0, 0);
+      const endTime = new Date(startTime.getTime() + duration * 60 * 1000);
+      const problemsForContest = selectProblems(problemCount, distribution);
+      const contestType = index >= 25 ? 'themed' : index >= 20 ? 'major' : 'normal';
+      const theme = index >= 25 ? THEMED_CONTEST_NAMES[index - 25] : '';
+
+      contests.push(new Contest({
+        title,
+        description,
+        startTime,
+        endTime,
+        duration,
+        problems: problemsForContest,
+        participants: [],
+        ratedFor,
+        contestType,
+        theme,
+        season: SEASON_NUMBER,
+        contestNumber: index + 1,
+        isRated: true,
+        createdBy: user._id,
+      }));
+    }
+
+    await Contest.insertMany(contests);
+    console.log(`✅ Đã tạo thành công ${contests.length} contest cho Season ${SEASON_NUMBER}.`);
+  } catch (err) {
+    console.error('❌ Lỗi:', err);
+  } finally {
+    await mongoose.disconnect();
+  }
 }
 
 seed();

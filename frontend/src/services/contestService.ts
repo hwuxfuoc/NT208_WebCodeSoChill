@@ -9,6 +9,10 @@ export interface Contest {
   duration: number;
   participants: string[];
   status: "upcoming" | "ongoing" | "ended";
+  season?: number;
+  contestNumber?: number;
+  contestType?: "normal" | "major" | "themed";
+  theme?: string;
   ratedFor: string;
   isRated: boolean;
   createdBy: {
