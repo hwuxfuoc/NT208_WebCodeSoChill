@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Contest, getContestProblems } from "../../services/contestService";
+import ModalPortal from "../../components/ModalPortal";
 
 interface ViewProblemsModalProps {
   onClose: () => void;
@@ -44,13 +45,13 @@ export default function ViewProblemsModal({ onClose, contest }: ViewProblemsModa
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
-      onClick={onClose}
-    >
+    <ModalPortal>
       <div
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-lg relative flex flex-col"
+        className="fixed inset-0 z-[1000] flex items-center justify-center p-4 overflow-y-auto bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      >
+      <div
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-lg relative flex flex-col overflow-hidden"
         style={{ maxHeight: "85vh" }}
         onClick={e => e.stopPropagation()}
       >
@@ -139,5 +140,6 @@ export default function ViewProblemsModal({ onClose, contest }: ViewProblemsModa
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

@@ -11,6 +11,11 @@ const contestSchema = new mongoose.Schema({
     problems:       [{ type: mongoose.Schema.Types.ObjectId, ref: 'Problem' }],
     participants:   [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 
+    season:          { type: Number, default: 1 },
+    contestNumber:   { type: Number },
+    contestType:     { type: String, enum: ['normal', 'major', 'themed'], default: 'normal' },
+    theme:           { type: String, default: '' },
+
     ratedFor:       { type: String, enum: ['all', 'beginner', 'intermediate', 'advanced'], default: 'all' },
     isRated:        { type: Boolean, default: false },
     createdBy:      { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

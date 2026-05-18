@@ -85,8 +85,8 @@ const getLeaderboard = async (req, res) => {
         const skip = (page - 1) * limit;
 
         const users = await User.find()
-            .select('username displayname avatarUrl totalSolved contestRating rank')
-            .sort({ contestRating: -1, totalSolved: -1 })
+            .select('username displayname avatarUrl totalSolved contestRating rank experiencePoints level')
+            .sort({ experiencePoints: -1, totalSolved: -1 })
             .skip(skip)
             .limit(limit);
 

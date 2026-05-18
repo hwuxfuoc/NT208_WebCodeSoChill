@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Contest, registerContest } from "../../services/contestService";
 import { useAuth } from "../../hooks/useAuth";
+import ModalPortal from "../../components/ModalPortal";
 
 interface ContestRegisterModalProps {
   onClose: () => void;
   contest: Contest;
+  onRegistered?: () => void;
 }
 
-export default function ContestRegisterModal({ onClose, contest }: ContestRegisterModalProps) {
+export default function ContestRegisterModal({ onClose, contest, onRegistered }: ContestRegisterModalProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +28,9 @@ export default function ContestRegisterModal({ onClose, contest }: ContestRegist
     try {
       await registerContest(contest._id);
       setSubmitted(true);
+      if (contest.status === 'ongoing' && onRegistered) {
+        onRegistered();
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to register. Please try again.");
     } finally {
@@ -34,13 +39,13 @@ export default function ContestRegisterModal({ onClose, contest }: ContestRegist
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
-      onClick={onClose}
-    >
+    <ModalPortal>
       <div
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative"
+        className="fixed inset-0 z-[1000] flex items-center justify-center p-4 overflow-y-auto bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      >
+      <div
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <button
@@ -123,5 +128,6 @@ export default function ContestRegisterModal({ onClose, contest }: ContestRegist
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 }

@@ -8,7 +8,8 @@ interface Leader {
   displayname: string;
   avatarUrl: string;
   rank?: string;
-  contestRating?: number;
+  level?: number;
+  experiencePoints?: number;
   totalSolved?: number;
 }
 
@@ -39,9 +40,9 @@ export default function FullLeaderboardModal({ onClose }: { onClose: () => void 
     }
   };
 
-  const formatPoints = (rating?: number) => {
-    if (!rating) return "0";
-    return rating.toLocaleString();
+  const formatPoints = (points?: number) => {
+    if (!points) return "0";
+    return points.toLocaleString();
   };
 
   return (
@@ -87,10 +88,10 @@ export default function FullLeaderboardModal({ onClose }: { onClose: () => void 
                     }
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-sm text-[#1A1D2B] truncate">{u.displayname}</p>
-                      <p className="text-[10px] text-gray-400">{u.rank || "Community Member"}</p>
+                      <p className="text-[10px] text-gray-400">{u.rank || (u.level ? `Lv. ${u.level}` : "Community Member")}</p>
                     </div>
                     <span className="font-black tabular-nums text-sm" style={{ color: isYou ? "var(--main-orange-color)" : "#1A1D2B" }}>
-                      {formatPoints(u.contestRating)} <span className="text-[9px] font-semibold text-gray-400 uppercase">EXP</span>
+                      {formatPoints(u.experiencePoints)} <span className="text-[9px] font-semibold text-gray-400 uppercase">EXP</span>
                     </span>
                   </div>
                 );
