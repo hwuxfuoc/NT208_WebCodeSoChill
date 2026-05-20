@@ -33,6 +33,7 @@ async function startServer() {
   app.use('/api/problems',      require('./api/problems/problemRoutes'));
   app.use('/api/submissions',   require('./api/submissions/submissionRoutes'));
   app.use('/api/contests',      require('./api/contests/contestRoutes'));
+  app.use('/api/stats',         require('./api/stats/statsRoutes'));
   app.use('/api/community',     require('./api/community/communityRoutes'));
   app.use('/api/notifications', require('./api/notifications/notificationRoutes'));
   app.use('/api/settings',      require('./api/settings/settingRoutes'));

@@ -28,6 +28,7 @@ def _get_collection(name: str):
 problems_col   = _get_collection("problems")
 algorithms_col = _get_collection("algorithms")
 hints_col      = _get_collection("hints")
+solutions_col  = _get_collection("solutions")
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -55,6 +56,15 @@ def get_relevant_context(question: str, problem_id: str | None = None, top_k: in
     # 3. Tìm hints liên quan
     hint_res = hints_col.query(query_texts=[question], n_results=2)
     results.extend(_extract_docs(hint_res))
+
+    # 4. Tìm solution nếu có problem_id
+    if problem_id:
+        try:
+            sol_res = solutions_col.get(ids=[problem_id], include=["documents"])
+            if sol_res["documents"] and sol_res["documents"][0]:
+                results.append(f"[Code giải chuẩn (tham khảo)]\n{sol_res['documents'][0]}")
+        except Exception:
+            pass
 
     return "\n\n---\n\n".join(results) if results else ""
 
@@ -95,4 +105,11 @@ def upsert_hint(hint_id: str, problem_title: str, content: str):
         ids=[hint_id],
         documents=[content],
         metadatas=[{"label": f"Hint: {problem_title}"}],
+    )
+
+def upsert_solution(problem_id: str, problem_title: str, code: str):
+    solutions_col.upsert(
+        ids=[problem_id],
+        documents=[code],
+        metadatas=[{"label": f"Solution: {problem_title}"}],
     )

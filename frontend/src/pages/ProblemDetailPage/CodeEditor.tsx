@@ -19,11 +19,11 @@ const LANGUAGE_OPTIONS = [
 ];
 
 const DEFAULT_SNIPPETS: Record<string, string> = {
-  python: "def solve():\n    pass\n\nif __name__ == '__main__':\n    solve()\n",
+  python: "import sys\n\ninput = sys.stdin.readline\n\ndef solve():\n    # write your code here\n    pass\n\nif __name__ == '__main__':\n    solve()\n",
   javascript: "function solve() {\n    // write your code here\n}\n\n// Example run\n// console.log(solve());\n",
   typescript: "function solve(): void {\n    // write your code here\n}\n\nsolve();\n",
-  java: "public class Solution {\n    public static void main(String[] args) {\n        // write your code here\n    }\n}\n",
-  cpp: "#include <bits/stdc++.h>\nusing namespace std;\nint main() {\n    // write your code here\n    return 0;\n}\n",
+  java: "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        // write your code here\n    }\n}\n",
+  cpp: "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    // write your code here\n    return 0;\n}\n",
   csharp: "using System;\nclass Solution {\n    static void Main() {\n        // write your code here\n    }\n}\n",
   go: "package main\nimport \"fmt\"\nfunc main() {\n    // write your code here\n    fmt.Println()\n}\n",
   rust: "fn main() {\n    // write your code here\n}\n",
@@ -46,6 +46,9 @@ interface CodeEditorProps {
   problemId: string;
   timeLimit: number;
   memoryLimit: number;
+  onOpenChat?: () => void;
+  onCodeChange?: (code: string) => void;
+  onStatusChange?: (status: string | null) => void;
 }
 
 interface JudgeResult {
@@ -57,7 +60,7 @@ interface JudgeResult {
   totalTests: number;
 }
 
-export default function CodeEditor({ problemId }: CodeEditorProps) {
+export default function CodeEditor({ problemId, onOpenChat, onCodeChange, onStatusChange }: CodeEditorProps) {
   const [language, setLanguage] = useState(LANGUAGE_OPTIONS[0]);
   const [code, setCode] = useState(DEFAULT_SNIPPETS[LANGUAGE_OPTIONS[0].value]);
   const [lastStatus, setLastStatus] = useState<string | null>(null);
@@ -82,11 +85,17 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
           const matchedLang = LANGUAGE_OPTIONS.find((l) => l.value === sub.language);
           if (matchedLang) setLanguage(matchedLang);
           setCode(sub.code);
+          onCodeChange?.(sub.code);
           setLastStatus(sub.status);
+          onStatusChange?.(sub.status);
+        } else {
+          // Sync default snippet if no previous submission
+          onCodeChange?.(code);
         }
       })
       .catch(() => {
-        // Nếu chưa login hoặc lỗi → giữ nguyên default snippet
+        // Nếu chưa login hoặc lỗi → giữ nguyên default snippet và sync
+        onCodeChange?.(code);
       })
       .finally(() => setLoadingLast(false));
   }, [problemId]);
@@ -105,7 +114,9 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
     setLanguage(selected);
     // Chỉ reset code nếu đang là default snippet của language cũ
     if (!code || code.trim() === DEFAULT_SNIPPETS[language.value]?.trim()) {
-      setCode(DEFAULT_SNIPPETS[selected.value] ?? "");
+      const newCode = DEFAULT_SNIPPETS[selected.value] ?? "";
+      setCode(newCode);
+      onCodeChange?.(newCode);
     }
   };
 
@@ -145,6 +156,7 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
       });
       // Cập nhật badge status sau khi submit mới
       setLastStatus(newStatus);
+      onStatusChange?.(newStatus);
     } catch (err: any) {
       setErrorMessage(err.response?.data?.message || err.message || "Lỗi khi nộp bài");
     } finally {
@@ -202,12 +214,14 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 transition-colors"
-            disabled
+            onClick={onOpenChat}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
+            title="Ask AI"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"></path>
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
           </button>
           <button
@@ -232,7 +246,15 @@ export default function CodeEditor({ problemId }: CodeEditorProps) {
           language={editorLanguage}
           theme="vs-dark"
           value={code}
-          onChange={(value) => setCode(value ?? "")}
+          onChange={(value) => {
+            const newCode = value ?? "";
+            setCode(newCode);
+            onCodeChange?.(newCode);
+            if (lastStatus !== null) {
+              setLastStatus(null);
+              onStatusChange?.(null);
+            }
+          }}
           options={{
             fontSize: 13,
             minimap: { enabled: false },
