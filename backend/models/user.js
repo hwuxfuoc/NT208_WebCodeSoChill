@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
     role:                   { type: String, enum: ['user', 'admin'], default: 'user' },
     isVerified:             { type: Boolean, default: false },
 
+    // Reset Password
+    resetPasswordCode:      { type: String, default: null },
+    resetPasswordExpire:    { type: Date, default: null },
+
 }, { timestamps: true });
 
 // ─── EXP → Rank virtual ────────────────────────────────────────────────────
