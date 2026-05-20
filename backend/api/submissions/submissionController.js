@@ -1,6 +1,7 @@
 // backend/api/submission/submissionController.js
 const Submission = require('../../models/submission');
 const Problem = require('../../models/problem');
+const Notification = require('../../models/notification');
 const User = require('../../models/user');
 const { runCode } = require('../../judge/runner');
 
@@ -75,6 +76,14 @@ const submit = async (req, res) => {
             const p = await Problem.findById(problemId);
             p.acceptanceRate = p.totalSubmissions > 0 ? Math.round((p.totalAccepted / p.totalSubmissions) * 100) : 0;
             await p.save();
+
+            await Notification.create({
+                userId: req.user.id,
+                type: 'general',
+                title: 'Bài đã được chấp nhận',
+                message: `Bài "${problem.title}" của bạn đã được chấp nhận!`,
+                link: `/problems/${problemId}`,
+            });
         } else {
             await Problem.findByIdAndUpdate(problemId, { $inc: { totalSubmissions: 1 } });
         }

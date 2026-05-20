@@ -7,7 +7,11 @@ const auth = require('../../middleware/auth');
 const adminOnly = require('../../middleware/adminOnly');
 
 // Controller
-const { promoteUser } = require('./adminController');
+const { getAllUsers, promoteUser } = require('./adminController');
+
+// Route: Get all users
+// GET /api/admin/users
+router.get('/users', auth, adminOnly, getAllUsers);
 
 // Route: Promote a user to admin
 // POST /api/admin/promote/:userId

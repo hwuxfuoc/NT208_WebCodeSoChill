@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/images/logo.jpg";
 import { motion } from "framer-motion";
@@ -15,10 +15,8 @@ const links = [
 export default function Sidebar() {
   const authCtx = useContext(AuthContext);
   const isAdmin = !!authCtx?.user?.role && authCtx.user.role === 'admin';
-  const adminLink = isAdmin
-    ? { to: '/admin/problems', label: 'Admin', icon: <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M12 8v8"/><path d="M8 12h8"/></svg> }
-    : null;
-  const allLinks = adminLink ? [...links, adminLink] : links;
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
+
   return (
     <motion.aside
       className="sidebar"
@@ -36,7 +34,7 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="side-nav">
-        {allLinks.map(({ to, label, icon }) => (
+        {links.map(({ to, label, icon }) => (
           <div key={to} className="side-item">
             <NavLink to={to} className={({ isActive }) => `side-link ${isActive ? "active" : ""}`}>
               <span className="side-icon flex items-center justify-center w-6">{icon}</span>
@@ -44,6 +42,46 @@ export default function Sidebar() {
             </NavLink>
           </div>
         ))}
+
+        {isAdmin && (
+          <div className="side-item">
+            <button
+              onClick={() => setShowAdminMenu(!showAdminMenu)}
+              className={`side-link w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${showAdminMenu ? 'active' : ''}`}
+              style={showAdminMenu ? { backgroundColor: 'rgba(255, 127, 39, 0.1)', color: 'var(--main-orange-color)' } : {}}
+            >
+              <span className="side-icon flex items-center justify-center w-6">
+                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4"></circle>
+                  <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                </svg>
+              </span>
+              <span className="label">Admin</span>
+              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className={`ml-auto transition-transform ${showAdminMenu ? 'rotate-180' : ''}`}>
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            {showAdminMenu && (
+              <div className="ml-2 mt-2 space-y-1 pl-4 border-l-2" style={{ borderColor: 'rgba(255, 127, 39, 0.3)' }}>
+                <NavLink
+                  to="/admin/problems"
+                  className={({ isActive }) => `block px-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'active' : 'hover:bg-gray-100'}`}
+                  style={({ isActive }) => isActive ? { backgroundColor: 'rgba(255, 127, 39, 0.1)', color: 'var(--main-orange-color)', fontWeight: 'bold' } : {}}
+                >
+                  📋 Problems
+                </NavLink>
+                <NavLink
+                  to="/admin/users"
+                  className={({ isActive }) => `block px-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'active' : 'hover:bg-gray-100'}`}
+                  style={({ isActive }) => isActive ? { backgroundColor: 'rgba(255, 127, 39, 0.1)', color: 'var(--main-orange-color)', fontWeight: 'bold' } : {}}
+                >
+                  👥 Users
+                </NavLink>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
     </motion.aside>

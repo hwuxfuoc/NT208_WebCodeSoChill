@@ -1,4 +1,42 @@
-export default function ActivityHeatmap() {
+import { useEffect, useState } from "react";
+import * as profileService from "../../services/profileService";
+
+interface ActivityHeatmapProps {
+  userId?: string;
+}
+
+export default function ActivityHeatmap({ userId }: ActivityHeatmapProps) {
+  const [activeDates, setActiveDates] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let isCancelled = false;
+    if (!userId) return;
+    setLoading(true);
+    profileService.getUserCalendar(userId)
+      .then(res => {
+        if (isCancelled) return;
+        const arr: string[] = res.data.activeDates || [];
+        setActiveDates(new Set(arr));
+      })
+      .catch(err => console.error(err))
+      .finally(() => { if (!isCancelled) setLoading(false); });
+
+    return () => { isCancelled = true; };
+  }, [userId]);
+
+  const days = 98; // ~14 weeks
+  const today = new Date();
+  const lastDays = Array.from({ length: days }).map((_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (days - 1 - i));
+    return d;
+  });
+
+  const getColor = (dateStr: string) => {
+    return activeDates.has(dateStr) ? 'bg-teal-500' : 'bg-gray-100';
+  };
+
   return (
     <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col">
       <div className="flex justify-between items-center mb-6">
@@ -7,17 +45,13 @@ export default function ActivityHeatmap() {
       </div>
       <div className="flex-1 flex flex-col justify-center">
         <div className="grid grid-rows-7 grid-flow-col gap-1.5 overflow-x-auto pb-2">
-          {Array.from({ length: 98 }).map((_, i) => (
-            <div 
-              key={i} 
-              className={`w-3.5 h-3.5 rounded-[3px] ${
-                i % 12 === 0 ? "bg-teal-500" : 
-                i % 7 === 0 ? "bg-teal-400" : 
-                i % 3 === 0 ? "bg-teal-200" : 
-                "bg-gray-100"
-              }`} 
-            />
-          ))}
+          {loading && <div className="text-sm text-gray-500 col-span-14">Loading...</div>}
+          {!loading && lastDays.map((d, i) => {
+            const dateStr = d.toISOString().slice(0,10);
+            return (
+              <div key={i} className={`w-3.5 h-3.5 rounded-[3px] ${getColor(dateStr)}`} title={dateStr} />
+            );
+          })}
         </div>
         <div className="flex justify-end items-center gap-2 mt-4 text-[11px] font-bold text-gray-400 uppercase">
           <span>Less</span>
