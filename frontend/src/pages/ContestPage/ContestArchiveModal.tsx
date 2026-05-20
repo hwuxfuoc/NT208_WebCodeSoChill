@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Contest } from "../../services/contestService";
+import * as contestService from "../../services/contestService";
 
 import ModalPortal from "../../components/ModalPortal";
 
@@ -8,22 +10,30 @@ interface ContestArchiveModalProps {
   onViewRankings: (contest: Contest) => void;
 }
 
-const ARCHIVE = [
-  { id: 42, title: "Biweekly Architectural Challenge #42", date: "Oct 20, 2023", participants: 3842, solved: 2640 },
-  { id: 41, title: "Front-end Performance Architecting",   date: "Oct 15, 2023", participants: 2910, solved: 1420 },
-  { id: 40, title: "Database Sharding & Query Tuning",     date: "Oct 10, 2023", participants: 1870, solved: 980  },
-  { id: 39, title: "Cloud-Native Serverless Patterns",     date: "Oct 01, 2023", participants: 4210, solved: 2105 },
-  { id: 38, title: "Async Rust Systems Challenge",         date: "Sep 22, 2023", participants: 1540, solved: 770  },
-  { id: 37, title: "Graph Neural Networks Sprint",         date: "Sep 15, 2023", participants: 2200, solved: 1100 },
-  { id: 36, title: "Microservices Security Gauntlet",      date: "Sep 08, 2023", participants: 3100, solved: 1540 },
-  { id: 35, title: "Distributed Consensus Algorithms",     date: "Sep 01, 2023", participants: 1980, solved: 860  },
-  { id: 34, title: "WebAssembly Performance Challenge",    date: "Aug 25, 2023", participants: 2700, solved: 1350 },
-  { id: 33, title: "Zero-copy I/O & Memory Mapping",       date: "Aug 18, 2023", participants: 1420, solved: 680  },
-  { id: 32, title: "Functional Programming Patterns",      date: "Aug 11, 2023", participants: 3300, solved: 1650 },
-  { id: 31, title: "Kubernetes Scheduling Deep Dive",      date: "Aug 04, 2023", participants: 2050, solved: 990  },
-];
-
 export default function ContestArchiveModal({ onClose, onViewProblems, onViewRankings }: ContestArchiveModalProps) {
+  const [archive, setArchive] = useState<Contest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchArchive();
+  }, []);
+
+  const fetchArchive = async () => {
+    try {
+      setLoading(true);
+      const res = await contestService.getContests();
+      const contests = res?.data?.contests || [];
+      const past = contests
+        .filter((c) => c.status === "ended")
+        .sort((a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime());
+      setArchive(past);
+    } catch (err) {
+      console.error("Failed to fetch contest archive", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ModalPortal>
       <div
@@ -47,63 +57,54 @@ export default function ContestArchiveModal({ onClose, onViewProblems, onViewRan
         <div className="px-8 pt-8 pb-5 flex-shrink-0 border-b border-gray-100">
           <span className="text-[11px] font-black tracking-widest uppercase" style={{ color: "var(--main-orange-color)" }}>Contest Archive</span>
           <h2 className="text-xl font-extrabold text-[#1A1D2B] mt-1">All Past Contests</h2>
-          <p className="text-xs text-gray-400 mt-1">{ARCHIVE.length} contests · Sorted by most recent</p>
+          <p className="text-xs text-gray-400 mt-1">{archive.length} contests · Sorted by most recent</p>
         </div>
 
         <div className="overflow-y-auto flex-1 px-8 py-4" style={{ scrollbarWidth: "thin", scrollbarColor: "#e5e7eb transparent" }}>
-          {ARCHIVE.map((c) => {
-            const contest: Contest = {
-              _id: `archive-${c.id}`,
-              title: c.title,
-              description: c.title,
-              startTime: new Date(c.date).toISOString(),
-              endTime: new Date(c.date).toISOString(),
-              duration: 0,
-              participants: [],
-              status: "ended",
-              ratedFor: "",
-              isRated: false,
-              createdBy: { _id: "archive", username: "archive", displayname: "Archive" },
-            };
+          {loading ? (
+            <div className="py-8 flex justify-center"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div></div>
+          ) : (
+            archive.map((c, idx) => {
+              const dateStr = c.endTime ? new Date(c.endTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "";
+              return (
+                <div
+                  key={c._id}
+                  className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-[#f8fafc] border border-gray-100 hover:border-gray-200 transition-colors"
+                >
+                  <span className="text-[10px] font-black text-gray-400 tracking-wider w-10 flex-shrink-0">
+                    #{archive.length - idx}
+                  </span>
 
-            return (
-              <div
-                key={c.id}
-                className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-[#f8fafc] border border-gray-100 hover:border-gray-200 transition-colors"
-              >
-                <span className="text-[10px] font-black text-gray-400 tracking-wider w-10 flex-shrink-0">
-                  #{c.id}
-                </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm text-[#1A1D2B] truncate">
+                      {c.title}
+                    </p>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-[10px] text-gray-400 font-medium">{dateStr}</span>
+                      <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                      <span className="text-[10px] text-gray-400 font-medium">{c.participants ? c.participants.length : 0} participants</span>
+                    </div>
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-[#1A1D2B] truncate">
-                    {c.title}
-                  </p>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[10px] text-gray-400 font-medium">{c.date}</span>
-                    <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                    <span className="text-[10px] text-gray-400 font-medium">{c.participants.toLocaleString()} participants</span>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => onViewProblems(c)}
+                      className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-500 transition-colors"
+                    >
+                      Problems
+                    </button>
+                    <button
+                      onClick={() => onViewRankings(c)}
+                      className="text-[11px] font-bold px-3 py-1.5 rounded-lg text-white hover:opacity-85 transition-opacity"
+                      style={{ backgroundColor: "var(--main-orange-color)" }}
+                    >
+                      Rankings
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button
-                    onClick={() => onViewProblems(contest)}
-                    className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-500 transition-colors"
-                  >
-                    Problems
-                  </button>
-                  <button
-                    onClick={() => onViewRankings(contest)}
-                    className="text-[11px] font-bold px-3 py-1.5 rounded-lg text-white hover:opacity-85 transition-opacity"
-                    style={{ backgroundColor: "var(--main-orange-color)" }}
-                  >
-                    Rankings
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </div>

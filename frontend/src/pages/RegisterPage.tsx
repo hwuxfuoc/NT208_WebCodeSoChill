@@ -57,95 +57,54 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', backgroundColor: '#f5f5f5' }}>
-      <div className="card" style={{ width: '100%', maxWidth: '450px', padding: '2rem' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Đăng Ký</h2>
+    <div className="min-h-screen flex items-center justify-center p-4 py-8">
+      <div className="card w-full max-w-lg p-8 relative overflow-hidden border border-white/40">
+        {/* Decorative top border */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#fc6b57] to-[#49bb98]"></div>
+        
+        <div className="text-center mb-8 mt-2">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Đăng Ký</h2>
+          <p className="text-gray-500 text-sm font-medium">Tạo tài khoản CodeSoChill mới của bạn</p>
+        </div>
 
         {(localError || error) && (
-          <div
-            style={{
-              backgroundColor: '#fee',
-              border: '1px solid #fcc',
-              color: '#c00',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              marginBottom: '1rem',
-            }}
-          >
-            {localError || error}
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3.5 rounded-md mb-6 text-sm flex items-center shadow-sm">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+            <span>{localError || error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              htmlFor="username"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Tên Đăng Nhập *
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="your_username"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
-            />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="username" className="block mb-1.5 text-sm font-bold text-gray-700">Tên Đăng Nhập <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="your_username"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="displayname" className="block mb-1.5 text-sm font-bold text-gray-700">Tên Hiển Thị <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                id="displayname"
+                name="displayname"
+                value={formData.displayname}
+                onChange={handleChange}
+                placeholder="Your Full Name"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
+              />
+            </div>
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              htmlFor="displayname"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Tên Hiển Thị *
-            </label>
-            <input
-              type="text"
-              id="displayname"
-              name="displayname"
-              value={formData.displayname}
-              onChange={handleChange}
-              placeholder="Your Full Name"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              htmlFor="email"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Email *
-            </label>
+          <div>
+            <label htmlFor="email" className="block mb-1.5 text-sm font-bold text-gray-700">Email <span className="text-red-500">*</span></label>
             <input
               type="email"
               id="email"
@@ -153,86 +112,40 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
             />
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              htmlFor="password"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Mật Khẩu * (tối thiểu 6 ký tự)
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="password" className="block mb-1.5 text-sm font-bold text-gray-700">Mật Khẩu <span className="text-red-500">*</span></label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="block mb-1.5 text-sm font-bold text-gray-700">Xác Nhận Mật Khẩu <span className="text-red-500">*</span></label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
+              />
+            </div>
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              htmlFor="confirmPassword"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Xác Nhận Mật Khẩu *
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              placeholder="••••••••"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label
-              htmlFor="phone"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Số Điện Thoại (tùy chọn)
-            </label>
+          <div>
+            <label htmlFor="phone" className="block mb-1.5 text-sm font-bold text-gray-700">Số Điện Thoại <span className="text-gray-400 font-normal">(tùy chọn)</span></label>
             <input
               type="tel"
               id="phone"
@@ -240,49 +153,28 @@ export default function RegisterPage() {
               value={formData.phone}
               onChange={handleChange}
               placeholder="+84 1234567890"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.6 : 1,
-            }}
+            className={`w-full py-3.5 mt-4 rounded-xl text-white font-bold text-[15px] tracking-wide transition-all duration-300 ${
+              loading 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-[#fc6b57] to-[#e85a46] shadow-md shadow-[#fc6b57]/30 hover:shadow-lg hover:shadow-[#fc6b57]/40 hover:-translate-y-0.5'
+            }`}
           >
             {loading ? 'Đang đăng ký...' : 'Đăng Ký'}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <p>
+        <div className="mt-6 pt-5 border-t border-gray-100 text-center">
+          <p className="text-gray-600 text-sm font-medium">
             Đã có tài khoản?{' '}
-            <Link
-              to="/login"
-              style={{
-                color: '#007bff',
-                textDecoration: 'none',
-                fontWeight: '600',
-              }}
-            >
-              Đăng nhập
+            <Link to="/login" className="text-[#49bb98] font-bold hover:underline transition-all">
+              Đăng nhập ngay
             </Link>
           </p>
         </div>

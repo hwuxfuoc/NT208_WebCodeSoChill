@@ -127,161 +127,97 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // ─── Styles ───────────────────────────────────────────────────────────────
-  const pageStyle: React.CSSProperties = {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    padding: '1rem',
-  };
-
-  const cardStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: '440px',
-    background: 'rgba(255,255,255,0.05)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255,255,255,0.12)',
-    borderRadius: '20px',
-    padding: '2.5rem',
-    boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
-  };
-
-  const headingStyle: React.CSSProperties = {
-    textAlign: 'center',
-    marginBottom: '0.5rem',
-    fontSize: '1.75rem',
-    fontWeight: 700,
-    color: '#fff',
-    letterSpacing: '-0.5px',
-  };
-
-  const subtitleStyle: React.CSSProperties = {
-    textAlign: 'center',
-    marginBottom: '2rem',
-    fontSize: '0.9rem',
-    color: 'rgba(255,255,255,0.55)',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    display: 'block',
-    marginBottom: '0.5rem',
-    fontWeight: '500',
-    fontSize: '0.875rem',
-    color: 'rgba(255,255,255,0.75)',
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '0.8rem 1rem',
-    background: 'rgba(255,255,255,0.08)',
-    border: '1px solid rgba(255,255,255,0.15)',
-    borderRadius: '10px',
-    fontSize: '1rem',
-    color: '#fff',
-    boxSizing: 'border-box',
-    outline: 'none',
-    transition: 'border-color 0.2s',
-  };
-
-  const btnStyle = (disabled: boolean): React.CSSProperties => ({
-    width: '100%',
-    padding: '0.875rem',
-    background: disabled
-      ? 'rgba(99,102,241,0.4)'
-      : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-    color: 'white',
-    border: 'none',
-    borderRadius: '10px',
-    fontSize: '1rem',
-    fontWeight: 600,
-    cursor: disabled ? 'not-allowed' : 'pointer',
-    transition: 'all 0.2s',
-    marginTop: '0.5rem',
-  });
-
-  const alertStyle = (isError: boolean): React.CSSProperties => ({
-    padding: '0.75rem 1rem',
-    borderRadius: '10px',
-    marginBottom: '1.25rem',
-    fontSize: '0.875rem',
-    background: isError ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)',
-    border: `1px solid ${isError ? 'rgba(239,68,68,0.4)' : 'rgba(34,197,94,0.4)'}`,
-    color: isError ? '#fca5a5' : '#86efac',
-  });
-
   const iconLock = (
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" style={{ margin: '0 auto 1rem', display: 'block' }}>
-      <circle cx="12" cy="12" r="12" fill="rgba(99,102,241,0.2)" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#818cf8" strokeWidth="1.5" strokeLinecap="round" />
-      <rect x="5" y="11" width="14" height="9" rx="2" fill="rgba(99,102,241,0.4)" stroke="#818cf8" strokeWidth="1.5" />
-      <circle cx="12" cy="15.5" r="1.5" fill="#818cf8" />
-    </svg>
+    <div className="mx-auto w-16 h-16 bg-[#49bb98]/10 rounded-full flex items-center justify-center mb-6">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#49bb98" strokeWidth="2" strokeLinecap="round" />
+        <rect x="5" y="11" width="14" height="9" rx="2" fill="#49bb98" fillOpacity="0.2" stroke="#49bb98" strokeWidth="2" />
+        <circle cx="12" cy="15.5" r="1.5" fill="#49bb98" />
+      </svg>
+    </div>
   );
 
   const iconEmail = (
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" style={{ margin: '0 auto 1rem', display: 'block' }}>
-      <circle cx="12" cy="12" r="12" fill="rgba(139,92,246,0.2)" />
-      <rect x="4" y="7" width="16" height="11" rx="2" fill="rgba(139,92,246,0.3)" stroke="#a78bfa" strokeWidth="1.5" />
-      <path d="M4 9l8 5 8-5" stroke="#a78bfa" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
+    <div className="mx-auto w-16 h-16 bg-[#fc6b57]/10 rounded-full flex items-center justify-center mb-6">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <rect x="4" y="7" width="16" height="11" rx="2" fill="#fc6b57" fillOpacity="0.2" stroke="#fc6b57" strokeWidth="2" />
+        <path d="M4 9l8 5 8-5" stroke="#fc6b57" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    </div>
   );
 
   return (
-    <div style={pageStyle}>
-      <div style={cardStyle}>
+    <div className="min-h-screen flex items-center justify-center p-4 py-8">
+      <div className="card w-full max-w-md p-8 relative overflow-hidden border border-white/40">
+        {/* Decorative top border */}
+        <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${step === 'request' ? 'from-[#49bb98] to-[#fc6b57]' : 'from-[#fc6b57] to-[#49bb98]'}`}></div>
+
         {step === 'request' ? (
           <>
             {iconLock}
-            <h1 style={headingStyle}>Quên Mật Khẩu</h1>
-            <p style={subtitleStyle}>
+            <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">Quên Mật Khẩu</h1>
+            <p className="text-center text-gray-500 text-sm mb-6">
               Nhập email tài khoản của bạn, chúng tôi sẽ gửi mã xác nhận 6 số.
             </p>
 
-            {requestMsg && <div style={alertStyle(requestMsg.isError)}>{requestMsg.text}</div>}
+            {requestMsg && (
+              <div className={`p-3.5 rounded-md mb-6 text-sm flex items-center shadow-sm border-l-4 ${requestMsg.isError ? 'bg-red-50 border-red-500 text-red-700' : 'bg-green-50 border-green-500 text-green-700'}`}>
+                <span>{requestMsg.text}</span>
+              </div>
+            )}
 
-            <form onSubmit={handleRequestCode}>
-              <div style={{ marginBottom: '1.25rem' }}>
-                <label htmlFor="fp-email" style={labelStyle}>Địa chỉ Email</label>
+            <form onSubmit={handleRequestCode} className="space-y-5">
+              <div>
+                <label htmlFor="fp-email" className="block mb-1.5 text-sm font-bold text-gray-700">Địa chỉ Email</label>
                 <input
                   id="fp-email"
                   type="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setRequestMsg(null); }}
                   placeholder="you@example.com"
-                  style={inputStyle}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#49bb98]/20 focus:border-[#49bb98] outline-none transition-all duration-200 font-medium text-sm"
                   autoFocus
                 />
               </div>
-              <button type="submit" disabled={loadingRequest} style={btnStyle(loadingRequest)}>
+              <button 
+                type="submit" 
+                disabled={loadingRequest} 
+                className={`w-full py-3.5 mt-2 rounded-xl text-white font-bold text-[15px] tracking-wide transition-all duration-300 ${
+                  loadingRequest 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-[#49bb98] to-[#3ea786] shadow-md shadow-[#49bb98]/30 hover:shadow-lg hover:shadow-[#49bb98]/40 hover:-translate-y-0.5'
+                }`}
+              >
                 {loadingRequest ? 'Đang gửi mã...' : 'Nhận mã xác nhận'}
               </button>
             </form>
 
-            <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-              <Link to="/login" style={{ color: '#818cf8', fontSize: '0.875rem', textDecoration: 'none' }}>
-                ← Quay lại đăng nhập
+            <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+              <Link to="/login" className="text-gray-500 font-medium hover:text-[#49bb98] text-sm transition-all flex items-center justify-center gap-1.5">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Quay lại đăng nhập
               </Link>
             </div>
           </>
         ) : (
           <>
             {iconEmail}
-            <h1 style={headingStyle}>Nhập Mã Xác Nhận</h1>
-            <p style={subtitleStyle}>
-              Mã 6 số đã được gửi tới <strong style={{ color: 'rgba(255,255,255,0.8)' }}>{email}</strong>
+            <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">Nhập Mã Xác Nhận</h1>
+            <p className="text-center text-gray-500 text-sm mb-6">
+              Mã 6 số đã được gửi tới <strong className="text-gray-800">{email}</strong>
             </p>
 
-            {resetMsg && <div style={alertStyle(resetMsg.isError)}>{resetMsg.text}</div>}
+            {resetMsg && (
+              <div className={`p-3.5 rounded-md mb-6 text-sm flex items-center shadow-sm border-l-4 ${resetMsg.isError ? 'bg-red-50 border-red-500 text-red-700' : 'bg-green-50 border-green-500 text-green-700'}`}>
+                <span>{resetMsg.text}</span>
+              </div>
+            )}
 
-            <form onSubmit={handleResetPassword}>
+            <form onSubmit={handleResetPassword} className="space-y-5">
               {/* OTP Input */}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={labelStyle}>Mã xác nhận</label>
-                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+              <div>
+                <label className="block mb-2 text-sm font-bold text-gray-700 text-center">Mã xác nhận</label>
+                <div className="flex gap-2 justify-center">
                   {code.map((digit, idx) => (
                     <input
                       key={idx}
@@ -293,46 +229,28 @@ export default function ForgotPasswordPage() {
                       onChange={(e) => handleCodeChange(idx, e.target.value)}
                       onKeyDown={(e) => handleCodeKeyDown(idx, e)}
                       onPaste={idx === 0 ? handleCodePaste : undefined}
-                      style={{
-                        width: '48px',
-                        height: '56px',
-                        textAlign: 'center',
-                        fontSize: '1.5rem',
-                        fontWeight: 700,
-                        fontFamily: 'monospace',
-                        background: digit ? 'rgba(99,102,241,0.25)' : 'rgba(255,255,255,0.08)',
-                        border: `2px solid ${digit ? '#6366f1' : 'rgba(255,255,255,0.15)'}`,
-                        borderRadius: '10px',
-                        color: '#fff',
-                        outline: 'none',
-                        transition: 'all 0.15s',
-                        boxSizing: 'border-box',
-                      }}
+                      className={`w-11 h-14 text-center text-xl font-bold font-mono rounded-xl border-2 outline-none transition-all ${digit ? 'bg-[#fc6b57]/5 border-[#fc6b57] text-[#fc6b57]' : 'bg-gray-50 border-gray-200 text-gray-700 focus:border-[#fc6b57]/50 focus:bg-white'}`}
                     />
                   ))}
                 </div>
               </div>
 
               {/* Mật khẩu mới */}
-              <div style={{ marginBottom: '1rem' }}>
-                <label htmlFor="fp-newpass" style={labelStyle}>Mật khẩu mới</label>
-                <div style={{ position: 'relative' }}>
+              <div>
+                <label htmlFor="fp-newpass" className="block mb-1.5 text-sm font-bold text-gray-700">Mật khẩu mới</label>
+                <div className="relative">
                   <input
                     id="fp-newpass"
                     type={showPass ? 'text' : 'password'}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Ít nhất 6 ký tự"
-                    style={{ ...inputStyle, paddingRight: '2.75rem' }}
+                    className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57] outline-none transition-all duration-200 font-medium text-sm"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
-                    style={{
-                      position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)',
-                      background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.5)',
-                      fontSize: '0.8rem', padding: 0,
-                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 font-medium text-sm px-2"
                   >
                     {showPass ? 'Ẩn' : 'Hiện'}
                   </button>
@@ -340,55 +258,61 @@ export default function ForgotPasswordPage() {
               </div>
 
               {/* Xác nhận mật khẩu */}
-              <div style={{ marginBottom: '1.25rem' }}>
-                <label htmlFor="fp-confirm" style={labelStyle}>Xác nhận mật khẩu mới</label>
+              <div>
+                <label htmlFor="fp-confirm" className="block mb-1.5 text-sm font-bold text-gray-700">Xác nhận mật khẩu mới</label>
                 <input
                   id="fp-confirm"
                   type={showPass ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Nhập lại mật khẩu"
-                  style={{
-                    ...inputStyle,
-                    borderColor: confirmPassword && confirmPassword !== newPassword
-                      ? 'rgba(239,68,68,0.6)'
-                      : 'rgba(255,255,255,0.15)',
-                  }}
+                  className={`w-full px-4 py-3 rounded-xl border bg-gray-50 focus:bg-white outline-none transition-all duration-200 font-medium text-sm ${
+                    confirmPassword && confirmPassword !== newPassword
+                      ? 'border-red-400 focus:ring-2 focus:ring-red-100'
+                      : 'border-gray-200 focus:ring-2 focus:ring-[#fc6b57]/20 focus:border-[#fc6b57]'
+                  }`}
                 />
                 {confirmPassword && confirmPassword !== newPassword && (
-                  <p style={{ color: '#fca5a5', fontSize: '0.78rem', margin: '0.35rem 0 0' }}>
+                  <p className="text-red-500 text-xs mt-1.5 font-medium">
                     Mật khẩu không khớp
                   </p>
                 )}
               </div>
 
-              <button type="submit" disabled={loadingReset} style={btnStyle(loadingReset)}>
+              <button 
+                type="submit" 
+                disabled={loadingReset} 
+                className={`w-full py-3.5 mt-2 rounded-xl text-white font-bold text-[15px] tracking-wide transition-all duration-300 ${
+                  loadingReset 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-[#fc6b57] to-[#e85a46] shadow-md shadow-[#fc6b57]/30 hover:shadow-lg hover:shadow-[#fc6b57]/40 hover:-translate-y-0.5'
+                }`}
+              >
                 {loadingReset ? 'Đang xử lý...' : 'Đổi Mật Khẩu'}
               </button>
             </form>
 
             {/* Resend + Back */}
-            <div style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
-              Không nhận được mã?{' '}
-              <button
-                onClick={handleResend}
-                disabled={resendCooldown > 0 || loadingRequest}
-                style={{
-                  background: 'none', border: 'none', cursor: resendCooldown > 0 ? 'default' : 'pointer',
-                  color: resendCooldown > 0 ? 'rgba(255,255,255,0.3)' : '#818cf8',
-                  fontWeight: 600, fontSize: '0.85rem', padding: 0,
-                }}
-              >
-                {resendCooldown > 0 ? `Gửi lại (${resendCooldown}s)` : 'Gửi lại'}
-              </button>
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '0.75rem' }}>
-              <button
-                onClick={() => { setStep('request'); setResetMsg(null); setCode(['', '', '', '', '', '']); }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#818cf8', fontSize: '0.85rem' }}
-              >
-                ← Đổi email
-              </button>
+            <div className="mt-8 pt-5 border-t border-gray-100 text-center space-y-3">
+              <div className="text-sm text-gray-500 font-medium">
+                Không nhận được mã?{' '}
+                <button
+                  onClick={handleResend}
+                  disabled={resendCooldown > 0 || loadingRequest}
+                  className={`font-bold transition-all ${resendCooldown > 0 ? 'text-gray-400 cursor-default' : 'text-[#fc6b57] hover:underline'}`}
+                >
+                  {resendCooldown > 0 ? `Gửi lại (${resendCooldown}s)` : 'Gửi lại'}
+                </button>
+              </div>
+              <div>
+                <button
+                  onClick={() => { setStep('request'); setResetMsg(null); setCode(['', '', '', '', '', '']); }}
+                  className="text-gray-500 font-medium hover:text-[#49bb98] text-sm transition-all flex items-center justify-center gap-1.5 mx-auto"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  Đổi email
+                </button>
+              </div>
             </div>
           </>
         )}

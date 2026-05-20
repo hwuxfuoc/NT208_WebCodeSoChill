@@ -71,7 +71,6 @@ export default function SeasonalLeaderboard() {
       <div className="card flex flex-col">
         <div className="flex justify-between items-center mb-1">
           <h3 className="font-bold text-lg text-gray-800">Seasonal Leaderboard</h3>
-          <span className="px-3 py-1 bg-orange-50 text-orange-500 text-[10px] font-bold rounded-full border border-orange-100">SEASON 4</span>
         </div>
         <p className="text-[10px] text-gray-400 font-semibold tracking-wide uppercase mb-4">Top Performers this month</p>
 

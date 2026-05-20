@@ -44,7 +44,7 @@ export default function Sidebar() {
         ))}
 
         {isAdmin && (
-          <div className="side-item">
+          <div className="flex flex-col w-full">
             <button
               onClick={() => setShowAdminMenu(!showAdminMenu)}
               className={`side-link w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${showAdminMenu ? 'active' : ''}`}
@@ -56,30 +56,33 @@ export default function Sidebar() {
                   <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
                 </svg>
               </span>
-              <span className="label">Admin</span>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className={`ml-auto transition-transform ${showAdminMenu ? 'rotate-180' : ''}`}>
+              <span className="label font-medium">Admin</span>
+              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className={`ml-auto transition-transform duration-300 ${showAdminMenu ? 'rotate-180' : ''}`}>
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
 
-            {showAdminMenu && (
-              <div className="ml-2 mt-2 space-y-1 pl-4 border-l-2" style={{ borderColor: 'rgba(255, 127, 39, 0.3)' }}>
+            {/* Dropdown Menu */}
+            <div 
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${showAdminMenu ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'}`}
+            >
+              <div className="flex flex-col gap-1.5 ml-[22px] pl-4 border-l-2" style={{ borderColor: 'rgba(255, 127, 39, 0.2)' }}>
                 <NavLink
                   to="/admin/problems"
-                  className={({ isActive }) => `block px-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'active' : 'hover:bg-gray-100'}`}
-                  style={({ isActive }) => isActive ? { backgroundColor: 'rgba(255, 127, 39, 0.1)', color: 'var(--main-orange-color)', fontWeight: 'bold' } : {}}
+                  className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[rgba(255,127,39,0.1)] text-[#fc6b57]' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
                 >
-                  📋 Problems
+                  <span className="text-base">📋</span> 
+                  <span>Problems</span>
                 </NavLink>
                 <NavLink
                   to="/admin/users"
-                  className={({ isActive }) => `block px-3 py-2 rounded-lg text-sm transition-colors ${isActive ? 'active' : 'hover:bg-gray-100'}`}
-                  style={({ isActive }) => isActive ? { backgroundColor: 'rgba(255, 127, 39, 0.1)', color: 'var(--main-orange-color)', fontWeight: 'bold' } : {}}
+                  className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[rgba(255,127,39,0.1)] text-[#fc6b57]' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
                 >
-                  👥 Users
+                  <span className="text-base">👥</span> 
+                  <span>Users</span>
                 </NavLink>
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>
