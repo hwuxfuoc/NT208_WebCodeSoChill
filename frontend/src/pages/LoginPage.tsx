@@ -37,37 +37,26 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', backgroundColor: '#f5f5f5' }}>
-      <div className="card" style={{ width: '100%', maxWidth: '400px', padding: '2rem' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>Đăng Nhập</h2>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="card w-full max-w-md p-8 relative overflow-hidden border border-white/40">
+        {/* Decorative top border */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#49bb98] to-[#fc6b57]"></div>
+        
+        <div className="text-center mb-8 mt-2">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Đăng Nhập</h2>
+          <p className="text-gray-500 text-sm font-medium">Chào mừng bạn quay trở lại CodeSoChill</p>
+        </div>
 
         {(localError || error) && (
-          <div
-            style={{
-              backgroundColor: '#fee',
-              border: '1px solid #fcc',
-              color: '#c00',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              marginBottom: '1rem',
-            }}
-          >
-            {localError || error}
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3.5 rounded-md mb-6 text-sm flex items-center shadow-sm">
+            <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+            <span>{localError || error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label
-              htmlFor="email"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Email
-            </label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="email" className="block mb-1.5 text-sm font-bold text-gray-700">Email</label>
             <input
               type="email"
               id="email"
@@ -75,28 +64,12 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#49bb98]/20 focus:border-[#49bb98] outline-none transition-all duration-200 font-medium text-sm"
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label
-              htmlFor="password"
-              style={{
-                display: 'block',
-                marginBottom: '0.5rem',
-                fontWeight: '500',
-              }}
-            >
-              Mật Khẩu
-            </label>
+          <div>
+            <label htmlFor="password" className="block mb-1.5 text-sm font-bold text-gray-700">Mật Khẩu</label>
             <input
               type="password"
               id="password"
@@ -104,61 +77,33 @@ export default function LoginPage() {
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                boxSizing: 'border-box',
-              }}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-[#49bb98]/20 focus:border-[#49bb98] outline-none transition-all duration-200 font-medium text-sm"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.6 : 1,
-            }}
+            className={`w-full py-3.5 mt-2 rounded-xl text-white font-bold text-[15px] tracking-wide transition-all duration-300 ${
+              loading 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-[#49bb98] to-[#3ea786] shadow-md shadow-[#49bb98]/30 hover:shadow-lg hover:shadow-[#49bb98]/40 hover:-translate-y-0.5'
+            }`}
           >
             {loading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <p style={{ marginBottom: '0.5rem' }}>
+        <div className="mt-8 pt-6 border-t border-gray-100 text-center space-y-3">
+          <p className="text-gray-600 text-sm font-medium">
             Chưa có tài khoản?{' '}
-            <Link
-              to="/register"
-              style={{
-                color: '#007bff',
-                textDecoration: 'none',
-                fontWeight: '600',
-              }}
-            >
+            <Link to="/register" className="text-[#fc6b57] font-bold hover:underline transition-all">
               Đăng ký ngay
             </Link>
           </p>
-          <p style={{ margin: 0 }}>
+          <p className="text-gray-600 text-sm font-medium">
             Bạn quên mật khẩu?{' '}
-            <Link
-              to="/forgotpassword"
-              style={{
-                color: '#007bff',
-                textDecoration: 'none',
-                fontWeight: '600',
-              }}
-            >
+            <Link to="/forgotpassword" className="text-[#49bb98] font-bold hover:underline transition-all">
               Lấy lại mật khẩu
             </Link>
           </p>
