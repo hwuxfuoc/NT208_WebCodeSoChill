@@ -37,7 +37,7 @@ const chat = async (req, res) => {
 
     return res.json({ answer: aiRes.data.answer });
   } catch (err) {
-    console.error("[chat]", err.message);
+    console.error("[chat]", err.response?.data || err.message);
     if (err.code === "ECONNREFUSED")
       return res.status(503).json({ error: "AI service đang offline" });
     if (err.code === "ECONNABORTED")
@@ -83,17 +83,50 @@ const chatStream = async (req, res) => {
       { responseType: "stream", timeout: 120_000 }
     );
 
+    // Buffer để ghép các TCP chunk bị cắt ngang ranh giới dòng
+    let lineBuffer = "";
+
     aiRes.data.on("data", (chunk) => {
-      const lines = chunk.toString().split("\n");
+      lineBuffer += chunk.toString();
+      const lines = lineBuffer.split("\n");
+      // Giữ lại phần cuối chưa có \n để ghép vào chunk tiếp theo
+      lineBuffer = lines.pop() || "";
+
       for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const payload = line.slice(6).trim();
-          if (payload === "[DONE]") {
+        if (!line.startsWith("data: ")) continue;
+
+        const payload = line.slice(6).trim();
+        if (!payload) continue;
+
+        if (payload === "[DONE]") {
+          res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+          res.end();
+          return;
+        }
+
+        try {
+          const parsed = JSON.parse(payload);
+
+          if (parsed.done) {
             res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
             res.end();
-          } else {
-            res.write(`data: ${payload}\n\n`);
+            return;
           }
+
+          if (parsed.error) {
+            res.write(`data: ${JSON.stringify({ error: parsed.error })}\n\n`);
+            continue;
+          }
+
+          // Chỉ lấy 1 field duy nhất, ưu tiên chunk → token → response
+          // KHÔNG fallback raw payload để tránh gửi trùng
+          const textChunk = parsed.chunk ?? parsed.token ?? parsed.response;
+          if (textChunk) {
+            res.write(`data: ${JSON.stringify({ chunk: textChunk })}\n\n`);
+          }
+        } catch (parseErr) {
+          // Bỏ qua chunk không parse được, KHÔNG forward raw
+          console.warn("[chatStream] Cannot parse chunk:", payload?.slice(0, 80));
         }
       }
     });
@@ -103,8 +136,28 @@ const chatStream = async (req, res) => {
       res.end();
     });
   } catch (err) {
-    console.error("[chatStream]", err.message);
-    res.write(`data: ${JSON.stringify({ error: "Lỗi khi gọi AI service" })}\n\n`);
+    const message = err.response?.data || err.message || String(err);
+    console.error("[chatStream]", message, err.code);
+
+    const isRefused =
+      err.code === "ECONNREFUSED" ||
+      String(err.message).includes("ECONNREFUSED");
+    const isTimeout =
+      err.code === "ECONNABORTED" || String(err.message).includes("timeout");
+
+    if (isRefused) {
+      res.write(
+        `data: ${JSON.stringify({ error: "AI service đang offline" })}\n\n`
+      );
+    } else if (isTimeout) {
+      res.write(
+        `data: ${JSON.stringify({ error: "AI service timeout" })}\n\n`
+      );
+    } else {
+      res.write(
+        `data: ${JSON.stringify({ error: "Lỗi khi gọi AI service" })}\n\n`
+      );
+    }
     res.end();
   }
 };

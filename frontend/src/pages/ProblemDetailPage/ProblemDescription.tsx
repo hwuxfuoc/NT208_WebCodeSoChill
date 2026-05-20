@@ -20,6 +20,7 @@ interface Props {
   topics: string[];
   timeLimit: number;
   memoryLimit: number;
+  onAskAI?: () => void;
 }
 
 const difficultyStyle = {
@@ -39,6 +40,7 @@ export default function ProblemDescription({
   topics,
   timeLimit,
   memoryLimit,
+  onAskAI,
 }: Props) {
   const style = difficultyStyle[difficulty];
 
@@ -171,14 +173,12 @@ export default function ProblemDescription({
 
             <button
               type="button"
-              disabled
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold cursor-not-allowed"
+              onClick={onAskAI}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-colors"
               style={{
                 background: "var(--main-orange-color)",
                 color: "#fff",
-                opacity: 0.45,
               }}
-              title="AI Hint — coming soon"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/>
@@ -186,7 +186,6 @@ export default function ProblemDescription({
                 <line x1="12" y1="17" x2="12.01" y2="17"/>
               </svg>
               Ask AI for a Hint
-              <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Coming soon</span>
             </button>
           </div>
         </div>

@@ -15,7 +15,9 @@ Cần cài: pip install pymongo chromadb sentence-transformers
 import os
 import sys
 import json
-from rag import upsert_problem, upsert_algorithm, upsert_hint
+from dotenv import load_dotenv  # thêm dòng này
+load_dotenv()                   # thêm dòng này
+from rag import upsert_problem, upsert_algorithm, upsert_hint, upsert_solution
 
 # ─────────────────────────────────────────────────────────────
 # PHẦN 1: Import đề bài từ MongoDB
@@ -52,6 +54,48 @@ def ingest_problems_from_mongo():
     client.close()
     print(f"✅ Ingest xong {len(problems)} bài\n")
 
+# ─────────────────────────────────────────────────────────────
+# PHẦN 1.5: Import Solutions từ MongoDB (Accepted submissions)
+# ─────────────────────────────────────────────────────────────
+
+def ingest_solutions_from_mongo():
+    """Đọc các submission 'accepted' từ MongoDB làm reference solution."""
+    try:
+        from pymongo import MongoClient
+    except ImportError:
+        print("⚠️  pymongo chưa cài. Chạy: pip install pymongo")
+        return
+
+    MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+    DB_NAME   = os.getenv("DB_NAME", "codesochwill")  # đổi tên DB của bạn
+
+    client = MongoClient(MONGO_URI)
+    db = client[DB_NAME]
+
+    # Tìm các submission đã được accepted
+    submissions = list(db["submissions"].find({"status": "accepted"}))
+    
+    # Gom nhóm theo problemId, ưu tiên bài submit gần nhất hoặc memory/time tốt nhất
+    # Đơn giản nhất: lưu 1 solution duy nhất cho mỗi bài (bài mới nhất)
+    best_solutions = {}
+    for sub in submissions:
+        pid = str(sub.get("problemId", ""))
+        if pid:
+            best_solutions[pid] = sub.get("code", "")
+            
+    print(f"📦 Tìm thấy giải pháp cho {len(best_solutions)} bài trong MongoDB")
+
+    # Lấy title từ problems để metadata đẹp hơn
+    problems = {str(p["_id"]): p.get("title", "Unknown") for p in db["problems"].find({})}
+
+    count = 0
+    for pid, code in best_solutions.items():
+        title = problems.get(pid, f"Problem {pid}")
+        upsert_solution(pid, title, code)
+        count += 1
+
+    client.close()
+    print(f"✅ Ingest xong {count} solutions\n")
 
 # ─────────────────────────────────────────────────────────────
 # PHẦN 2: Algorithm knowledge base (viết thủ công)
@@ -383,6 +427,7 @@ if __name__ == "__main__":
         ingest_algorithms()
         ingest_hints()
         ingest_problems_from_mongo()
+        ingest_solutions_from_mongo()
 
     elif "--dataset-only" in args:
         print("🚀 Chế độ: Dataset export only\n")
@@ -393,6 +438,7 @@ if __name__ == "__main__":
         ingest_algorithms()
         ingest_hints()
         ingest_problems_from_mongo()
+        ingest_solutions_from_mongo()
         export_problems_for_dataset()
 
     print("🎉 Hoàn thành!")
