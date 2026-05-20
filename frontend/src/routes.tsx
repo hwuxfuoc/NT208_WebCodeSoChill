@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 const routes: RouteObject[] = [
   {
@@ -35,6 +36,7 @@ const routes: RouteObject[] = [
   },
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
+  { path: "/forgotpassword", element: <ForgotPasswordPage /> },
   { path: "*", element: <NotFoundPage /> }
 ];
 

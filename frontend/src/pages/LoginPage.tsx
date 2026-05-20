@@ -136,7 +136,7 @@ export default function LoginPage() {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <p>
+          <p style={{ marginBottom: '0.5rem' }}>
             Chưa có tài khoản?{' '}
             <Link
               to="/register"
@@ -147,6 +147,19 @@ export default function LoginPage() {
               }}
             >
               Đăng ký ngay
+            </Link>
+          </p>
+          <p style={{ margin: 0 }}>
+            Bạn quên mật khẩu?{' '}
+            <Link
+              to="/forgotpassword"
+              style={{
+                color: '#007bff',
+                textDecoration: 'none',
+                fontWeight: '600',
+              }}
+            >
+              Lấy lại mật khẩu
             </Link>
           </p>
         </div>
