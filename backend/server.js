@@ -36,6 +36,7 @@ async function startServer() {
   app.use('/api/stats',         require('./api/stats/statsRoutes'));
   app.use('/api/community',     require('./api/community/communityRoutes'));
   app.use('/api/notifications', require('./api/notifications/notificationRoutes'));
+  app.use('/api/messages',      require('./api/messages/messageRoutes'));
   app.use('/api/settings',      require('./api/settings/settingRoutes'));
   app.use('/api/admin',         require('./api/admin/adminRoutes'));
   app.use('/api/ai',            require('./api/ai/aiRoutes'));

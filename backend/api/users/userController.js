@@ -76,6 +76,32 @@ const getUserStats = async (req, res) => {
     }
 };
 
+// @desc    Tìm user theo username hoặc displayname
+// @route   GET /api/users/search
+const searchUsers = async (req, res) => {
+    try {
+        const query = String(req.query.q || req.query.query || '').trim();
+        if (!query) {
+            return res.json({ users: [] });
+        }
+
+        const regex = new RegExp(query, 'i');
+        const users = await User.find({
+            $or: [
+                { username: regex },
+                { displayname: regex },
+            ]
+        })
+        .select('username displayname avatarUrl')
+        .limit(10);
+
+        res.json({ users });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+};
+
 // @desc    Bảng xếp hạng toàn hệ thống
 // @route   GET /api/users/leaderboard
 const getLeaderboard = async (req, res) => {
@@ -182,4 +208,4 @@ const getUserCalendar = async (req, res) => {
     }
 };
 
-module.exports = { getProfile, getUserSubmissions, getUserStats, getLeaderboard, updateProfile, getUserCalendar };
+module.exports = { getProfile, getUserSubmissions, getUserStats, getLeaderboard, updateProfile, getUserCalendar, searchUsers };

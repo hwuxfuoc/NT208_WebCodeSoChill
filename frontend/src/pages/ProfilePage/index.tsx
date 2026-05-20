@@ -84,8 +84,8 @@ export default function ProfilePage() {
       <UserProfileCard user={profile} stats={stats} isOwnProfile={isOwnProfile} />
 
       <div className="grid grid-cols-2 gap-6">
-        <ActivityHeatmap />
-        <ContestRating />
+        <ActivityHeatmap userId={profile?._id} />
+        <ContestRating stats={stats} profile={profile} />
       </div>
 
       <div className="grid grid-cols-2 gap-6">

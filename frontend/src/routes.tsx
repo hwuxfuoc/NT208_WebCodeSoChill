@@ -4,6 +4,7 @@ import FullscreenLayout from "./components/layout/FullscreenLayout";
 import HomePage from "./pages/HomePage";
 import ProblemsPage from "./pages/ProblemsPage";
 import AdminProblemsPage from "./pages/AdminProblemsPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
 import ProblemDetailPage from "./pages/ProblemDetailPage";
 import ContestPage from "./pages/ContestPage";
 import CommunityPage from "./pages/CommunityPage";
@@ -20,6 +21,7 @@ const routes: RouteObject[] = [
       { index: true, element: <HomePage /> },
       { path: "problems", element: <ProblemsPage /> },
       { path: "admin/problems", element: <AdminProblemsPage /> },
+      { path: "admin/users", element: <AdminUsersPage /> },
       { path: "contest", element: <ContestPage /> },
       { path: "community", element: <CommunityPage /> },
       { path: "profile", element: <ProfilePage /> },

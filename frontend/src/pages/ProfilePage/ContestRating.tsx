@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+interface ContestRatingProps {
+  stats?: any;
+  profile?: any;
+}
+
 const DATA_4M = [{ m: "Jan", r: 1800 }, { m: "Feb", r: 1920 }, { m: "Mar", r: 2050 }, { m: "Apr", r: 1980 }, { m: "May", r: 2415 }];
 const DATA_1Y = [
   { m: "Jun", r: 1600 }, { m: "Jul", r: 1720 }, { m: "Aug", r: 1680 }, { m: "Sep", r: 1800 },
@@ -8,9 +13,10 @@ const DATA_1Y = [
   { m: "Feb", r: 2200 }, { m: "Mar", r: 2300 }, { m: "Apr", r: 2380 }, { m: "May", r: 2415 },
 ];
 
-export default function ContestRating() {
+export default function ContestRating({ stats, profile }: ContestRatingProps) {
   const [period, setPeriod] = useState<"4M" | "1Y">("4M");
   const data = period === "4M" ? DATA_4M : DATA_1Y;
+  const rating = stats?.contestRating ?? profile?.contestRating ?? 0;
 
   return (
     <section className="card flex flex-col">
@@ -26,8 +32,10 @@ export default function ContestRating() {
         </div>
       </div>
       <div className="mb-4">
-        <span className="text-2xl font-extrabold text-[#1A1D2B]">2,415</span>
-        <span className="text-xs font-bold text-green-500 ml-2">↑ 124 this month</span>
+        <span className="text-2xl font-extrabold text-[#1A1D2B]">{rating.toLocaleString()}</span>
+        {typeof rating === 'number' && (
+          <span className="text-xs font-bold text-green-500 ml-2">{/* optionally show delta if available */}</span>
+        )}
       </div>
       <div style={{ width: "100%", height: 160 }}>
         <ResponsiveContainer>
