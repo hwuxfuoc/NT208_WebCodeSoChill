@@ -161,6 +161,7 @@ jobs:
             --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prod \
             --cwd ./frontend \
+            --build-env VITE_API_URL="${{ secrets.VITE_API_URL }}" \
             --token=${{ secrets.VERCEL_TOKEN }}
           echo "✅ Frontend deployed to Vercel!"
         env:
