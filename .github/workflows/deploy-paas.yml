@@ -55,11 +55,10 @@ jobs:
       # 3. Deploy Frontend lên Vercel
       - name: Deploy Frontend to Vercel
         uses: amondnet/vercel-action@v20
+        working-directory: frontend
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          # Chỉ định deploy thư mục frontend
-          # working-directory: ./frontend
           # Đánh dấu đây là bản Production Deploy chính thức
           vercel-args: '--prod'
