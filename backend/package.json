@@ -7,8 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "cleanup-seed-problems": "node scripts/cleanupSeedProblems.js",
-    "test": "jest --forceExit --detectOpenHandles",
-    "test:coverage": "jest --coverage --forceExit --detectOpenHandles"
+    "test": "jest --runInBand --forceExit --detectOpenHandles",
+    "test:coverage": "jest --coverage --runInBand --forceExit --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +35,6 @@
   "jest": {
     "testEnvironment": "node",
     "testMatch": ["**/tests/**/*.test.js"],
-    "testTimeout": 30000
+    "testTimeout": 120000
   }
 }

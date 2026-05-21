@@ -12,11 +12,14 @@ let adminToken;
 let userToken;
 
 const sampleProblem = {
+  problemId: 'two-sum',
+  slug: 'two-sum',
   title: 'Two Sum',
   description: 'Given an array of integers, return indices of the two numbers such that they add up to target.',
-  difficulty: 'Easy',
+  difficulty: 'easy',
   topics: ['Array', 'Hash Table'],
   examples: [{ input: '[2,7,11,15], target=9', output: '[0,1]' }],
+  testCases: [{ input: '[2,7,11,15]\n9', expectedOutput: '[0,1]' }],
   constraints: '2 <= nums.length <= 10^4',
   starterCode: { javascript: 'function twoSum(nums, target) {}', python: 'def twoSum(nums, target):' },
 };
@@ -50,7 +53,9 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await mongoose.disconnect();
-  await mongoServer.stop();
+  if (mongoServer) {
+    await mongoServer.stop();
+  }
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -132,7 +137,7 @@ describe('GET /api/problems/:id', () => {
     const res = await request(app)
       .post('/api/problems')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ ...sampleProblem, title: 'Get By ID Test' });
+      .send({ ...sampleProblem, problemId: 'get-by-id-test', slug: 'get-by-id-test', title: 'Get By ID Test' });
     problemId = res.body.problem?._id || res.body.problem?.id;
   });
 
