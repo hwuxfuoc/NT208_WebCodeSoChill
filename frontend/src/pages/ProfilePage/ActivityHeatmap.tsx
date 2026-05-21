@@ -38,28 +38,28 @@ export default function ActivityHeatmap({ userId }: ActivityHeatmapProps) {
   };
 
   return (
-    <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col">
+    <section className="rounded-3xl p-8 shadow-sm border-none flex flex-col bg-gradient-to-br from-[#fdba74] to-[var(--main-orange-color)]">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-bold text-xl text-[#1A1D2B]">Activity</h3>
-        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider bg-gray-100 px-3 py-1.5 rounded-lg">Last 3 Months</span>
+        <h3 className="font-bold text-xl text-white">Activity</h3>
+        <span className="text-xs font-bold text-white/90 uppercase tracking-wider bg-white/20 px-3 py-1.5 rounded-lg">Last 3 Months</span>
       </div>
       <div className="flex-1 flex flex-col justify-center">
         <div className="grid grid-rows-7 grid-flow-col gap-1.5 overflow-x-auto pb-2">
-          {loading && <div className="text-sm text-gray-500 col-span-14">Loading...</div>}
+          {loading && <div className="text-sm text-white/70 col-span-14">Loading...</div>}
           {!loading && lastDays.map((d, i) => {
             const dateStr = d.toISOString().slice(0,10);
             return (
-              <div key={i} className={`w-3.5 h-3.5 rounded-[3px] ${getColor(dateStr)}`} title={dateStr} />
+              <div key={i} className={`w-3.5 h-3.5 rounded-[3px] ${activeDates.has(dateStr) ? 'bg-white shadow-sm' : 'bg-white/20'}`} title={dateStr} />
             );
           })}
         </div>
-        <div className="flex justify-end items-center gap-2 mt-4 text-[11px] font-bold text-gray-400 uppercase">
+        <div className="flex justify-end items-center gap-2 mt-4 text-[11px] font-bold text-white/80 uppercase">
           <span>Less</span>
           <div className="flex gap-1">
-            <div className="w-3 h-3 rounded-[3px] bg-gray-100"></div>
-            <div className="w-3 h-3 rounded-[3px] bg-teal-200"></div>
-            <div className="w-3 h-3 rounded-[3px] bg-teal-400"></div>
-            <div className="w-3 h-3 rounded-[3px] bg-teal-500"></div>
+            <div className="w-3 h-3 rounded-[3px] bg-white/20"></div>
+            <div className="w-3 h-3 rounded-[3px] bg-white/40"></div>
+            <div className="w-3 h-3 rounded-[3px] bg-white/70"></div>
+            <div className="w-3 h-3 rounded-[3px] bg-white"></div>
           </div>
           <span>More</span>
         </div>

@@ -44,7 +44,7 @@ export default function CalendarStreak() {
   return (
     <section
       className="rounded-3xl shadow-md text-white relative overflow-hidden"
-      style={{ backgroundColor: "var(--main-orange-color)" }}
+      style={{ background: "linear-gradient(135deg, #fdba74, var(--main-orange-color))" }}
     >
       <div className="flex items-center justify-between px-5 pt-5 pb-4">
         <button

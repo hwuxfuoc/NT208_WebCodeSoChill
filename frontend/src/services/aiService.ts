@@ -88,7 +88,6 @@ export async function chatStream(options: ChatStreamOptions): Promise<void> {
             } else if (json.error) {
               onError(json.error);
             } else if (json.chunk !== undefined) {
-              // Backend luôn chuẩn hóa về field "chunk"
               onChunk(json.chunk);
             }
           } catch (e) {
@@ -98,7 +97,6 @@ export async function chatStream(options: ChatStreamOptions): Promise<void> {
       }
     }
 
-    // Flush decoder và xử lý phần buffer còn lại (nếu có)
     const remaining = decoder.decode();
     if (remaining) buffer += remaining;
     if (buffer.trim().startsWith("data: ")) {

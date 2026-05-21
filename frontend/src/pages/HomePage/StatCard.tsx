@@ -1,11 +1,11 @@
-export default function StatCard({ title, value, icon, color }: { title: string; value: string; icon: React.ReactNode; color: string }) {
-  const iconColor = color.match(/\[(.*?)\]/)?.[1] || 'currentColor';
+export default function StatCard({ title, value, icon, color, iconColor }: { title: string; value: string; icon: React.ReactNode; color: string; iconColor?: string }) {
+  const finalIconColor = iconColor || color.match(/\[(.*?)\]/)?.[1] || 'currentColor';
 
   return (
     <div className={`relative overflow-hidden rounded-[18px] pl-[10px] pr-[16px] py-[16px] border-none shadow-sm flex items-center gap-2 ${color}`}>
       <div
         className="w-[44px] h-[44px] rounded-[12px] flex-shrink-0 flex items-center justify-center bg-white shadow-sm z-10"
-        style={{ color: iconColor }}
+        style={{ color: finalIconColor }}
       >
         {icon}
       </div>

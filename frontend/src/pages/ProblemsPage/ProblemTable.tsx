@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Problem } from '../../types/problem';
+import { useAuth } from "../../hooks/useAuth";
 
 interface ProblemTableProps {
   rows: Problem[];
@@ -63,10 +64,11 @@ function AcceptanceBar({ value, difficulty }: { value: number; difficulty: strin
   );
 }
 
-function SolveButton({ id, solved }: { id: string; solved: boolean }) {
+function SolveButton({ id, solved, onSolveClick }: { id: string; solved: boolean; onSolveClick: (e: React.MouseEvent) => void }) {
   return (
     <Link
       to={`/problems/${id}`}
+      onClick={onSolveClick}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -104,9 +106,20 @@ function Row({ children, isHeader = false }: { children: React.ReactNode; isHead
 }
 
 export default function ProblemTable({ rows, page, pageCount, pageSize, setPage, total }: ProblemTableProps) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const totalCount = total ?? rows.length;
   const startItem = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
   const endItem = Math.min(page * pageSize, totalCount);
+
+  const handleSolveClick = (e: React.MouseEvent, id: string) => {
+    if (!user) {
+      e.preventDefault();
+      navigate("/login");
+    }
+  };
+
 
   const getPageNumbers = () => {
     const pages: (number | '...')[] = [];
@@ -170,7 +183,7 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
               <DifficultyBadge difficulty={p.difficulty} />
             </div>
             <div style={{ width: COL.action, flexShrink: 0, display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-              <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} />
+              <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} onSolveClick={(e) => handleSolveClick(e, p.slug ?? p._id ?? '')} />
             </div>
           </Row>
         );

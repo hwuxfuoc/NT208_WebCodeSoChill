@@ -290,7 +290,7 @@ p {
 
 /* Homepage Cards */
 .promo {
-  background: linear-gradient(135deg, var(--main-green-color), #3ea786);
+  background: linear-gradient(135deg, #6ee7b7, var(--main-green-color));
   color: #fff;
   border: none;
   box-shadow: 0 10px 30px rgba(73, 187, 152, 0.3);
@@ -341,7 +341,7 @@ p {
 }
 
 .challenge-card {
-  background: linear-gradient(135deg, var(--main-orange-color), #e85a46);
+  background: linear-gradient(135deg, #fdba74, var(--main-orange-color));
   color: #fff;
   border: none;
   box-shadow: 0 10px 30px rgba(252, 107, 87, 0.3);
@@ -437,7 +437,7 @@ p {
 
 .side-stack {
   display: grid;
-  gap: 20px;
+  gap: 12px;
   align-items: start;
 }
 
@@ -527,11 +527,18 @@ p {
   .upgrade-card {
     display: none;
   }
+
+  .home-grid-top,
+  .home-grid-bottom {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    padding-bottom: 70px;
   }
 
   .sidebar {
@@ -540,12 +547,47 @@ p {
 
   .home-grid-top,
   .home-grid-bottom,
-  .community-layout {
+  .community-layout,
+  .page-grid-2 {
     grid-template-columns: 1fr;
   }
 
   .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .main-content {
+    padding: 16px 12px;
+  }
+
+  .card {
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-row {
     grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 12px 8px;
+  }
+
+  .search-bar-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }
 

@@ -61,8 +61,18 @@ export default function RegisterPage() {
       <div className="card w-full max-w-lg p-8 relative overflow-hidden border border-white/40">
         {/* Decorative top border */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#fc6b57] to-[#49bb98]"></div>
-        
-        <div className="text-center mb-8 mt-2">
+
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors font-semibold w-max"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Return to Homepage
+        </Link>
+
+        <div className="text-center mb-8 mt-6">
           <h2 className="text-3xl font-bold text-gray-800 mb-2">Đăng Ký</h2>
           <p className="text-gray-500 text-sm font-medium">Tạo tài khoản CodeSoChill mới của bạn</p>
         </div>

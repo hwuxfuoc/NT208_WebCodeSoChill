@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useModal } from "../../context/ModalContext";
 import * as messageService from "../../services/messageService";
+import { DEFAULT_AVATAR } from "../../utils/constants";
 
 export default function MessagesModal() {
   const { closeModal } = useModal();
@@ -156,7 +158,13 @@ export default function MessagesModal() {
   const convo = convos.find(c => String(c.id) === String(active)) || null;
 
   return (
-    <div className="modal-panel w-[780px] h-[520px] p-0 flex overflow-hidden border-none shadow-2xl">
+    <motion.div
+      className="modal-panel w-[780px] h-[520px] p-0 flex overflow-hidden border-none shadow-2xl"
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
       <div className="w-[280px] border-r border-gray-100 flex flex-col bg-white">
         <div className="px-5 pt-5 pb-3 flex justify-between items-center">
           <h2 className="text-base font-extrabold text-[#1A1D2B]">Messages</h2>
@@ -237,7 +245,7 @@ export default function MessagesModal() {
 
         <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-3 bg-white">
           <div className="relative">
-            <img src={convo?.avatar ?? 'https://via.placeholder.com/40'} alt={convo?.name ?? 'User'} className="w-8 h-8 rounded-full" />
+            <img src={convo?.avatar ?? DEFAULT_AVATAR} alt={convo?.name ?? 'User'} className="w-8 h-8 rounded-full" />
             {convo?.online && <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 border-2 border-white rounded-full" />}
           </div>
           <div>
@@ -289,6 +297,6 @@ export default function MessagesModal() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

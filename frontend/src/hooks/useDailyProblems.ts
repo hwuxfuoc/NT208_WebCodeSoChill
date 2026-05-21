@@ -1,4 +1,3 @@
-// Shared hook so all components fetch the same daily problems from one place
 import { useState, useEffect } from "react";
 import { getDailyProblems } from "../services/problemService";
 import { checkSolvedProblems } from "../services/submissionService";
@@ -11,7 +10,6 @@ export interface DailyProblem {
   difficulty: "easy" | "medium" | "hard";
 }
 
-// Module-level cache (survive re-renders, reset on new day)
 let problemsCache: DailyProblem[] | null = null;
 let cacheDate: string | null = null;
 
@@ -19,7 +17,6 @@ export function useDailyProblems() {
   const [problems, setProblems] = useState<DailyProblem[]>(problemsCache || []);
   const [loading, setLoading] = useState(!problemsCache);
   const [error, setError] = useState<string | null>(null);
-  // solvedIds: set of problem _id strings the current user has already accepted
   const [solvedIds, setSolvedIds] = useState<Set<string>>(new Set());
   const [solvedLoading, setSolvedLoading] = useState(true);
 
@@ -35,13 +32,12 @@ export function useDailyProblems() {
         const solvedMap = res.data.solved || {};
         setSolvedIds(new Set(Object.keys(solvedMap).filter((k) => solvedMap[k])));
       } catch {
-        // User not logged in or error — silently keep solvedIds empty
+        // silent
       } finally {
         setSolvedLoading(false);
       }
     };
 
-    // Return cached data if same day
     if (problemsCache && cacheDate === today) {
       setProblems(problemsCache);
       setLoading(false);
@@ -60,7 +56,6 @@ export function useDailyProblems() {
         await fetchAndCheckSolved(data);
       } catch (err: any) {
         setError(err.response?.data?.message || "Failed to load daily problems");
-        console.error("Failed to fetch daily problems", err);
         setSolvedLoading(false);
       } finally {
         setLoading(false);

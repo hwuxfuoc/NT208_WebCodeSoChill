@@ -42,7 +42,17 @@ export default function LoginPage() {
         {/* Decorative top border */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#49bb98] to-[#fc6b57]"></div>
         
-        <div className="text-center mb-8 mt-2">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors font-semibold w-max"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Return to Homepage
+        </Link>
+
+        <div className="text-center mb-8 mt-6">
           <h2 className="text-3xl font-bold text-gray-800 mb-2">Đăng Nhập</h2>
           <p className="text-gray-500 text-sm font-medium">Chào mừng bạn quay trở lại CodeSoChill</p>
         </div>

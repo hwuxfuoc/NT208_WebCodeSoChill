@@ -3,9 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 import { useDailyProblems } from "../../hooks/useDailyProblems";
 
 const DIFF_COLOR: Record<string, { bg: string; text: string }> = {
-  easy: { bg: "#dcfce7", text: "var(--main-green-color)" },
-  medium: { bg: "#ffedd5", text: "var(--main-orange-color)" },
-  hard: { bg: "#fee2e2", text: "#dc2626" },
+  easy: { bg: "rgba(255, 255, 255, 0.2)", text: "#fff" },
+  medium: { bg: "rgba(255, 255, 255, 0.2)", text: "#fff" },
+  hard: { bg: "rgba(255, 255, 255, 0.2)", text: "#fff" },
 };
 
 export default function TodayChallengePanel() {
@@ -29,7 +29,7 @@ export default function TodayChallengePanel() {
       id="today-challenge"
       ref={panelRef}
       className="rounded-2xl p-5 text-white relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, var(--main-orange-color), #fabab1ff)" }}
+      style={{ background: "linear-gradient(135deg, #fdba74, var(--main-orange-color))" }}
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-2xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/3 w-24 h-24 bg-white/10 rounded-full translate-y-1/3 blur-2xl pointer-events-none" />

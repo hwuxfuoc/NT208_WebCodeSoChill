@@ -1,8 +1,11 @@
-//frontend/src/modals/SettingsModal/index.tsx
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useModal } from "../../context/ModalContext";
 import { useAuth } from "../../hooks/useAuth";
-import * as settingService from "../../services/settingService"; // ✅ fix tên import
+import * as settingService from "../../services/settingService";
+import AvatarCropModal from "./AvatarCropModal";
+
+import { DEFAULT_AVATAR } from "../../utils/constants";
 
 const TABS = [
   { id: "account", label: "Account" },
@@ -28,10 +31,10 @@ export default function SettingsModal() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { closeModal } = useModal();
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -50,7 +53,7 @@ export default function SettingsModal() {
         email: user.email || "",
         bio: user.bio || "",
         phone: user.phone || "",
-        avatarUrl: user.avatarUrl || "https://via.placeholder.com/80",
+        avatarUrl: user.avatarUrl || DEFAULT_AVATAR,
       });
     }
   }, [user]);
@@ -60,33 +63,35 @@ export default function SettingsModal() {
   const [avatarUploading, setAvatarUploading] = useState(false);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError(null);
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Image must be smaller than 10MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setCropSrc(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
 
-      setError(null);
-
-      if (file.size > 10 * 1024 * 1024) {
-        setError("Image must be smaller than 10MB");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setFormData(prev => ({ ...prev, avatarUrl: event.target?.result as string }));
-      };
-      reader.readAsDataURL(file);
-
-      setAvatarUploading(true);
-      try {
-        const res = await settingService.uploadAvatar(file);
-        console.log("✅ Upload OK:", res.data.avatarUrl);
-        setFormData(prev => ({ ...prev, avatarUrl: res.data.avatarUrl }));
-      } catch (err: any) {
-        console.error("❌ Upload error:", err.response?.status, err.response?.data);
-        setError(err.response?.data?.message || "Failed to upload image");
-      } finally {
-        setAvatarUploading(false);
-      }
+  const handleCropConfirm = async (croppedBlob: Blob) => {
+    setCropSrc(null);
+    const objectUrl = URL.createObjectURL(croppedBlob);
+    setFormData(prev => ({ ...prev, avatarUrl: objectUrl }));
+    setAvatarUploading(true);
+    try {
+      const file = new File([croppedBlob], "avatar.jpg", { type: "image/jpeg" });
+      const res = await settingService.uploadAvatar(file);
+      setFormData(prev => ({ ...prev, avatarUrl: res.data.avatarUrl }));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to upload image");
+    } finally {
+      setAvatarUploading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -99,7 +104,7 @@ export default function SettingsModal() {
     setError(null);
     setSuccess(null);
     try {
-      await settingService.updateAccount({ 
+      await settingService.updateAccount({
         displayname: formData.displayname,
         bio: formData.bio,
         phone: formData.phone,
@@ -153,14 +158,30 @@ export default function SettingsModal() {
   };
 
   return (
-    <div className="modal-panel bg-[#f8fafc] w-[860px] max-h-[88vh] p-4 flex gap-4 rounded-[32px] border-none shadow-2xl">
-      <div className="w-[220px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-1 flex-shrink-0">
-        <div className="flex justify-between items-center mb-5">
-          <h2 className="text-base font-extrabold text-[#1A1D2B]">Settings</h2>
-          <button onClick={closeModal} className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-400 transition-colors">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
+    <>
+      {cropSrc && (
+        <AvatarCropModal
+          imageDataUrl={cropSrc}
+          onConfirm={handleCropConfirm}
+          onCancel={() => setCropSrc(null)}
+        />
+      )}
+      <motion.div
+        className="modal-panel bg-[#f8fafc] w-[860px] max-h-[88vh] p-4 flex gap-4 rounded-[32px] border-none shadow-2xl relative"
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+      <button
+        onClick={closeModal}
+        className="absolute top-4 right-4 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-400 transition-colors z-10"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div className="w-[220px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-1 flex-shrink-0 pt-12">
+        <h2 className="text-base font-extrabold text-[#1A1D2B] mb-4">Settings</h2>
         {TABS.map(t => (
           <button key={t.id} onClick={() => { setActive(t.id); setError(null); setSuccess(null); }}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-sm font-semibold transition-colors ${active === t.id ? "text-white shadow-sm" : "text-gray-600 hover:bg-gray-100"}`}
@@ -172,8 +193,7 @@ export default function SettingsModal() {
       </div>
 
       <div className="flex-1 bg-white rounded-3xl p-8 shadow-sm border border-gray-100 overflow-y-auto" style={{ scrollbarWidth: "thin" }}>
-        
-        {/* Error/Success shared across tabs */}
+
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-semibold">{error}</div>
         )}
@@ -191,8 +211,8 @@ export default function SettingsModal() {
                 <p className="text-xs text-gray-400">@{formData.username}</p>
               </div>
               <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleImageChange} />
-              <button onClick={handleImageClick} disabled={avatarUploading} 
-                className="ml-auto text-xs font-bold px-4 py-2 rounded-xl text-white hover:opacity-90 disabled:opacity-60" 
+              <button onClick={handleImageClick} disabled={avatarUploading}
+                className="ml-auto text-xs font-bold px-4 py-2 rounded-xl text-white hover:opacity-90 disabled:opacity-60"
                 style={{ backgroundColor: "var(--main-orange-color)" }}>
                 {avatarUploading ? "Uploading..." : "Change Photo"}
               </button>
@@ -214,7 +234,11 @@ export default function SettingsModal() {
             <Field label="Bio">
               <textarea rows={3} name="bio" value={formData.bio} onChange={handleInputChange} className={`${inputCls} resize-none`} />
             </Field>
-            <div className="flex justify-end pt-2">
+            <div className="flex justify-between pt-2">
+              <button onClick={() => { logout(); closeModal(); window.location.href = '/'; }} 
+                className="px-6 py-2.5 rounded-xl text-sm font-bold text-gray-600 bg-gray-200 hover:bg-gray-300 transition-colors">
+                Log Out
+              </button>
               <button onClick={handleSaveChanges} disabled={saveLoading}
                 className="px-6 py-2.5 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-60"
                 style={{ backgroundColor: "var(--main-orange-color)" }}>
@@ -280,6 +304,7 @@ export default function SettingsModal() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
+    </>
   );
 }

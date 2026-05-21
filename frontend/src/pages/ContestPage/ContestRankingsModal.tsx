@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Contest, getContestLeaderboard } from "../../services/contestService";
 import { useAuth } from "../../hooks/useAuth";
 import ModalPortal from "../../components/ModalPortal";
+import { DEFAULT_AVATAR } from "../../utils/constants";
 
 interface ContestRankingsModalProps {
   onClose: () => void;
@@ -94,7 +95,7 @@ export default function ContestRankingsModal({ onClose, contest }: ContestRankin
                       {medal ? medal.label : `#${rank}`}
                     </span>
 
-                    <img src={entry.user.avatarUrl || "https://via.placeholder.com/40"} alt={entry.user.displayname} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                    <img src={entry.user.avatarUrl || DEFAULT_AVATAR} alt={entry.user.displayname} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
                     <div className="flex-1 flex items-center gap-2 min-w-0 pr-2">
                       <span className="font-bold text-sm text-[#1A1D2B] truncate">{entry.user.displayname}</span>
                       {isCurrentUser && <span className="bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded text-[9px] font-bold">YOU</span>}

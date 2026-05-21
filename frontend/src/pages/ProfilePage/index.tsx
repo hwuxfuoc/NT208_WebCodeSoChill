@@ -1,4 +1,3 @@
-//frontend/src/pages/ProfilePage/index.tsx
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
@@ -11,11 +10,12 @@ import RecentBadges from "./RecentBadges";
 import ContactSocialCard from "./ContactSocialCard";
 import RecentSubmissions from "./RecentSubmissions";
 import ProfileHeader from "./ProfileHeader";
+import GuestBanner from "../../components/common/GuestBanner";
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
-  const { user: currentUser } = useAuth();
-  
+  const { user: currentUser, loading: authLoading } = useAuth();
+
   const [profile, setProfile] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [submissions, setSubmissions] = useState<any[]>([]);
@@ -26,15 +26,19 @@ export default function ProfilePage() {
   const displayUsername = username || currentUser?.username;
 
   useEffect(() => {
+    if (authLoading) return; // Wait for auth to resolve
+    if (!displayUsername) {
+      setLoading(false);
+      return;
+    }
+
     const fetchProfileData = async () => {
-      if (!displayUsername) return;
-      
       setLoading(true);
       setError(null);
       try {
         const profileRes = await profileService.getProfile(displayUsername);
         const profileData = profileRes.data.user;
-        
+
         const [statsRes, submissionsRes] = await Promise.all([
           profileService.getUserStats(profileData._id),
           profileService.getUserSubmissions(profileData._id, 1, 10),
@@ -55,7 +59,24 @@ export default function ProfilePage() {
     };
 
     fetchProfileData();
-  }, [displayUsername]);
+  }, [displayUsername, authLoading]);
+
+  if (authLoading) {
+    return (
+      <div className="page-stack h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
+
+  if (!currentUser && !username) {
+    return (
+      <div className="page-stack">
+        <ProfileHeader />
+        <GuestBanner page="profile" />
+      </div>
+    );
+  }
 
   if (loading) {
     return (

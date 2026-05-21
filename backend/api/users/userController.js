@@ -9,7 +9,13 @@ const getProfile = async (req, res) => {
         const user = await User.findOne({ username: req.params.username })
             .select('-hashedPassword -email -phone -appearance');
         if (!user) return res.status(404).json({ message: 'User không tồn tại' });
-        res.json({ user });
+        
+        let leaderboardRank = null;
+        if (user.experiencePoints > 0) {
+            leaderboardRank = await User.countDocuments({ experiencePoints: { $gt: user.experiencePoints } }) + 1;
+        }
+
+        res.json({ user, leaderboardRank });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Lỗi server' });
