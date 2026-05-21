@@ -60,6 +60,6 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           # Chỉ định deploy thư mục frontend
-          working-directory: ./frontend
+          # working-directory: ./frontend
           # Đánh dấu đây là bản Production Deploy chính thức
           vercel-args: '--prod'
