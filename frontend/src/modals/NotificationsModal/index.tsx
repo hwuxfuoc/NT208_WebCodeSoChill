@@ -1,5 +1,6 @@
 import { useModal } from "../../context/ModalContext";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import * as notificationService from "../../services/notificationService";
 
 type NotificationItem = {
@@ -65,7 +66,14 @@ export default function NotificationsModal() {
   };
 
   return (
-    <div className="modal-panel w-[380px] p-0 overflow-hidden flex flex-col" style={{ maxHeight: "85vh" }}>
+    <motion.div
+      className="modal-panel w-[380px] p-0 overflow-hidden flex flex-col"
+      style={{ maxHeight: "85vh" }}
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+    >
       <div className="px-6 pt-5 pb-4 flex justify-between items-center border-b border-gray-100 flex-shrink-0">
         <div>
           <h2 className="text-base font-extrabold text-[#1A1D2B]">Notifications</h2>
@@ -99,6 +107,6 @@ export default function NotificationsModal() {
         <button onClick={markAllRead} className="flex-1 py-2 rounded-xl text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors">Mark all read</button>
         <button onClick={clearAll} className="flex-1 py-2 rounded-xl text-xs font-bold text-gray-400 hover:bg-gray-50 transition-colors">Clear all</button>
       </div>
-    </div>
+    </motion.div>
   );
 }

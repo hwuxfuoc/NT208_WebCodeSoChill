@@ -11,6 +11,7 @@ ai-service/.env.*
 # build
 dist/
 build/
+.venv
 
 # logs
 npm-debug.log*

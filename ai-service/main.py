@@ -1,4 +1,3 @@
-# ai-service/main.py
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,9 +27,6 @@ app.add_middleware(
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
 
-# TODO: Sau khi fine-tune xong → đổi thành tên model custom
-# Ví dụ: MODEL = "codesochill-ai"
-# Dự phòng nếu fine-tune thất bại → giữ nguyên model gốc
 MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b")
 
 
@@ -89,7 +85,7 @@ Nhiệm vụ của bạn là HƯỚNG DẪN, không phải làm bài thay.
 
 Nguyên tắc bắt buộc:
 - Bắt buộc trả lời bằng tiếng Việt, chỉ dùng tiếng Anh cho tên biến/hàm/keyword lập trình.
-- Nếu user đã nộp và kết quả là đúng/accepted, hãy xác nhận bằng một câu tự nhiên tiếng Việt, thân thiện và không cứng nhắc, ví dụ: "Bài này đã đúng rồi...".
+- Nếu user đã nộp và kết quả là đúng/accepted, hãy xác nhận bằng một câu tự nhiên tiếng Việt, thân thiện và không cứng nhắc.
 - Nếu user_code có sẵn, luôn đọc và phân tích code hiện tại trước khi trả lời. KHÔNG đưa ra kết luận chung chung và KHÔNG nói code đúng nếu bạn chưa kiểm tra kỹ.
 - Nếu user_code có sẵn và status không phải accepted hoặc không có status, đừng khen hay nói đã hoàn thành.
 - Nếu user_code có sẵn, chỉ mô tả chỗ cần sửa và thay đổi cụ thể. KHÔNG viết lại toàn bộ hàm hoặc chương trình.
@@ -111,7 +107,6 @@ Nguyên tắc bắt buộc:
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
-    """Non-streaming endpoint – dùng khi cần response đơn giản."""
     if is_solution_confirmed(req.last_submission_status):
         return {"answer": solved_response()}
 
@@ -136,6 +131,13 @@ async def chat(req: ChatRequest):
         response.raise_for_status()
         result = response.json()
         return {"answer": result.get("response", "")}
+    except requests.exceptions.ConnectionError:
+        fallback_msg = "Lưu ý: Hệ thống AI cục bộ (Ollama) đang không hoạt động.\n\n"
+        if req.user_code:
+            fallback_msg += "Dựa trên đoạn code của bạn, một gợi ý nhỏ là hãy kiểm tra lại các vòng lặp và điều kiện ranh giới (edge cases). Đôi khi lỗi nằm ở những chi tiết rất nhỏ đấy!"
+        else:
+            fallback_msg += "Để bắt đầu, bạn hãy thử liệt kê các bước giải quyết bài toán ra nháp và suy nghĩ về cấu trúc dữ liệu phù hợp nhất nhé."
+        return {"answer": fallback_msg}
     except requests.exceptions.Timeout:
         raise HTTPException(status_code=504, detail="Model timeout – thử lại sau")
     except Exception as e:
@@ -144,7 +146,6 @@ async def chat(req: ChatRequest):
 
 @app.post("/chat/stream")
 async def chat_stream(req: ChatRequest):
-    """Streaming endpoint – dùng cho frontend để hiện chữ dần."""
     if is_solution_confirmed(req.last_submission_status):
         async def solved_stream():
             yield f"data: {json.dumps({'token': solved_response()})}\n\n"
@@ -160,7 +161,6 @@ async def chat_stream(req: ChatRequest):
         loop = asyncio.get_event_loop()
 
         def _stream():
-            """Sync generator chạy trong thread pool để không block event loop."""
             with requests.post(OLLAMA_URL, json={
                 "model": MODEL,
                 "prompt": full_prompt,
@@ -185,6 +185,18 @@ async def chat_stream(req: ChatRequest):
                 try:
                     for line in _stream():
                         asyncio.run_coroutine_threadsafe(queue.put(line), loop)
+                except requests.exceptions.ConnectionError:
+                    import time
+                    fallback_msg = "Lưu ý: Hệ thống AI cục bộ (Ollama) đang không hoạt động, đây là gợi ý dự phòng:\n\n"
+                    if req.user_code:
+                        fallback_msg += "Dựa vào thông tin bạn gửi, một gợi ý nhỏ là hãy kiểm tra kỹ các điều kiện dừng hoặc giới hạn mảng (out of bounds) trong code của bạn. Đôi khi những lỗi logic nhỏ lại nằm ở cách khởi tạo biến hoặc kiểu dữ liệu đấy!"
+                    else:
+                        fallback_msg += "Với bài toán này, bạn hãy bắt đầu bằng cách xác định rõ Input/Output. Hãy thử liệt kê các trường hợp đặc biệt (edge cases) trước khi bắt tay vào viết code nhé."
+                    
+                    for w in fallback_msg.split(' '):
+                        chunk = json.dumps({"response": w + " "}).encode('utf-8')
+                        asyncio.run_coroutine_threadsafe(queue.put(chunk), loop)
+                        time.sleep(0.05)
                 except Exception as e:
                     asyncio.run_coroutine_threadsafe(
                         queue.put(f"__error__:{e}"), loop
@@ -197,6 +209,7 @@ async def chat_stream(req: ChatRequest):
             while True:
                 line = await queue.get()
                 if line is None:
+                    yield "data: [DONE]\n\n"
                     break
                 if isinstance(line, str) and line.startswith("__error__:"):
                     yield f"data: {json.dumps({'error': line[len('__error__:'):]})}\n\n"

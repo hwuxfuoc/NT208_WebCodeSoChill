@@ -1,13 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDailyProblems } from "../../hooks/useDailyProblems";
+import { useAuth } from "../../hooks/useAuth";
 
 const DIFF_COLOR: Record<string, string> = {
-  easy: "bg-teal-500",
-  medium: "bg-yellow-500",
-  hard: "bg-red-500",
+  easy: "bg-white/20",
+  medium: "bg-white/20",
+  hard: "bg-white/20",
 };
 
 export default function DailyChallengeCard() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const { problems, loading, solvedIds, solvedCount, solvedLoading } = useDailyProblems();
 
   const total = problems.length || 3;
@@ -20,7 +23,7 @@ export default function DailyChallengeCard() {
     <section className="card challenge-card relative overflow-hidden flex flex-col">
       <div className="relative z-10 flex flex-col h-full">
         <h3 className="font-bold text-xl mb-2">Today's Challenge</h3>
-        <p className="text-sm opacity-90 mb-4">Solve today's 3 problems to earn XP</p>
+        <p className="text-sm opacity-90 mb-4">Solve today's 3 problems to earn EXP</p>
 
         {/* Progress bar */}
         <div className="flex justify-between items-end mb-1 text-[11px] font-bold">
@@ -48,10 +51,10 @@ export default function DailyChallengeCard() {
             problems.map((p) => {
               const isSolved = solvedIds.has(p._id);
               return (
-                <Link
+                <div
                   key={p._id}
-                  to={`/problems/${p.problemId}`}
-                  className="flex justify-between items-center bg-white/20 hover:bg-white/30 transition-colors p-3 rounded-xl border border-white/20 backdrop-blur-sm"
+                  onClick={() => !user ? navigate("/login") : navigate(`/problems/${p.problemId}`)}
+                  className="flex justify-between items-center bg-white/20 hover:bg-white/30 transition-colors p-3 rounded-xl border border-white/20 backdrop-blur-sm cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     {/* Checkmark nếu đã solved, book icon nếu chưa */}
@@ -93,7 +96,7 @@ export default function DailyChallengeCard() {
                       {p.difficulty}
                     </span>
                   </div>
-                </Link>
+                </div>
               );
             })
           ) : (
@@ -104,12 +107,12 @@ export default function DailyChallengeCard() {
         </div>
 
         {problems.length > 0 && (
-          <Link
-            to={`/problems/${targetProblemId}`}
-            className="btn-light w-full mt-6 py-3 font-bold text-sm tracking-wide shadow-md text-center block"
+          <div
+            onClick={() => !user ? navigate("/login") : navigate(`/problems/${targetProblemId}`)}
+            className="btn-light w-full mt-6 py-3 font-bold text-sm tracking-wide shadow-md text-center block cursor-pointer"
           >
             {solvedCount === total && total > 0 ? "ALL DONE! 🎉" : "START CHALLENGES"}
-          </Link>
+          </div>
         )}
       </div>
     </section>

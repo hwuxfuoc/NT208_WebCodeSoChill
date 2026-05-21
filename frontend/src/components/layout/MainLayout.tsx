@@ -6,11 +6,11 @@ import PageTransition from "../animations/PageTransition";
 export default function MainLayout() {
   return (
     <div className="app-shell">
-      <Sidebar />
+      <Sidebar key="sidebar-fixed" />
       <main className="main-content">
         <PageTransition />
       </main>
-      <RightToolbar />
+      <RightToolbar key="right-toolbar-fixed" />
     </div>
   );
 }

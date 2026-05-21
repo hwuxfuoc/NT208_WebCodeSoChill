@@ -1,4 +1,6 @@
-// backend/server.js
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -9,7 +11,6 @@ const connectDB = require('./config/db');
 const app = express();
 app.use(cors());
 
-// ✅ express.json phải đặt TRƯỚC tất cả routes
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -26,20 +27,19 @@ async function startServer() {
   await bootstrapSeedProblems();
   console.log('✓ bootstrapSeedProblems done');
 
-  // Routes
-  app.use('/api/upload',        require('./api/upload/uploadRoutes'));
-  app.use('/api/auth',          require('./api/auth/authRoutes'));
-  app.use('/api/users',         require('./api/users/userRoutes'));
-  app.use('/api/problems',      require('./api/problems/problemRoutes'));
-  app.use('/api/submissions',   require('./api/submissions/submissionRoutes'));
-  app.use('/api/contests',      require('./api/contests/contestRoutes'));
-  app.use('/api/stats',         require('./api/stats/statsRoutes'));
-  app.use('/api/community',     require('./api/community/communityRoutes'));
+  app.use('/api/upload', require('./api/upload/uploadRoutes'));
+  app.use('/api/auth', require('./api/auth/authRoutes'));
+  app.use('/api/users', require('./api/users/userRoutes'));
+  app.use('/api/problems', require('./api/problems/problemRoutes'));
+  app.use('/api/submissions', require('./api/submissions/submissionRoutes'));
+  app.use('/api/contests', require('./api/contests/contestRoutes'));
+  app.use('/api/stats', require('./api/stats/statsRoutes'));
+  app.use('/api/community', require('./api/community/communityRoutes'));
   app.use('/api/notifications', require('./api/notifications/notificationRoutes'));
-  app.use('/api/messages',      require('./api/messages/messageRoutes'));
-  app.use('/api/settings',      require('./api/settings/settingRoutes'));
-  app.use('/api/admin',         require('./api/admin/adminRoutes'));
-  app.use('/api/ai',            require('./api/ai/aiRoutes'));
+  app.use('/api/messages', require('./api/messages/messageRoutes'));
+  app.use('/api/settings', require('./api/settings/settingRoutes'));
+  app.use('/api/admin', require('./api/admin/adminRoutes'));
+  app.use('/api/ai', require('./api/ai/aiRoutes'));
   console.log('✓ Routes registered');
 
   app.get('/', (req, res) => res.send('Server is running...'));

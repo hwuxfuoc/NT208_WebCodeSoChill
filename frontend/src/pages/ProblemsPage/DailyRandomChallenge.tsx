@@ -1,20 +1,52 @@
-import { Link } from "react-router-dom";
 import { useDailyProblems } from "../../hooks/useDailyProblems";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
-const DIFF_COLOR: Record<string, { bg: string; text: string }> = {
-  easy: { bg: "#dcfce7", text: "var(--main-green-color)" },
-  medium: { bg: "#ffedd5", text: "var(--main-orange-color)" },
-  hard: { bg: "#fee2e2", text: "#dc2626" },
-};
+const TODAY_KEY = `daily_exp_earned_${new Date().toISOString().split("T")[0]}`;
 
 export default function DailyRandomChallenge() {
+  const { user } = useAuth();
   const { problems, loading, solvedIds, solvedCount, solvedLoading } = useDailyProblems();
+  const [earned, setEarned] = useState(() => localStorage.getItem(TODAY_KEY) === "true");
+  const navigate = useNavigate();
 
   const total = problems.length || 3;
   const pct = total > 0 ? Math.round((solvedCount / total) * 100) : 0;
+  const allDone = !solvedLoading && solvedCount === total && total > 0;
 
-  const firstUnsolved = problems.find(p => !solvedIds.has(p._id));
-  const targetProblemId = firstUnsolved ? firstUnsolved.problemId : (problems[0]?.problemId || "");
+  useEffect(() => {
+    if (allDone && !earned) {
+    }
+  }, [allDone]);
+
+  const handleClaim = () => {
+    localStorage.setItem(TODAY_KEY, "true");
+    setEarned(true);
+  };
+
+  const handleSolveRandom = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    const unsolved = problems.filter(p => !solvedIds.has(p._id));
+    if (unsolved.length > 0) {
+      const randomProblem = unsolved[Math.floor(Math.random() * unsolved.length)];
+      navigate(`/problems/${randomProblem.slug || randomProblem.problemId}`);
+    }
+  };
+
+  const btnLabel = () => {
+    if (earned) return "Earned ✓";
+    if (allDone) return "Claim 30 EXP";
+    return "Solve Random";
+  };
+
+  const btnStyle = (): React.CSSProperties => {
+    if (earned) return { backgroundColor: "#e5e7eb", color: "#6b7280", cursor: "default" };
+    return { backgroundColor: "var(--main-orange-color)", color: "#fff", cursor: "pointer" };
+  };
 
   return (
     <section className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4">
@@ -31,12 +63,12 @@ export default function DailyRandomChallenge() {
           </svg>
         </div>
         <div>
-          <h3 className="font-extrabold text-[15px] text-[#1A1D2B] leading-tight">Daily<br />Challenge</h3>
+          <h3 className="font-extrabold text-[15px] text-[#1A1D2B] leading-tight whitespace-nowrap">Random Challenge</h3>
         </div>
       </div>
 
       <p className="text-[13px] text-gray-500 leading-relaxed -mt-1">
-        Solve 3 problems today (Easy · Medium · Hard) to collect EXP.
+        Solve 3 random problems today to collect 30 EXP.
       </p>
 
       <div>
@@ -48,72 +80,36 @@ export default function DailyRandomChallenge() {
         </div>
         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
           <div
-            className="h-full rounded-full transition-all"
+            className="h-full rounded-full transition-all duration-700"
             style={{ width: `${pct}%`, backgroundColor: "var(--main-orange-color)" }}
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        {loading ? (
-          <div className="flex items-center justify-center py-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2" style={{ borderColor: "var(--main-orange-color)" }}></div>
-          </div>
-        ) : problems.map((p) => {
-          const dc = DIFF_COLOR[p.difficulty] || DIFF_COLOR.easy;
-          const isSolved = solvedIds.has(p._id);
-          return (
-            <Link
-              key={p._id}
-              to={`/problems/${p.problemId}`}
-              className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-colors group overflow-hidden"
-            >
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                {isSolved && (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--main-green-color)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                )}
-                <span className={`text-[13px] font-semibold text-gray-700 group-hover:text-orange-600 truncate ${isSolved ? 'line-through opacity-60' : ''}`}>
-                  {p.title}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                {isSolved && (
-                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-widest bg-green-100 text-green-600">
-                    Done
-                  </span>
-                )}
-                <span
-                  className="text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest flex-shrink-0"
-                  style={{ backgroundColor: dc.bg, color: dc.text }}
-                >
-                  {p.difficulty}
-                </span>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-3">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2" style={{ borderColor: "var(--main-orange-color)" }}></div>
+        </div>
+      ) : null}
 
-      {problems.length > 0 && (
-        <Link
-          to={`/problems/${targetProblemId}`}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[13px] text-white transition-opacity hover:opacity-90"
-          style={{ backgroundColor: "var(--main-orange-color)" }}
-        >
-          {solvedCount === total ? (
-            <>ALL DONE! 🎉</>
-          ) : (
-            <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              Start Challenge
-            </>
-          )}
-        </Link>
-      )}
+      <button
+        onClick={allDone && !earned ? handleClaim : (!allDone ? handleSolveRandom : undefined)}
+        disabled={earned}
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[13px] transition-all"
+        style={btnStyle()}
+      >
+        {earned && (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        )}
+        {allDone && !earned && (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        )}
+        {btnLabel()}
+      </button>
     </section>
   );
 }

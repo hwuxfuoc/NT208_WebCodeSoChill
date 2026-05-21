@@ -46,7 +46,6 @@ interface CodeEditorProps {
   problemId: string;
   timeLimit: number;
   memoryLimit: number;
-  onOpenChat?: () => void;
   onCodeChange?: (code: string) => void;
   onStatusChange?: (status: string | null) => void;
 }
@@ -60,7 +59,7 @@ interface JudgeResult {
   totalTests: number;
 }
 
-export default function CodeEditor({ problemId, onOpenChat, onCodeChange, onStatusChange }: CodeEditorProps) {
+export default function CodeEditor({ problemId, onCodeChange, onStatusChange }: CodeEditorProps) {
   const [language, setLanguage] = useState(LANGUAGE_OPTIONS[0]);
   const [code, setCode] = useState(DEFAULT_SNIPPETS[LANGUAGE_OPTIONS[0].value]);
   const [lastStatus, setLastStatus] = useState<string | null>(null);
@@ -74,7 +73,6 @@ export default function CodeEditor({ problemId, onOpenChat, onCodeChange, onStat
   const [searchParams] = useSearchParams();
   const contestId = searchParams.get("contestId") || undefined;
 
-  // Load last submission khi vào bài để restore code + language + status
   useEffect(() => {
     setLoadingLast(true);
     setLastStatus(null);
@@ -89,12 +87,10 @@ export default function CodeEditor({ problemId, onOpenChat, onCodeChange, onStat
           setLastStatus(sub.status);
           onStatusChange?.(sub.status);
         } else {
-          // Sync default snippet if no previous submission
           onCodeChange?.(code);
         }
       })
       .catch(() => {
-        // Nếu chưa login hoặc lỗi → giữ nguyên default snippet và sync
         onCodeChange?.(code);
       })
       .finally(() => setLoadingLast(false));
@@ -112,7 +108,6 @@ export default function CodeEditor({ problemId, onOpenChat, onCodeChange, onStat
     const selected = LANGUAGE_OPTIONS.find((item) => item.value === value);
     if (!selected) return;
     setLanguage(selected);
-    // Chỉ reset code nếu đang là default snippet của language cũ
     if (!code || code.trim() === DEFAULT_SNIPPETS[language.value]?.trim()) {
       const newCode = DEFAULT_SNIPPETS[selected.value] ?? "";
       setCode(newCode);
@@ -212,30 +207,6 @@ export default function CodeEditor({ problemId, onOpenChat, onCodeChange, onStat
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onOpenChat}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-colors"
-            title="Ask AI"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white/70 transition-colors"
-            disabled
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <polyline points="9 21 3 21 3 15"></polyline>
-              <line x1="21" y1="3" x2="14" y2="10"></line>
-              <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-          </button>
         </div>
       </div>
 

@@ -22,6 +22,7 @@ export default function CreatePostBox() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleCode = () => {
@@ -83,7 +84,8 @@ export default function CreatePostBox() {
       setImagePreview(null);
       setShowCode(false);
       
-      alert("Post published successfully!");
+      setSuccessMessage("Post published successfully!");
+      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
       console.error("Failed to create post:", err);
       alert(err.response?.data?.message || "Failed to publish post");
@@ -93,7 +95,12 @@ export default function CreatePostBox() {
   };
 
   return (
-    <div className="card">
+    <div className="card transition-all relative">
+      {successMessage && (
+        <div className="mb-4 bg-orange-50 border border-orange-200 text-orange-600 text-[13px] font-bold px-4 py-2.5 rounded-xl flex items-center justify-center transition-all animate-in fade-in slide-in-from-top-2">
+          {successMessage}
+        </div>
+      )}
       <input
         ref={fileInputRef}
         type="file"

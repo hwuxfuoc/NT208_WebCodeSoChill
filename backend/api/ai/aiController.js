@@ -1,10 +1,7 @@
-// backend/api/ai/aiController.js
 const axios = require("axios");
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://localhost:8000";
 
-// @desc    Gửi câu hỏi đến AI
-// @route   POST /api/ai/chat
 const chat = async (req, res) => {
   const {
     question,
@@ -46,8 +43,6 @@ const chat = async (req, res) => {
   }
 };
 
-// @desc    Gửi câu hỏi đến AI (streaming)
-// @route   POST /api/ai/chat/stream
 const chatStream = async (req, res) => {
   const {
     question,
@@ -83,13 +78,11 @@ const chatStream = async (req, res) => {
       { responseType: "stream", timeout: 120_000 }
     );
 
-    // Buffer để ghép các TCP chunk bị cắt ngang ranh giới dòng
     let lineBuffer = "";
 
     aiRes.data.on("data", (chunk) => {
       lineBuffer += chunk.toString();
       const lines = lineBuffer.split("\n");
-      // Giữ lại phần cuối chưa có \n để ghép vào chunk tiếp theo
       lineBuffer = lines.pop() || "";
 
       for (const line of lines) {
@@ -118,14 +111,11 @@ const chatStream = async (req, res) => {
             continue;
           }
 
-          // Chỉ lấy 1 field duy nhất, ưu tiên chunk → token → response
-          // KHÔNG fallback raw payload để tránh gửi trùng
           const textChunk = parsed.chunk ?? parsed.token ?? parsed.response;
           if (textChunk) {
             res.write(`data: ${JSON.stringify({ chunk: textChunk })}\n\n`);
           }
         } catch (parseErr) {
-          // Bỏ qua chunk không parse được, KHÔNG forward raw
           console.warn("[chatStream] Cannot parse chunk:", payload?.slice(0, 80));
         }
       }

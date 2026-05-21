@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { getPosts, likePost } from "../../services/communityService";
 import CommentModal from "./CommentModal";
 import ImageModal from "./ImageModal";
 import { useAuth } from "../../hooks/useAuth";
+import { useModal } from "../../context/ModalContext";
 
 interface Post {
   _id: string;
@@ -23,6 +26,122 @@ interface Post {
   createdAt: string;
 }
 
+type AuthorInfo = {
+  _id: string;
+  username: string;
+  displayname: string;
+  avatarUrl: string;
+  rank?: string;
+};
+
+import { getProfile } from "../../services/profileService";
+
+
+function UserCardModal({ author, currentUser, onClose }: { author: AuthorInfo | null; currentUser: any; onClose: () => void }) {
+  const { openModal } = useModal();
+  const [profileData, setProfileData] = useState<{ user: any, leaderboardRank: number | null } | null>(null);
+
+  useEffect(() => {
+    if (author) {
+      getProfile(author.username).then(res => setProfileData(res.data)).catch(console.error);
+    } else {
+      setProfileData(null);
+    }
+  }, [author]);
+
+  const [isSelf, setIsSelf] = useState(false);
+
+  useEffect(() => {
+    if (!author) return;
+    let currentUserId = currentUser?.id || currentUser?._id;
+    
+    // Fallback: Decode token from localStorage directly
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload && payload.id) currentUserId = payload.id;
+      }
+    } catch (e) {
+      console.error("Token decode error:", e);
+    }
+    
+    const self = Boolean(
+      (currentUser && currentUser.username && author.username.toLowerCase() === currentUser.username.toLowerCase()) ||
+      (currentUserId && author._id === currentUserId) ||
+      (profileData && profileData.user && profileData.user._id === currentUserId)
+    );
+    setIsSelf(self);
+  }, [author, currentUser, profileData]);
+
+  return createPortal(
+    <AnimatePresence>
+      {author && (
+        <motion.div
+          className="fixed inset-0 z-[950] flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onClose} />
+          <motion.div
+            className="relative bg-white rounded-2xl w-[360px] shadow-2xl overflow-hidden"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Orange gradient header */}
+            <div className="h-28 w-full" style={{ background: 'linear-gradient(135deg, #fdba74, var(--main-orange-color))' }} />
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white transition-colors"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+
+            {/* Avatar floating over the boundary */}
+            <div className="absolute left-6" style={{ top: '72px' }}>
+              <img
+                src={author.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(author.displayname)}`}
+                alt={author.displayname}
+                className="w-16 h-16 rounded-2xl border-4 border-white object-cover shadow-md"
+              />
+            </div>
+
+            {/* White content area */}
+            <div className="pt-10 px-6 pb-6">
+              <p className="font-extrabold text-[17px] text-[#1A1D2B] leading-tight">{author.displayname}</p>
+              <p className="text-gray-400 text-sm mb-3">@{author.username}</p>
+
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-orange-50 text-orange-500 mb-4">
+                {profileData ? (
+                  profileData.leaderboardRank ? `RANK ${profileData.leaderboardRank}` : 'UNRANKED'
+                ) : '...'}
+              </div>
+
+              {!isSelf && (
+                <button
+                  onClick={() => { onClose(); openModal('messages'); }}
+                  className="w-full py-2.5 rounded-xl text-white font-bold text-sm transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  style={{ backgroundColor: 'var(--main-orange-color)' }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  Send Message
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body
+  );
+}
+
 export default function PostFeed() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
@@ -31,6 +150,7 @@ export default function PostFeed() {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [commentPost, setCommentPost] = useState<Post | null>(null);
   const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
+  const [viewAuthor, setViewAuthor] = useState<AuthorInfo | null>(null);
 
   useEffect(() => {
     fetchPosts();
@@ -75,24 +195,43 @@ export default function PostFeed() {
   };
 
   const toggleLike = async (id: string) => {
+    // Optimistic update: flip like state and update count in-place without refetching
+    const userId = (user as any)?._id || user?.id;
+    setLikedPosts(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+    setPosts(prev => prev.map(p => {
+      if (p._id !== id) return p;
+      const wasLiked = (p.likes || []).includes(userId);
+      return {
+        ...p,
+        likeCount: wasLiked ? p.likeCount - 1 : p.likeCount + 1,
+        likes: wasLiked
+          ? (p.likes || []).filter(lid => lid !== userId)
+          : [...(p.likes || []), userId],
+      };
+    }));
     try {
-      setLikedPosts(prev => {
-        const next = new Set(prev);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
-        return next;
-      });
-      
       await likePost(id);
-      // Refresh posts to get updated like count
-      fetchPosts();
     } catch (err) {
-      console.error("Failed to like post", err);
+      // Revert on error
+      console.error('Failed to like post', err);
       setLikedPosts(prev => {
         const next = new Set(prev);
-        next.delete(id);
+        if (next.has(id)) next.delete(id); else next.add(id);
         return next;
       });
+      setPosts(prev => prev.map(p => {
+        if (p._id !== id) return p;
+        const wasLiked = !(p.likes || []).includes(userId);
+        return {
+          ...p,
+          likeCount: wasLiked ? p.likeCount - 1 : p.likeCount + 1,
+        };
+      }));
     }
   };
 
@@ -134,10 +273,20 @@ export default function PostFeed() {
           <article className="card post-card" key={post._id}>
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
-                <img src={post.authorId.avatarUrl} alt={post.authorId.displayname} className="post-avatar" />
+                <button
+                  onClick={() => setViewAuthor(post.authorId)}
+                  className="rounded-xl overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity"
+                >
+                  <img src={post.authorId.avatarUrl} alt={post.authorId.displayname} className="post-avatar" />
+                </button>
                 <div>
-                  <h4 className="font-bold text-gray-800 text-[15px]">{post.authorId.displayname}</h4>
-                  <span className="text-xs text-gray-500">@{post.authorId.username} • {formatTimeAgo(post.createdAt)}</span>
+                  <button
+                    onClick={() => setViewAuthor(post.authorId)}
+                    className="font-bold text-gray-800 text-[15px] hover:text-orange-500 transition-colors"
+                  >
+                    {post.authorId.displayname}
+                  </button>
+                  <span className="text-xs text-gray-500 block">@{post.authorId.username} • {formatTimeAgo(post.createdAt)}</span>
                 </div>
               </div>
               <button className="text-gray-400 hover:text-gray-600">
@@ -206,6 +355,10 @@ export default function PostFeed() {
           onClose={() => setFullScreenImage(null)} 
         />
       )}
+
+      <UserCardModal author={viewAuthor} currentUser={user} onClose={() => setViewAuthor(null)} />
+
+
     </>
   );
 }

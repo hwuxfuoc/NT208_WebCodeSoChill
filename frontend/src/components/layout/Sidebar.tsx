@@ -52,8 +52,7 @@ export default function Sidebar() {
             >
               <span className="side-icon flex items-center justify-center w-6">
                 <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                  <circle cx="12" cy="8" r="4"></circle>
-                  <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </span>
               <span className="label font-medium">Admin</span>
@@ -71,14 +70,22 @@ export default function Sidebar() {
                   to="/admin/problems"
                   className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[rgba(255,127,39,0.1)] text-[#fc6b57]' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
                 >
-                  <span className="text-base">📋</span> 
+                  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
                   <span>Problems</span>
                 </NavLink>
                 <NavLink
                   to="/admin/users"
                   className={({ isActive }) => `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive ? 'bg-[rgba(255,127,39,0.1)] text-[#fc6b57]' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
                 >
-                  <span className="text-base">👥</span> 
+                  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
                   <span>Users</span>
                 </NavLink>
               </div>

@@ -1,7 +1,3 @@
-/**
- * PageTransition.tsx
- * Slide-up + fade + subtle motion blur on every route change.
- */
 import { motion, AnimatePresence } from "framer-motion";
 import { Outlet, useLocation } from "react-router-dom";
 
@@ -15,7 +11,7 @@ export default function PageTransition() {
   const { pathname } = useLocation();
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="wait">
       <motion.div
         key={pathname}
         variants={variants}

@@ -8,11 +8,14 @@ import UpcomingContestsTable from "./UpcomingContestsTable";
 import RecentContestsGrid from "./RecentContestsGrid";
 import * as contestService from "../../services/contestService";
 import { Contest } from "../../services/contestService";
+import { useAuth } from "../../hooks/useAuth";
+import GuestBanner from "../../components/common/GuestBanner";
 
 export default function ContestPage() {
+  const { user } = useAuth();
   const [activeModal, setActiveModal] = useState<"register" | "view_problems" | "rankings" | "archive" | null>(null);
   const [selectedContest, setSelectedContest] = useState<Contest | null>(null);
-  
+
   const [contests, setContests] = useState<Contest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +37,17 @@ export default function ContestPage() {
   const ongoingContests = contests.filter(c => c.status === "ongoing");
   const upcomingContests = contests.filter(c => c.status === "upcoming");
   const pastContests = contests.filter(c => c.status === "ended");
+
+  if (!user) {
+    return (
+      <div className="page-stack">
+        <div className="page-header">
+          <h1>Contest</h1>
+        </div>
+        <GuestBanner page="contest" />
+      </div>
+    );
+  }
 
   return (
     <div className="page-stack">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useModal } from "../../context/ModalContext";
 import { useAuth } from "../../hooks/useAuth";
+import { DEFAULT_AVATAR } from "../../utils/constants";
 
 interface UserProfileCardProps {
   user?: any;
@@ -45,7 +46,7 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
 
       <div className="relative shrink-0">
         <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-white shadow-md">
-          <img src={displayUser?.avatarUrl || "https://via.placeholder.com/80"} alt={displayUser?.displayname} className="w-full h-full object-cover" />
+          <img src={displayUser?.avatarUrl || DEFAULT_AVATAR} alt={displayUser?.displayname} className="w-full h-full object-cover" />
         </div>
         <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full" />
       </div>
