@@ -157,8 +157,10 @@ jobs:
           echo "Deploying Frontend to Vercel..."
           vercel pull --yes \
             --environment=production \
+            --cwd ./frontend \
             --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prod \
+            --cwd ./frontend \
             --token=${{ secrets.VERCEL_TOKEN }}
           echo "✅ Frontend deployed to Vercel!"
         env:

@@ -510,6 +510,39 @@ p {
   padding: 30px;
 }
 
+/* ─── Mobile Header ────────────────────────────────────────────────────────── */
+.mobile-header {
+  display: none;
+}
+
+/* ─── Sidebar mobile drawer ─────────────────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+}
+
+.mobile-drawer-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+
+.mobile-drawer-close:hover {
+  background: #e5e7eb;
+}
+
+/* ─── Responsive Breakpoints ──────────────────────────────────────────────── */
 @media (max-width: 1200px) {
   .app-shell {
     grid-template-columns: 80px 1fr;
@@ -535,16 +568,112 @@ p {
 }
 
 @media (max-width: 900px) {
+  /* ── App shell: single column, space for sticky header ── */
   .app-shell {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    padding-bottom: 70px;
+    display: block;
+    padding-top: 60px; /* height of mobile-header */
   }
 
+  /* ── Mobile sticky header ── */
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    padding: 0 16px;
+    background: #fff;
+    border-bottom: 1px solid #eceff3;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    z-index: 200;
+    gap: 12px;
+  }
+
+  .mobile-hamburger {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: #f6f7f9;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-hamburger:hover {
+    background: rgba(252, 107, 87, 0.08);
+    color: var(--main-orange-color);
+  }
+
+  .mobile-header-logo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .mobile-tool-btn {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  /* ── Sidebar: hidden by default on mobile, shown as drawer ── */
   .sidebar {
     display: none;
   }
 
+  .sidebar-mobile-drawer {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    z-index: 300;
+    border-radius: 0 24px 24px 0;
+    padding-top: 56px; /* extra space for the X close button */
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+    overflow-y: auto;
+  }
+
+  /* Restore labels inside mobile drawer */
+  .sidebar-mobile-drawer .label,
+  .sidebar-mobile-drawer .brand span:not(.logo) {
+    display: inline !important;
+  }
+
+  /* ── Overlay backdrop ── */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 29, 43, 0.45);
+    backdrop-filter: blur(3px);
+    z-index: 250;
+  }
+
+  /* ── Right toolbar hidden on mobile ── */
+  .right-toolbar {
+    display: none;
+  }
+
+  /* ── Content grids ── */
   .home-grid-top,
   .home-grid-bottom,
   .community-layout,
