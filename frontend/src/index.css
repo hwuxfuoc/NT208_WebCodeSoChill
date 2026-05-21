@@ -312,6 +312,7 @@ p {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  /* no fixed height — let cards auto-size */
 }
 
 .stat-card {
@@ -682,7 +683,8 @@ p {
   }
 
   .stats-row {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .main-content {
