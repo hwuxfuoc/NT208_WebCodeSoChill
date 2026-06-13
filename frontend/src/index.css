@@ -393,6 +393,7 @@ p {
   display: grid;
   grid-template-columns: 1.8fr 1.2fr;
   gap: 24px;
+  align-items: start;
 }
 
 .feed {
@@ -439,6 +440,8 @@ p {
   display: grid;
   gap: 12px;
   align-items: start;
+  position: sticky;
+  top: 24px;
 }
 
 .list-item-clean {

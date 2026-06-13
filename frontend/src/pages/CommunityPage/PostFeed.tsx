@@ -27,7 +27,7 @@ interface Post {
 }
 
 import UserCardModal, { AuthorInfo } from "../../components/common/UserCardModal";
-export default function PostFeed() {
+export default function PostFeed({ searchQuery = "" }: { searchQuery?: string }) {
   const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -150,9 +150,23 @@ export default function PostFeed() {
     );
   }
 
+  const filteredPosts = posts.filter(post => 
+    post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.authorId.displayname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.authorId.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  if (filteredPosts.length === 0) {
+    return (
+      <div className="card p-6 text-center text-gray-500">
+        <p>No posts found.</p>
+      </div>
+    );
+  }
+
   return (
     <>
-      {posts.map((post) => {
+      {filteredPosts.map((post) => {
         const isLiked = likedPosts.has(post._id);
         return (
           <article className="card post-card" key={post._id}>

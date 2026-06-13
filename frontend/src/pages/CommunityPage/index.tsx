@@ -6,8 +6,11 @@ import CommunityHeader from "./CommunityHeader";
 import { useAuth } from "../../hooks/useAuth";
 import GuestBanner from "../../components/common/GuestBanner";
 
+import { useState } from "react";
+
 export default function CommunityPage() {
   const { user, loading } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
 
   if (loading) {
     return (
@@ -28,12 +31,12 @@ export default function CommunityPage() {
 
   return (
     <div className="page-stack">
-      <CommunityHeader />
+      <CommunityHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <div className="community-layout">
         <section className="feed">
           <CreatePostBox />
-          <PostFeed />
+          <PostFeed searchQuery={searchQuery} />
         </section>
 
         <aside className="side-stack">

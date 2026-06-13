@@ -23,6 +23,7 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
 
   const isOwnProfile = !username || username === currentUser?.username;
+  const hasFullAccess = isOwnProfile || currentUser?.role === 'admin';
   const displayUsername = username || currentUser?.username;
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function ProfilePage() {
         <RecentBadges />
       </div>
 
-      {isOwnProfile ? (
+      {hasFullAccess ? (
         <div className="grid gap-6" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
           <RecentSubmissions submissions={submissions} />
           <ContactSocialCard user={profile} />

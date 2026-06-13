@@ -18,6 +18,7 @@ export default function ContestPage() {
 
   const [contests, setContests] = useState<Contest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchContests();
@@ -34,9 +35,13 @@ export default function ContestPage() {
     }
   };
 
-  const ongoingContests = contests.filter(c => c.status === "ongoing");
-  const upcomingContests = contests.filter(c => c.status === "upcoming");
-  const pastContests = contests.filter(c => c.status === "ended");
+  const filteredContests = contests
+    .filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+
+  const ongoingContests = filteredContests.filter(c => c.status === "ongoing");
+  const upcomingContests = filteredContests.filter(c => c.status === "upcoming");
+  const pastContests = filteredContests.filter(c => c.status === "ended");
 
   if (!user) {
     return (
@@ -55,7 +60,12 @@ export default function ContestPage() {
         <h1>Contest</h1>
         <div className="search-bar-container">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--main-orange-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" placeholder="Search contest..." />
+          <input 
+            type="text" 
+            placeholder="Search contest..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
       </div>
 

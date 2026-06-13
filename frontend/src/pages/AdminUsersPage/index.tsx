@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../services/api';
+import { useAuth } from '../../hooks/useAuth';
+import UserCardModal from '../../components/common/UserCardModal';
 
 type UserItem = {
   _id: string;
@@ -20,115 +22,7 @@ type UserItem = {
   isLocked?: boolean;
 };
 
-function UserProfileModal({ user, onClose }: { user: UserItem | null; onClose: () => void }) {
-  const [leaderboardRank, setLeaderboardRank] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      api.get(`/api/users/${user.username}`).then(res => {
-        setLeaderboardRank(res.data.leaderboardRank);
-      }).catch(console.error);
-    } else {
-      setLeaderboardRank(null);
-    }
-  }, [user]);
-
-  return createPortal(
-    <AnimatePresence>
-      {user && (
-        <motion.div
-          className="fixed inset-0 z-[950] flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onClose} />
-          <motion.div
-            className="relative bg-white rounded-2xl w-[440px] shadow-2xl overflow-hidden"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="h-28 w-full" style={{ background: 'linear-gradient(135deg, #fdba74, var(--main-orange-color))' }} />
-            <button
-              onClick={onClose}
-              className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center text-white transition-colors"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-
-            {/* Avatar floating at boundary */}
-            <div className="absolute left-6" style={{ top: '76px' }}>
-              <img
-                src={user.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayname || user.username)}`}
-                alt={user.displayname}
-                className="w-20 h-20 rounded-2xl border-4 border-white object-cover shadow-md"
-              />
-            </div>
-
-            <div className="pt-12 px-7 pb-7">
-              <div className="mb-4">
-                <p className="font-extrabold text-lg text-[#1A1D2B] leading-tight">{user.displayname || user.username}</p>
-                <p className="text-gray-400 text-sm">@{user.username}</p>
-                <div className="flex gap-2 mt-2 flex-wrap">
-                  <span className="inline-block text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-orange-50 text-orange-500">
-                    {leaderboardRank ? `RANK ${leaderboardRank}` : 'UNRANKED'}
-                  </span>
-                  {user.role === 'admin' && (
-                    <span className="inline-block text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-orange-100 text-orange-600">Admin</span>
-                  )}
-                  {user.isLocked && (
-                    <span className="inline-block text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-red-100 text-red-600">Locked</span>
-                  )}
-                </div>
-              </div>
-
-
-
-              <div className="grid grid-cols-3 gap-3 mb-5">
-                {[
-                  { label: 'Level', value: `Lv.${user.level}` },
-                  { label: 'EXP', value: user.experiencePoints.toLocaleString() },
-                  { label: 'Solved', value: String(user.totalSolved) },
-                ].map(s => (
-                  <div key={s.label} className="bg-gray-50 rounded-xl p-3 text-center">
-                    <p className="text-[18px] font-black text-[#1A1D2B]">{s.value}</p>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-0.5">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col gap-2 text-sm">
-                {user.email && (
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    {user.email}
-                  </div>
-                )}
-                {user.phone && (
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                    {user.phone}
-                  </div>
-                )}
-                {user.bio && (
-                  <p className="text-gray-500 leading-relaxed mt-1">{user.bio}</p>
-                )}
-                <div className="flex items-center gap-2 text-gray-400 text-xs">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  Joined {new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>,
-    document.body
-  );
-}
 
 function ConfirmModal({
   open,
@@ -188,6 +82,7 @@ function ConfirmModal({
 }
 
 export default function AdminUsersPage() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -373,7 +268,7 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      <UserProfileModal user={viewUser} onClose={() => setViewUser(null)} />
+      <UserCardModal author={viewUser as any} currentUser={currentUser} onClose={() => setViewUser(null)} />
 
       <ConfirmModal
         open={!!lockTarget}
