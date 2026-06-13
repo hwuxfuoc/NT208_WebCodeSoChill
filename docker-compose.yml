@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      # Tự động gán biến để Backend gọi được AI Service nội bộ
+      - AI_SERVICE_URL=http://ai-service:8000
+    depends_on:
+      - ai-service
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "8000:8000"
+    # Lấy thêm env (nếu có .env riêng)
+    env_file:
+      - ./ai-service/.env
+    environment:
+      # Trỏ ra máy Host của giáo viên (host.docker.internal) để kết nối Ollama đang chạy ở ngoài
+      - OLLAMA_URL=http://host.docker.internal:11434/api/generate
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      # Frontend chạy ở client (trình duyệt) nên gọi backend qua localhost
+      - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - backend

@@ -137,9 +137,43 @@ Chi tiết hơn về từng phần được mô tả trong:
 
 ## 🚀 Hướng dẫn cài đặt & Chạy local
 
-Hướng dẫn cài đặt chi tiết từng bước (bao gồm cài đặt Node.js, MongoDB, biến môi trường...) vui lòng xem tại file:
+Bạn có thể chạy dự án bằng **Docker** (nhanh chóng, khuyên dùng) hoặc **Cài đặt thủ công** (dành cho phát triển).
 
-👉 [**Setup.md**](document/Setup.md)
+### 🐳 Cách 1: Chạy dự án bằng Docker (Cách nhanh nhất)
+
+Dự án CodeSoChill được cấu hình sẵn Docker, không yêu cầu cài đặt phức tạp bất kỳ môi trường nào (Node.js, Python, MongoDB). Chỉ cần chạy một lệnh duy nhất.
+
+**Yêu cầu hệ thống:** Đã cài đặt **Docker Desktop** (hoặc Docker Engine + Docker Compose). Không cần cài đặt thêm Node.js hay Python.
+
+**Các bước thực hiện:**
+
+1. Mở Terminal (hoặc Command Prompt / PowerShell) tại thư mục gốc của dự án (nơi chứa file `docker-compose.yml`).
+2. Chạy lệnh sau:
+   ```bash
+   docker-compose up --build
+   ```
+   *(Lưu ý: Lần chạy đầu tiên sẽ mất vài phút để Docker tải và cài đặt các thư viện cần thiết. Những lần sau sẽ khởi động ngay lập tức.)*
+
+3. Truy cập ứng dụng:
+   - **Frontend (Giao diện chính)**: [http://localhost:5173](http://localhost:5173)
+   - **Backend API**: [http://localhost:5000](http://localhost:5000)
+   - **AI Service API**: [http://localhost:8000](http://localhost:8000)
+
+**Chú thích về dữ liệu và AI:**
+- **Database**: Hệ thống mặc định kết nối lên MongoDB Atlas (Cloud) bằng cấu hình đã được cung cấp sẵn trong mã nguồn. Nhờ vậy, hệ thống có thể được truy cập ngay với đầy đủ dữ liệu (tài khoản test, câu hỏi, testcase) mà không cần seed lại dữ liệu.
+- **Trợ lý ảo AI (Ollama)**: Để tiết kiệm dung lượng và thời gian build Docker (tránh tải model 5GB), tính năng AI sẽ gọi qua một Ollama instance chạy trên máy tính (host).
+  - *Nếu muốn test tính năng AI*, vui lòng tải và chạy Ollama trên máy: `ollama run qwen2.5-coder:7b` (hoặc `llama3`).
+  - *Nếu không chạy Ollama*, mọi tính năng cốt lõi khác của hệ thống (nộp bài, chấm tự động, bảng xếp hạng) vẫn **hoạt động hoàn hảo 100%**.
+
+**Cách dừng dự án:**
+Để tắt toàn bộ hệ thống, nhấn `Ctrl + C` tại Terminal đang chạy lệnh `docker-compose up`, sau đó gõ thêm:
+```bash
+docker-compose down
+```
+
+### 💻 Cách 2: Cài đặt thủ công (Local Development)
+
+Hướng dẫn cài đặt chi tiết từng bước (bao gồm cài đặt Node.js, MongoDB, biến môi trường...) vui lòng xem tại file: 👉 [**Setup.md**](document/Setup.md)
 
 Tóm tắt nhanh các bước chính:
 
