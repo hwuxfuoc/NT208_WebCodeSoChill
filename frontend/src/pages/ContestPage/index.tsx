@@ -37,7 +37,7 @@ export default function ContestPage() {
 
   const filteredContests = contests
     .filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   const ongoingContests = filteredContests.filter(c => c.status === "ongoing");
   const upcomingContests = filteredContests.filter(c => c.status === "upcoming");
@@ -96,7 +96,7 @@ export default function ContestPage() {
           />
 
           <RecentContestsGrid 
-            contests={pastContests.slice(0, 3)}
+            contests={pastContests.slice(-3)}
             onViewArchive={() => setActiveModal("archive")}
             onViewRankings={(contest) => {
               setSelectedContest(contest);

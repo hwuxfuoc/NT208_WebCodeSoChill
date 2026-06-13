@@ -106,30 +106,41 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
           <button onClick={toggleShare} className="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
           </button>
-          {showShare && (
+          {showShare && (() => {
+            const socials = displayUser?.socialLinks || {};
+            const shareLinks = [
+              { name: "Facebook", url: socials.facebook, bg: "bg-blue-600 text-white", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> },
+              { name: "X", url: socials.twitter, bg: "bg-black text-white", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="4" x2="20" y2="20"></line><line x1="20" y1="4" x2="4" y2="20"></line></svg> },
+              { name: "LinkedIn", url: socials.linkedin, bg: "bg-blue-500 text-white", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg> },
+              { name: "GitHub", url: socials.github, bg: "bg-gray-800 text-white", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg> },
+              { name: "Instagram", url: socials.instagram, bg: "bg-pink-600 text-white", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> },
+              { name: "Website", url: socials.website, bg: "bg-orange-500 text-white", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> }
+            ].filter(link => !!link.url);
+            
+            const shareUrl = `https://www.codesochill.io.vn/profile/${displayUser?.username}`;
+
+            return (
             <div className="absolute top-12 right-0 bg-[#2a2a3e] p-4 rounded-2xl shadow-xl w-[280px] z-50" onClick={e => e.stopPropagation()}>
               <p className="text-white text-sm font-bold mb-4">Share Profile</p>
-              <div className="flex justify-between mb-5">
-                {[
-                  { name: "Facebook", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>, bg: "bg-blue-600 text-white" },
-                  { name: "WhatsApp", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>, bg: "bg-green-500 text-white" },
-                  { name: "X", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="4" x2="20" y2="20"></line><line x1="20" y1="4" x2="4" y2="20"></line></svg>, bg: "bg-black text-white" },
-                ].map((item, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity">
-                    <div className={`w-12 h-12 flex items-center justify-center rounded-full ${item.bg}`}>
-                      {item.icon}
-                    </div>
-                    <span className="text-[10px] text-gray-300 font-semibold">{item.name}</span>
-                  </div>
-                ))}
-              </div>
+              {shareLinks.length > 0 && (
+                <div className="flex flex-wrap gap-4 mb-5">
+                  {shareLinks.map((item, i) => (
+                    <a key={i} href={item.url.startsWith('http') ? item.url : `https://${item.url}`} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1.5 hover:opacity-80 transition-opacity">
+                      <div className={`w-12 h-12 flex items-center justify-center rounded-full ${item.bg}`}>
+                        {item.icon}
+                      </div>
+                      <span className="text-[10px] text-gray-300 font-semibold">{item.name}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
               <div className="flex items-center gap-2 bg-[#1e1e2e] rounded-xl p-1.5 border border-[#3e3e5e]">
                 <div className="flex-1 overflow-hidden px-2">
-                  <p className="text-xs text-gray-400 truncate">{`${window.location.origin}/profile/${displayUser?.username}`}</p>
+                  <p className="text-xs text-gray-400 truncate">{shareUrl}</p>
                 </div>
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(`${window.location.origin}/profile/${displayUser?.username}`);
+                    navigator.clipboard.writeText(shareUrl);
                     setShowShare(false);
                   }}
                   className="px-4 py-1.5 rounded-lg bg-gray-800 text-white text-[11px] font-bold hover:bg-gray-700 transition-colors shrink-0"
@@ -138,7 +149,8 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
                 </button>
               </div>
             </div>
-          )}
+            );
+          })()}
         </div>
         {isOwnProfile && (
           <button onClick={() => openModal("settings")} className="px-5 py-2.5 rounded-xl font-bold text-sm text-white shadow-md hover:opacity-90 transition-all" style={{ backgroundColor: "var(--main-orange-color)" }}>

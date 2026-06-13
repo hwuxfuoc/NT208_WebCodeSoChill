@@ -25,7 +25,7 @@ export default function ContestArchiveModal({ onClose, onViewProblems, onViewRan
       const contests = res?.data?.contests || [];
       const past = contests
         .filter((c) => c.status === "ended")
-        .sort((a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime());
+        .sort((a, b) => new Date(a.endTime).getTime() - new Date(b.endTime).getTime());
       setArchive(past);
     } catch (err) {
       console.error("Failed to fetch contest archive", err);
@@ -72,7 +72,7 @@ export default function ContestArchiveModal({ onClose, onViewProblems, onViewRan
                   className="flex items-center gap-4 px-4 py-4 rounded-2xl bg-[#f8fafc] border border-gray-100 hover:border-gray-200 transition-colors"
                 >
                   <span className="text-[10px] font-black text-gray-400 tracking-wider w-10 flex-shrink-0">
-                    #{archive.length - idx}
+                    #{idx + 1}
                   </span>
 
                   <div className="flex-1 min-w-0">
