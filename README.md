@@ -64,12 +64,11 @@ Chạy ở port local: `http://localhost:5173`
 
 | Công nghệ | Mục đích sử dụng |
 | --- | --- |
-| **React.js + Vite** | Framework chính để xây dựng giao diện người dùng theo dạng component, Vite giúp quá trình phát triển nhanh hơn đáng kể so với CRA truyền thống. |
-| **HTML5 + CSS3** | Xây dựng cấu trúc trang và viết style cơ bản, làm nền tảng cho toàn bộ giao diện. |
-| **Ant Design** | Thư viện UI component chuyên nghiệp, cung cấp sẵn các thành phần như Button, Table, Form, Modal,... giúp đẩy nhanh tốc độ phát triển UI. |
-| **Bootstrap + CSS thuần** | Hỗ trợ styling linh hoạt, đặc biệt cho các layout responsive và các tinh chỉnh giao diện tùy biến. |
-| **Ace Editor / Monaco Editor** | Trình soạn thảo code trực tuyến với syntax highlighting, line numbering và nhiều tính năng IDE thu gọn. |
-| **Axios** | Thư viện HTTP client dùng để gọi các API từ backend một cách gọn gàng, hỗ trợ xử lý lỗi và interceptor. |
+| **React.js + Vite + TypeScript** | Framework chính để xây dựng giao diện người dùng, Vite giúp phát triển nhanh, TypeScript đảm bảo an toàn kiểu dữ liệu. |
+| **TailwindCSS** | Utility-first CSS framework giúp xây dựng UI nhanh chóng, linh hoạt và dễ dàng tùy biến. |
+| **Framer Motion** | Thư viện animation mạnh mẽ dành cho React, tạo các hiệu ứng chuyển động mượt mà cho UI. |
+| **Monaco Editor** | Trình soạn thảo code trực tuyến với syntax highlighting, line numbering và nhiều tính năng IDE thu gọn (cùng engine với VS Code). |
+| **React Query + Axios** | Quản lý state của server, caching dữ liệu và gọi API từ backend một cách tối ưu. |
 | **React Router DOM** | Quản lý điều hướng (routing) giữa các trang trong ứng dụng Single Page Application (SPA). |
 
 ### ⚙️ Backend
@@ -83,6 +82,17 @@ Chạy ở port local: `http://localhost:5000`
 | **JWT (JSON Web Token)** | Xác thực người dùng sau khi đăng nhập, đảm bảo chỉ những request hợp lệ mới được truy cập tài nguyên bảo mật. |
 | **bcryptjs** | Mã hóa mật khẩu người dùng trước khi lưu vào database, bảo vệ dữ liệu ngay cả khi hệ thống bị tấn công. |
 | **Judge Engine** | Hệ thống chấm bài tự động chạy code người dùng trong môi trường sandbox an toàn, tránh ảnh hưởng đến hệ thống chính. |
+
+### 🤖 AI Service
+
+Chạy ở port local: `http://localhost:8000`
+
+| Công nghệ | Mục đích sử dụng |
+| --- | --- |
+| **FastAPI + Uvicorn** | Framework Python hiện đại, hiệu năng cao để xây dựng RESTful API cho dịch vụ AI. |
+| **ChromaDB** | Vector Database dùng để lưu trữ và truy vấn embeddings cho hệ thống RAG (Retrieval-Augmented Generation). |
+| **Sentence Transformers** | Mô hình AI dùng để chuyển đổi văn bản thành vector embeddings, phục vụ cho tìm kiếm ngữ nghĩa. |
+| **Ollama** | Khởi chạy và giao tiếp với các mô hình ngôn ngữ lớn (LLM) cục bộ để sinh câu trả lời tự động. |
 
 ### 🗄 Database
 
@@ -105,8 +115,8 @@ Các collection chính trong database:
 ```bash
 WebCodeSoChill/
 ├── backend/          # Node.js + Express – toàn bộ logic server, API, xác thực
-├── frontend/         # React + Vite – giao diện người dùng
-├── judge/            # (Tuỳ chọn) Thư mục chứa sandbox code execution engine
+├── frontend/         # React + Vite + TypeScript – giao diện người dùng
+├── ai-service/       # FastAPI + ChromaDB – Dịch vụ AI/RAG hỗ trợ học tập
 ├── README.md         # File bạn đang đọc
 ├── Setup.md          # Hướng dẫn cài đặt chi tiết
 └── .env.example      # Mẫu các biến môi trường cần cấu hình
@@ -151,24 +161,31 @@ npm run dev
 # 6. Chạy frontend (port 5173)
 cd frontend
 npm run dev
+
+# 7. Cài đặt và chạy AI Service (port 8000)
+cd ../ai-service
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
 Sau khi khởi động, truy cập ứng dụng tại: [http://localhost:5173](http://localhost:5173/)
 
 ---
 
-## ☁️ Deployment (Gợi ý)
+## ☁️ Deployment
 
-Dưới đây là các nền tảng được khuyến nghị để deploy từng thành phần của ứng dụng:
+Dự án hiện đã được deploy và đang chạy thực tế trên các nền tảng sau:
 
-| Thành phần | Nền tảng gợi ý | Lý do |
-| --- | --- | --- |
-| **Frontend** | [Vercel](https://vercel.com/) / [Netlify](https://netlify.com/) | Hỗ trợ React/Vite tốt, deploy tự động từ GitHub, có free tier. |
-| **Backend** | [Render.com](https://render.com/) / [Railway](https://railway.app/) / [Fly.io](https://fly.io/) | Hỗ trợ Node.js, dễ cấu hình biến môi trường, có free tier. |
-| **Database** | [MongoDB Atlas](https://www.mongodb.com/atlas) | Dịch vụ cloud MongoDB chính thức, free tier đủ dùng cho dự án nhỏ. |
-| **Judge Service** | Docker sandbox (tách riêng service) | Cần môi trường cô lập để chạy code người dùng an toàn, tránh rủi ro bảo mật. |
+| Thành phần | Nền tảng | Đường dẫn (URL) | Dashboard Quản lý |
+| --- | --- | --- | --- |
+| **Website Chính** | Domain Tùy chỉnh | [https://www.codesochill.io.vn](https://www.codesochill.io.vn) | - |
+| **Frontend** | Vercel | [Vercel App URL](https://nt-208-web-code-so-chill-frontend-eenx-a9ywf1jqb.vercel.app) | [Vercel Project](https://vercel.com/hwuxfuocs-projects/nt-208-web-code-so-chill-frontend-eenx) |
+| **Backend API** | Render | [Render Web Service](https://nt208-webcodesochill-tpqh.onrender.com) | [Render Dashboard](https://dashboard.render.com/web/srv-d877719s16ns738qc280) |
+| **AI Service** | Render | [Render AI Service](https://nt208-webcodesochill-ai.onrender.com) | [Render Dashboard](https://dashboard.render.com/web/srv-d877b0h9rddc7386e6hg) |
+| **Database** | MongoDB Atlas | Cluster của dự án | [MongoDB Dashboard](https://cloud.mongodb.com/v2/69d9a481ccc1bd04de725e02#/overview) |
+| **Media Storage** | Cloudinary | Lưu trữ Avatar User | [Cloudinary Dashboard](https://console.cloudinary.com/app/c-292e5a00e212a4aeeba56df65e8ccb/home/dashboard) |
 
-> ⚠️ **Lưu ý bảo mật**: Judge Engine (hệ thống chạy code người dùng) nên được tách thành một service riêng biệt và chạy trong môi trường sandbox (Docker container) để đảm bảo code độc hại không ảnh hưởng đến server chính.
+> ⚠️ **Lưu ý bảo mật**: Judge Engine (hệ thống chạy code người dùng) cần được đảm bảo chạy trong môi trường sandbox (Docker container) cô lập để đảm bảo code độc hại không ảnh hưởng đến server chính.
 > 
 
 ---
@@ -180,7 +197,7 @@ Dưới đây là các nền tảng được khuyến nghị để deploy từng
 | ER Diagram (thiết kế database) | [Xem trên Eraser.io](https://app.eraser.io/workspace/MibBxluYc33hORCIUomJ?origin=share) |
 | Frontend Local | [http://localhost:5173](http://localhost:5173/) |
 | Backend API Local | [http://localhost:5000](http://localhost:5000/) |
-| Live Demo | *(Sẽ cập nhật sau khi deploy)* |
+| Live Demo | [https://www.codesochill.io.vn](https://www.codesochill.io.vn) |
 
 ---
 
@@ -188,13 +205,13 @@ Dưới đây là các nền tảng được khuyến nghị để deploy từng
 
 | Công nghệ | Vai trò |
 | --- | --- |
-| React.js + Vite | Frontend framework |
-| Ant Design | UI Component Library |
-| Bootstrap | Responsive & Utility CSS |
+| React.js + Vite + TypeScript | Frontend framework |
+| TailwindCSS + Framer Motion | UI & Animation |
 | Node.js + Express | Backend API |
+| FastAPI + ChromaDB | AI / RAG Service |
 | MongoDB + Mongoose | Database |
 | JWT + bcryptjs | Xác thực & Bảo mật |
-| Ace / Monaco Editor | Trình soạn thảo code trực tuyến |
+| Monaco Editor | Trình soạn thảo code trực tuyến |
 
 ---
 
