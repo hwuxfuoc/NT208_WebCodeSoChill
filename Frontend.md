@@ -1,151 +1,327 @@
-### Cấu trúc cho project
+# 💻 Frontend – Web CodeSoChill
 
-```
-frontend/
-├── src/
-│   ├── assets/                 
-│   │   ├── images/             # Ảnh tĩnh (logo, placeholder nhà đất, icons map)
-│   │   │   └── logo.svg
-│   │   ├── icons/              # SVG icons (tìm kiếm, yêu thích, chat, map pin,...)
-│   │   └── fonts/              # Nếu dùng custom font
-│   ├── components/             # Components tái sử dụng toàn app (chung)
-│   │   ├── ui/                 # Atomic nhỏ, reusable
-│   │   │   ├── Button.jsx
-│   │   │   ├── Card.jsx
-│   │   │   ├── Input.jsx
-│   │   │   ├── Modal.jsx
-│   │   │   ├── LoadingSpinner.jsx
-│   │   │   ├── Badge.jsx       # Ví dụ: "Mới", "Hot", "Hết hạn"
-│   │   │   └── Select.jsx      # Dropdown filter
-│   │   ├── layout/             # Layout lớn
-│   │   │   ├── Header.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── Sidebar.jsx     # Nếu có filter sidebar trên mobile
-│   │   │   └── MainLayout.jsx  # Wrapper cho các page (header + footer)
-│   │   └── common/             # Components đặc thù bất động sản, dùng nhiều nơi
-│   │       ├── PropertyCard.jsx     # Card listing (ảnh, giá, địa chỉ,...)
-│   │       ├── PriceTag.jsx         # Format giá + đơn vị (tỷ, triệu)
-│   │       ├── SearchBar.jsx        # Thanh tìm kiếm + autocomplete
-│   │       ├── FilterTags.jsx       # Tags filter (giá, diện tích, loại nhà)
-│   │       └── ContactForm.jsx      # Form liên hệ chủ nhà
-│   ├── pages/                  # Mỗi trang/route chính (colocate components con nếu cần)
-│   │   ├── Home/
-│   │   │   ├── HomePage.jsx
-│   │   │   └── HeroSection.jsx     # Banner + search lớn (nếu riêng)
-│   │   ├── Property/
-│   │   │   ├── PropertyListPage.jsx     # Danh sách mua/thuê + filter + pagination/infinite scroll
-│   │   │   ├── PropertyDetailPage.jsx   # Chi tiết nhà
-│   │   │   ├── PropertyGallery.jsx      # Slide ảnh chi tiết
-│   │   │   ├── PropertyFeatures.jsx     # Đặc điểm (phòng ngủ, WC, nội thất)
-│   │   │   └── MapView.jsx              # Bản đồ chi tiết (Google Maps)
-│   │   ├── Chat/
-│   │   │   ├── ChatPage.jsx             # Danh sách chat rooms
-│   │   │   ├── ChatRoom.jsx             # Phòng chat realtime
-│   │   │   └── MessageBubble.jsx
-│   │   ├── Favorites/
-│   │   │   └── FavoritesPage.jsx        # Danh sách nhà yêu thích
-│   │   ├── AIAdvisor/
-│   │   │   └── AIAdvisorPage.jsx        # Chatbox tư vấn AI
-│   │   ├── Auth/
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── RegisterPage.jsx
-│   │   │   └── ForgotPassword.jsx
-│   │   └── NotFoundPage.jsx             # 404
-│   ├── features/               # (Tùy chọn - chỉ dùng khi tính năng lớn, hiện tại có thể bỏ nếu muốn gọn)
-│   │   ├── auth/               # Nếu tách auth phức tạp (login, register, forgot, profile)
-│   │   ├── property/           # Quản lý property (add/edit nếu có sau)
-│   │   └── chat/               # Realtime chat logic
-│   ├── hooks/                  # Custom hooks (rất quan trọng cho project bạn)
-│   │   ├── useProperties.js         # Fetch/filter listings
-│   │   ├── useProperty.js           # Chi tiết 1 property
-│   │   ├── useAuth.js               # Auth state (login/logout)
-│   │   ├── useChat.js               # Realtime chat (socket.io hoặc firebase)
-│   │   ├── useMap.js                # Google Maps hook
-│   │   ├── useFavorites.js          # Quản lý yêu thích (localStorage + DB sync)
-│   │   └── useAIAdvisor.js          # Call API AI (OpenAI/Grok)
-│   ├── services/               # API calls (axios/fetch)
-│   │   ├── api.js                   # Base axios instance + interceptors
-│   │   ├── propertyService.js       # getProperties, getPropertyById, searchProperties,...
-│   │   ├── authService.js           # login, register, getUser
-│   │   ├── chatService.js           # sendMessage, getMessages
-│   │   └── aiService.js             # call AI tư vấn
-│   ├── utils/                  # Helpers thuần JS
-│   │   ├── format.js                # formatPrice, formatDate, truncateText
-│   │   ├── validators.js            # validateEmail, validatePhone
-│   │   ├── constants.js             # LOAI_NHA = ['chung-cu', 'nha-dat', 'dat-nen',...]
-│   │   └── helpers.js               # debounce, throttle,...
-│   ├── context/                # Context API nếu dùng (thay Redux/Zustand)
-│   │   ├── AuthContext.jsx
-│   │   ├── FilterContext.jsx        # Filter search chung
-│   │   └── ChatContext.jsx
-│		├── App.jsx                 # Root component + Router
-│		├── index.css
-│		├── routes.js               # (Tùy chọn) Define routes nếu dùng React Router
-│		└── main.jsx
-├── index.html
-├── taiwind.config.js
-├── vite.config.js
-├── package-lock.json
-└── package.json
-```
+> Tài liệu này mô tả toàn bộ kiến trúc frontend của dự án **Web CodeSoChill**, bao gồm cấu trúc thư mục, luồng dữ liệu, vai trò của từng thành phần (components, hooks, services) và thứ tự triển khai. Đọc xong tài liệu này, lập trình viên sẽ nắm vững cách tổ chức code và triển khai tính năng mới trên nền tảng.
 
-### Thứ tự code logic
+---
 
-1. **Setup cơ bản & Routing – Nền tảng quan trọng**
-    - Tạo project nếu chưa: `npx create-vite@latest frontend --template react` (Vite nhanh hơn CRA, recommend 2026) hoặc giữ CRA nếu bạn quen.
-    - Cài đặt dependencies cơ bản (chạy trong terminal src/):
-    (Tailwind cho style nhanh, responsive, đẹp hơn batdongsan nhiều).
-    - Config **Tailwind** trong `tailwind.config.js` và `index.css`.
-    - Setup **React Router** trong `App.jsx`:
-        - Import `BrowserRouter`, `Routes`, `Route`.
-        - Wrap app với `<MainLayout />` (header + footer).
-        - Define các route cơ bản: `/` → Home, `/properties` → PropertyList, `/properties/:id` → PropertyDetail, `/chat`, `/favorites`, `/ai-advisor`, `/login`, `/register`,  → NotFound.
-    - Tạo file `routes.js` (nếu muốn tách) hoặc viết trực tiếp trong App.
-    
-    **Mục tiêu**: Chạy app, thấy navigation hoạt động, trang trắng với header/footer.
-    
-2. **Xây dựng Layout & Components chung**
-    - Bắt đầu từ `components/layout/` → `Header.jsx`, `Footer.jsx`, `Navbar.jsx`, `MainLayout.jsx`.
-    - Sau đó `components/ui/` → `Button.jsx`, `Card.jsx`, `Input.jsx`, `LoadingSpinner.jsx`, `Modal.jsx`, `Select.jsx`.
-    - Tiếp `components/common/` → `PropertyCard.jsx` (rất quan trọng, dùng ở home/list/favorites), `PriceTag.jsx`, `SearchBar.jsx`.
-    - Style với Tailwind + responsive (mobile-first).
-    
-    **Mục tiêu**: Có các block reusable đẹp, sẵn sàng dùng ở mọi page.
-    
-3. **Trang Home (Hero + Featured) – Trang đầu tiên thấy "đẹp"** 
-    - `pages/Home/HomePage.jsx` + `HeroSection.jsx`.
-    - Hero: Banner lớn (ảnh từ assets), search bar lớn (dùng `SearchBar.jsx`), slogan "Tìm nhà mơ ước tại Việt Nam".
-    - Section featured listings: 4-6 `PropertyCard` mock data (JSON hardcode trước).
-    - Thêm carousel nếu muốn (cài `swiper`).
-    
-    **Tại sao bắt đầu Home?** Nó là "landing page", giúp bạn visualize site đẹp hơn batdongsan ngay, tạo động lực.
-    
-4. **Trang Property List & Filter** 
-    - `pages/Property/PropertyListPage.jsx`.
-    - Dùng mock data (array objects: {id, title, price, location, type, images, ...}).
-    - Implement filter: Giá, diện tích, loại nhà (chung cư/nhà đất/đất nền), phòng ngủ → dùng state + `useEffect`.
-    - Grid/list view, pagination/infinite scroll (dùng `react-infinite-scroll-component` nếu muốn).
-    - Search & FilterTags.
-    
-    **Mục tiêu**: Trang listings giống batdongsan nhưng đẹp hơn (card hover effect, responsive).
-    
-5. **Trang Property Detail** 
-    - `pages/Property/PropertyDetailPage.jsx` + `PropertyGallery.jsx` + `PropertyFeatures.jsx` + `MapView.jsx`.
-    - Gallery: Dùng Swiper hoặc carousel.
-    - Map: Tích hợp Google Maps (cài `@react-google-maps/api`, cần API key free).
-    - Features: List phòng ngủ, WC, nội thất, mô tả.
-    - ContactForm + PriceTag.
-    
-    **Mục tiêu**: Trang chi tiết chuyên nghiệp, có map interactive.
-    
-6. **Auth & User features** 
-    - `pages/Auth/LoginPage.jsx`, `RegisterPage.jsx`.
-    - Dùng `useAuth.js` hook + Context.
-    - Favorites: Lưu localStorage trước, sau sync DB.
-7. **Chat & AI** 
-    - Chat: [Socket.io](http://socket.io/) hoặc Firebase cho realtime.
-    - AI: Call API Grok/OpenAI từ `aiService.js`.
-8. **Connect backend & data thật**
-    - Thay mock bằng `useProperties.js` + `propertyService.js` → fetch từ server/DB.
-    - Thêm auth JWT.
+## 1. Tổng quan kiến trúc
+
+Frontend của CodeSoChill được xây dựng theo mô hình Single Page Application (SPA), sử dụng **Vite + React + TypeScript**. Dữ liệu được fetch từ Backend API và AI Service, sau đó được quản lý trạng thái bằng Context API và custom hooks.
+
+`	ext
+[Người dùng tương tác]
+        │
+        ▼
+[React Components (pages, modals)]
+        │
+        ├── Sử dụng UI Components (components/ui, common)
+        ├── Tiêu thụ State (context, hooks)
+        │
+        ▼
+[Services / API Calls (axios)]
+        │
+        ▼
+[Backend / AI Service]
+`
+
+**Luồng dữ liệu cơ bản:**
+1. Component gọi custom hook (ví dụ: useProblems()).
+2. Hook sử dụng service (problemService.ts) để fetch dữ liệu qua axios.
+3. Service gọi API từ Backend.
+4. Dữ liệu trả về được lưu vào state cục bộ hoặc Context, UI tự động cập nhật.
+
+---
+
+## 2. Cấu trúc thư mục dự án
+
+`
+├── frontend/
+│   ├── .env.local
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.ts
+│   ├── tsconfig.json
+│   ├── tsconfig.tsbuildinfo
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   ├── routes.tsx
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   │   ├── Background.png
+│   │   │   │   ├── logo.jpg
+│   │   ├── components/
+│   │   │   ├── ModalPortal.tsx
+│   │   │   ├── animations/
+│   │   │   │   ├── PageTransition.tsx
+│   │   │   ├── ChatPanel/
+│   │   │   │   ├── ChatPanel.tsx
+│   │   │   ├── common/
+│   │   │   │   ├── ActivityHeatmap.tsx
+│   │   │   │   ├── ContestCard.tsx
+│   │   │   │   ├── ContestRatingChart.tsx
+│   │   │   │   ├── ...
+│   │   │   ├── layout/
+│   │   │   │   ├── FullscreenLayout.tsx
+│   │   │   │   ├── MainLayout.tsx
+│   │   │   │   ├── MobileHeader.tsx
+│   │   │   │   ├── ...
+│   │   │   ├── ui/
+│   │   │   │   ├── Avatar.tsx
+│   │   │   │   ├── Badge.tsx
+│   │   │   │   ├── Button.tsx
+│   │   │   │   ├── ...
+│   │   ├── context/
+│   │   │   ├── AuthContext.tsx
+│   │   │   ├── ModalContext.tsx
+│   │   │   ├── ThemeContext.tsx
+│   │   ├── hooks/
+│   │   │   ├── useAuth.ts
+│   │   │   ├── useCodeEditor.ts
+│   │   │   ├── useCommunityFeed.ts
+│   │   │   ├── useContests.ts
+│   │   │   ├── useCountdown.ts
+│   │   │   ├── useDailyProblems.ts
+│   │   │   ├── useModal.ts
+│   │   │   ├── useProblemDetail.ts
+│   │   │   ├── useProblems.ts
+│   │   │   ├── useProfile.ts
+│   │   ├── modals/
+│   │   │   ├── MessagesModal/
+│   │   │   │   ├── ChatWindow.tsx
+│   │   │   │   ├── ConversationList.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   ├── NotificationsModal/
+│   │   │   │   ├── index.tsx
+│   │   │   ├── SettingsModal/
+│   │   │   │   ├── AvatarCropModal.tsx
+│   │   │   │   ├── index.tsx
+│   │   ├── pages/
+│   │   │   ├── ForgotPasswordPage.tsx
+│   │   │   ├── LoginPage.tsx
+│   │   │   ├── NotFoundPage.tsx
+│   │   │   ├── RegisterPage.tsx
+│   │   │   ├── AdminProblemsPage/
+│   │   │   │   ├── index.tsx
+│   │   │   ├── AdminUsersPage/
+│   │   │   │   ├── index.tsx
+│   │   │   ├── CommunityPage/
+│   │   │   │   ├── CommentModal.tsx
+│   │   │   │   ├── CommunityHeader.tsx
+│   │   │   │   ├── CreatePostBox.tsx
+│   │   │   │   ├── FullLeaderboardModal.tsx
+│   │   │   │   ├── ImageModal.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── PostFeed.tsx
+│   │   │   │   ├── SeasonalLeaderboard.tsx
+│   │   │   │   ├── TrendingPostModal.tsx
+│   │   │   │   ├── TrendingPulse.tsx
+│   │   │   ├── ContestPage/
+│   │   │   │   ├── ContestArchiveModal.tsx
+│   │   │   │   ├── ContestRankingsModal.tsx
+│   │   │   │   ├── ContestRegisterModal.tsx
+│   │   │   │   ├── CurrentContest.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── RecentContestsGrid.tsx
+│   │   │   │   ├── UpcomingContestsTable.tsx
+│   │   │   │   ├── ViewProblemsModal.tsx
+│   │   │   ├── HomePage/
+│   │   │   │   ├── BannerPromo.tsx
+│   │   │   │   ├── ContestStatisticChart.tsx
+│   │   │   │   ├── DailyChallengeCard.tsx
+│   │   │   │   ├── DailyProblemsChart.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── StatCard.tsx
+│   │   │   │   ├── StatRow.tsx
+│   │   │   ├── ProblemDetailPage/
+│   │   │   │   ├── CodeEditor.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── ProblemDescription.tsx
+│   │   │   ├── ProblemsPage/
+│   │   │   │   ├── CalendarStreak.tsx
+│   │   │   │   ├── DailyRandomChallenge.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── ProblemSearchBar.tsx
+│   │   │   │   ├── ProblemsHeader.tsx
+│   │   │   │   ├── ProblemTable.tsx
+│   │   │   │   ├── TodayChallengePanel.tsx
+│   │   │   │   ├── TopicFilterBar.tsx
+│   │   │   ├── ProfilePage/
+│   │   │   │   ├── ActivityHeatmap.tsx
+│   │   │   │   ├── ContactSocialCard.tsx
+│   │   │   │   ├── ContestRating.tsx
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── ProfileHeader.tsx
+│   │   │   │   ├── RecentBadges.tsx
+│   │   │   │   ├── RecentSubmissions.tsx
+│   │   │   │   ├── SolvedProblems.tsx
+│   │   │   │   ├── UserProfileCard.tsx
+│   │   │   ├── SettingsPage/
+│   │   │   │   ├── AccountPage/
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   ├── AppearancePage/
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   ├── IntegrationsPage/
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   ├── SecurityPage/
+│   │   │   │   │   ├── index.tsx
+│   │   ├── services/
+│   │   │   ├── aiService.ts
+│   │   │   ├── api.ts
+│   │   │   ├── authService.ts
+│   │   │   ├── communityService.ts
+│   │   │   ├── contestService.ts
+│   │   │   ├── messageService.ts
+│   │   │   ├── notificationService.ts
+│   │   │   ├── problemService.ts
+│   │   │   ├── profileService.ts
+│   │   │   ├── settingService.ts
+│   │   │   ├── statService.ts
+│   │   │   ├── submissionService.ts
+│   │   │   ├── uploadService.ts
+│   │   ├── tests/
+│   │   │   ├── authService.test.ts
+│   │   ├── types/
+│   │   │   ├── auth.ts
+│   │   │   ├── community.ts
+│   │   │   ├── contest.ts
+│   │   │   ├── problem.ts
+│   │   │   ├── profile.ts
+│   │   ├── utils/
+│   │   │   ├── constants.ts
+│   │   │   ├── format.ts
+│   │   │   ├── helpers.ts
+│   │   │   ├── mockData.ts
+`
+
+---
+
+## 3. components/ – Các thành phần tái sử dụng
+
+Việc chia nhỏ component giúp dễ bảo trì và tái sử dụng trên toàn hệ thống.
+
+### ui/ – Atomic Components
+Chứa các UI thuần túy, không chứa business logic, nhận dữ liệu qua props.
+- Button.tsx: Nút bấm có các biến thể (primary, secondary, outline, ghost).
+- Badge.tsx: Thẻ tag hiển thị độ khó (Easy, Medium, Hard) hoặc trạng thái.
+- Avatar.tsx: Hiển thị ảnh đại diện người dùng.
+
+### common/ – Shared Components
+Chứa các component phức tạp hơn, mang tính đặc thù của nền tảng CodeSoChill.
+- ContestCard.tsx: Card hiển thị thông tin cuộc thi (thời gian, số lượng tham gia).
+- ActivityHeatmap.tsx: Biểu đồ nhiệt hiển thị tần suất nộp bài (giống GitHub contributions).
+- ContestRatingChart.tsx: Biểu đồ đường thể hiện lịch sử biến động rank của người dùng.
+
+### layout/ – Layout Components
+- MainLayout.tsx: Bọc các trang thông thường, chứa Header và Footer.
+- FullscreenLayout.tsx: Dành riêng cho ProblemDetailPage, ẩn Header/Footer để tối đa không gian cho Code Editor.
+
+---
+
+## 4. pages/ – Các màn hình chính
+
+Mỗi thư mục trong pages/ tương ứng với một route trên thanh địa chỉ.
+
+### ProblemDetailPage/ – Giao diện làm bài
+Trái tim của hệ thống chấm code.
+- ProblemDescription.tsx: Hiển thị đề bài dạng Markdown/HTML, các ví dụ và ràng buộc.
+- CodeEditor.tsx: Tích hợp Monaco Editor. Nhận ngôn ngữ lập trình, highlight syntax và bắt sự kiện gõ phím.
+- **Tương tác**: Có nút Run Code (chạy thử) và Submit Code (chấm chính thức), hiển thị Console Output.
+
+### CommunityPage/ – Diễn đàn thảo luận
+- PostFeed.tsx: Danh sách các bài đăng chia sẻ kinh nghiệm, thuật toán.
+- TrendingPulse.tsx: Các chủ đề đang hot.
+- SeasonalLeaderboard.tsx: Bảng xếp hạng theo mùa giải.
+
+### ProfilePage/ – Hồ sơ cá nhân
+- UserProfileCard.tsx: Thông tin cơ bản, rank, tổng số bài đã giải.
+- RecentSubmissions.tsx: Lịch sử nộp bài gần đây kèm kết quả.
+- ActivityHeatmap.tsx: Tần suất hoạt động.
+
+---
+
+## 5. hooks/ và services/ – Xử lý Logic & API
+
+Frontend không gọi xios trực tiếp trong component mà tách riêng thành Service và Hook.
+
+### services/
+Chứa các file gọi API thuần túy, trả về Promise.
+`	ypescript
+// services/problemService.ts
+import api from './api';
+
+export const getProblems = async (filters) => {
+  const response = await api.get('/api/problems', { params: filters });
+  return response.data;
+};
+`
+
+### hooks/
+Đóng gói Service vào các custom hook để quản lý trạng thái loading, error, data.
+`	ypescript
+// hooks/useProblems.ts
+import { useState, useEffect } from 'react';
+import { getProblems } from '../services/problemService';
+
+export const useProblems = (filters) => {
+  const [problems, setProblems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProblems(filters).then(data => {
+      setProblems(data);
+      setLoading(false);
+    });
+  }, [filters]);
+
+  return { problems, loading };
+};
+`
+
+---
+
+## 6. modals/ và context/ – Quản lý trạng thái toàn cục
+
+### context/
+- AuthContext.tsx: Lưu trữ thông tin người dùng đang đăng nhập và token. Cung cấp hàm login, logout.
+- ThemeContext.tsx: Quản lý giao diện Sáng/Tối.
+- ModalContext.tsx: Điều khiển việc đóng/mở các cửa sổ Pop-up từ bất kỳ đâu.
+
+### modals/
+Các cửa sổ Pop-up (hiển thị đè lên giao diện chính).
+- MessagesModal/: Hộp thoại nhắn tin giữa các người dùng.
+- NotificationsModal/: Danh sách thông báo (nhắc lịch thi, có người reply...).
+- Tích hợp với ModalPortal.tsx để render modal ra ngoài root DOM, tránh lỗi CSS z-index.
+
+---
+
+## 7. Thứ tự code logic và mức độ ưu tiên
+
+Dưới đây là trình tự triển khai tối ưu để đảm bảo không bị nghẽn (block) giữa các tính năng:
+
+1. **Setup & UI Kit (Nền tảng)**
+    - Cấu hình Vite, Tailwind, Router.
+    - Xây dựng các UI Components cơ bản (Button, Input, Avatar).
+    - Setup Layout (MainLayout, MobileHeader).
+
+2. **Auth & API Integration**
+    - Cấu hình services/api.ts với Axios Interceptors (tự động gắn Token).
+    - Triển khai AuthContext và các trang LoginPage, RegisterPage.
+
+3. **Core Features (Bài tập & Chấm code)**
+    - Xây dựng ProblemsPage (danh sách bài tập, bộ lọc).
+    - Xây dựng ProblemDetailPage (Code Editor, hiển thị đề bài).
+    - Kết nối API Submit Code và xử lý kết quả trả về.
+
+4. **Social & Gamification**
+    - Trang ProfilePage và các biểu đồ thống kê (ActivityHeatmap).
+    - Hệ thống cuộc thi ContestPage và Diễn đàn CommunityPage.
+
+5. **AI Service & Tiện ích mở rộng**
+    - Tích hợp ChatPanel gọi iService.ts để làm trợ lý ảo hỗ trợ giải thích code.
+    - Hoàn thiện SettingsPage, NotificationsModal và tính năng nhắn tin MessagesModal.
