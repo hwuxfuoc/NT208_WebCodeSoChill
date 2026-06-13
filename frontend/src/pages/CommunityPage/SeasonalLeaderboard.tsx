@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getLeaderboard } from "../../services/profileService";
 import { useAuth } from "../../hooks/useAuth";
 import FullLeaderboardModal from "./FullLeaderboardModal";
+import UserCardModal, { AuthorInfo } from "../../components/common/UserCardModal";
 
 interface Leader {
   _id: string;
@@ -19,6 +20,7 @@ export default function SeasonalLeaderboard() {
   const [leaders, setLeaders] = useState<Leader[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewAuthor, setViewAuthor] = useState<AuthorInfo | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -79,12 +81,14 @@ export default function SeasonalLeaderboard() {
             <div key={u._id} className={`flex items-center justify-between py-3 ${i < leaders.length - 1 ? "border-b border-gray-50" : ""}`}>
               <div className="flex items-center gap-3">
                 <span className={`w-5 text-center font-bold text-sm ${i <= 2 ? "text-orange-400" : "text-gray-400"}`}>{i + 1}</span>
-                <img src={u.avatarUrl} alt={u.displayname} className="w-9 h-9 rounded-xl object-cover" />
-                <div>
-                  <p className="font-semibold text-[13px] text-gray-800">{u.displayname}</p>
+                <button onClick={() => setViewAuthor(u as unknown as AuthorInfo)} className="shrink-0">
+                  <img src={u.avatarUrl} alt={u.displayname} className="w-9 h-9 rounded-xl object-cover hover:opacity-80 transition-opacity" />
+                </button>
+                <button onClick={() => setViewAuthor(u as unknown as AuthorInfo)} className="text-left">
+                  <p className="font-semibold text-[13px] text-gray-800 hover:text-orange-500 transition-colors">{u.displayname}</p>
                   <p className="text-[10px] text-gray-400">{u.rank || (u.level ? `Lv. ${u.level}` : `@${u.username}`)}</p>
                   {u.rank ? <p className="text-[10px] text-gray-400">@{u.username}</p> : null}
-                </div>
+                </button>
               </div>
               <div className="text-right">
                 <p className="font-bold text-[13px] text-gray-800">{formatPoints(u.experiencePoints)}</p>
@@ -124,6 +128,7 @@ export default function SeasonalLeaderboard() {
       </div>
 
       {showFull && <FullLeaderboardModal onClose={() => setShowFull(false)} />}
+      <UserCardModal author={viewAuthor} currentUser={user} onClose={() => setViewAuthor(null)} />
     </>
   );
 }

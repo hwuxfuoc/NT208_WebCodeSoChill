@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getLeaderboard } from "../../services/profileService";
 import { useAuth } from "../../hooks/useAuth";
 import ModalPortal from "../../components/ModalPortal";
+import UserCardModal, { AuthorInfo } from "../../components/common/UserCardModal";
 
 interface Leader {
   _id: string;
@@ -23,6 +24,7 @@ const MEDAL: Record<number, { label: string; bg: string; color: string }> = {
 export default function FullLeaderboardModal({ onClose }: { onClose: () => void }) {
   const [leaders, setLeaders] = useState<Leader[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewAuthor, setViewAuthor] = useState<AuthorInfo | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -85,10 +87,20 @@ export default function FullLeaderboardModal({ onClose }: { onClose: () => void 
                       </span>
                       {isYou
                         ? <div className="w-8 h-8 rounded-full bg-orange-200 flex-shrink-0 flex items-center justify-center text-[10px] font-black text-orange-600">YOU</div>
-                        : <img src={u.avatarUrl} alt={u.displayname} className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                        : (
+                          <button onClick={() => setViewAuthor(u as unknown as AuthorInfo)} className="shrink-0">
+                            <img src={u.avatarUrl} alt={u.displayname} className="w-8 h-8 rounded-full object-cover flex-shrink-0 hover:opacity-80 transition-opacity" />
+                          </button>
+                        )
                       }
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-sm text-[#1A1D2B] truncate">{u.displayname}</p>
+                        {isYou ? (
+                          <p className="font-bold text-sm text-[#1A1D2B] truncate">{u.displayname}</p>
+                        ) : (
+                          <button onClick={() => setViewAuthor(u as unknown as AuthorInfo)} className="text-left">
+                            <p className="font-bold text-sm text-[#1A1D2B] truncate hover:text-orange-500 transition-colors">{u.displayname}</p>
+                          </button>
+                        )}
                         <p className="text-[10px] text-gray-400">{u.rank || (u.level ? `Lv. ${u.level}` : "Community Member")}</p>
                       </div>
                       <span className="font-black tabular-nums text-sm" style={{ color: isYou ? "var(--main-orange-color)" : "#1A1D2B" }}>
@@ -105,6 +117,7 @@ export default function FullLeaderboardModal({ onClose }: { onClose: () => void 
           </div>
         </div>
       </div>
+      <UserCardModal author={viewAuthor} currentUser={user} onClose={() => setViewAuthor(null)} />
     </ModalPortal>
   );
 }

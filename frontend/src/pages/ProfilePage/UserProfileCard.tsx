@@ -69,6 +69,10 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
           </span>
         </div>
 
+        {displayUser?.bio && (
+          <p className="text-[13px] text-gray-600 mb-3 line-clamp-2 max-w-xl">{displayUser.bio}</p>
+        )}
+
         {/* Level + Progress bar */}
         <div className="flex items-center gap-2 mb-2">
           <span className="text-[11px] font-black text-gray-400 shrink-0 uppercase tracking-wide">
@@ -121,9 +125,15 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
               </div>
               <div className="flex items-center gap-2 bg-[#1e1e2e] rounded-xl p-1.5 border border-[#3e3e5e]">
                 <div className="flex-1 overflow-hidden px-2">
-                  <p className="text-xs text-gray-400 truncate">https://codesochill.dev/profile/{displayUser?.username}</p>
+                  <p className="text-xs text-gray-400 truncate">{`${window.location.origin}/profile/${displayUser?.username}`}</p>
                 </div>
-                <button className="px-4 py-1.5 rounded-lg bg-gray-800 text-white text-[11px] font-bold hover:bg-gray-700 transition-colors shrink-0">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/profile/${displayUser?.username}`);
+                    setShowShare(false);
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-gray-800 text-white text-[11px] font-bold hover:bg-gray-700 transition-colors shrink-0"
+                >
                   Copy
                 </button>
               </div>

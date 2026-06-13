@@ -22,6 +22,30 @@ const SOCIAL_LINKS = [
     color: "#0077b5",
   },
   {
+    label: "Facebook",
+    handle: "Alex Rivera",
+    url: "https://facebook.com",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    ),
+    color: "#1877f2",
+  },
+  {
+    label: "Instagram",
+    handle: "@alexrivera",
+    url: "https://instagram.com",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+      </svg>
+    ),
+    color: "#e1306c",
+  },
+  {
     label: "Twitter / X",
     handle: "@alexcodes",
     url: "https://twitter.com",
@@ -44,40 +68,70 @@ const SOCIAL_LINKS = [
       </svg>
     ),
     color: "var(--main-green-color)",
-  },
+  }
 ];
 
-export default function ContactSocialCard() {
+export default function ContactSocialCard({ user }: { user?: any }) {
+  const socialLinks = user?.socialLinks || {};
+
+  const linksToDisplay = SOCIAL_LINKS.map(link => {
+    let key = link.label.toLowerCase();
+    if (key === 'twitter / x') key = 'twitter';
+    const url = socialLinks[key];
+    return { ...link, url };
+  }).filter(link => link.url && link.url.trim() !== "");
+
   return (
-    <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+    <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 h-full flex flex-col">
       <h3 className="text-[13px] font-black uppercase tracking-wider text-gray-400 mb-4">Connect</h3>
-      <div className="flex flex-col gap-3">
-        {SOCIAL_LINKS.map((link) => (
-          <a
-            key={link.label}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-2xl bg-[#f8fafc] hover:bg-gray-100 transition-colors group"
-          >
-            <span
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-white shadow-sm"
-              style={{ color: link.color }}
-            >
-              {link.icon}
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-black text-gray-400 uppercase tracking-wider">{link.label}</p>
-              <p className="text-sm font-semibold text-[#1A1D2B] truncate">{link.handle}</p>
-            </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 group-hover:text-orange-400 transition-colors flex-shrink-0">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
+      
+      {linksToDisplay.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          {linksToDisplay.map((link) => {
+            let handle = link.url;
+            try {
+              const urlObj = new URL(link.url);
+              handle = urlObj.hostname.replace('www.', '') + urlObj.pathname;
+            } catch (e) { /* fallback */ }
+            
+            return (
+              <a
+                key={link.label}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-2xl bg-[#f8fafc] hover:bg-gray-100 transition-colors group"
+              >
+                <span
+                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-white shadow-sm"
+                  style={{ color: link.color }}
+                >
+                  {link.icon}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[12px] font-black text-gray-400 uppercase tracking-wider">{link.label}</p>
+                  <p className="text-sm font-semibold text-[#1A1D2B] truncate">{handle}</p>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 group-hover:text-orange-400 transition-colors flex-shrink-0">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col items-center justify-center text-center py-6 px-4">
+          <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
             </svg>
-          </a>
-        ))}
-      </div>
+          </div>
+          <p className="text-[13px] font-semibold text-gray-400">No social links provided.</p>
+        </div>
+      )}
     </section>
   );
 }

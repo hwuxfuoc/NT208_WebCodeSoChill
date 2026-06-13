@@ -114,10 +114,12 @@ export default function ProfilePage() {
         <RecentBadges />
       </div>
 
-      <div className="grid gap-6" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
-        <RecentSubmissions submissions={submissions} />
-        <ContactSocialCard />
-      </div>
+      {isOwnProfile && (
+        <div className="grid gap-6" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
+          <RecentSubmissions submissions={submissions} />
+          <ContactSocialCard user={profile} />
+        </div>
+      )}
     </div>
   );
 }
