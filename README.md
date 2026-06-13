@@ -105,7 +105,7 @@ Các collection chính trong database:
 | `users` | Thông tin tài khoản người dùng: tên, email, mật khẩu đã mã hóa, avatar, ngày tạo... |
 | `problems` | Danh sách bài tập: tiêu đề, mô tả, độ khó, chủ đề, giới hạn thời gian & bộ nhớ... |
 | `submissions` | Lịch sử nộp bài: người nộp, bài nộp, code, ngôn ngữ, kết quả, thời gian chấm... |
-| `testcases` | Các bộ dữ liệu input/output dùng để chấm bài, liên kết với từng bài tập. *(👉 [Xem cơ chế Testcase](Testcases.md))* |
+| `testcases` | Các bộ dữ liệu input/output dùng để chấm bài, liên kết với từng bài tập. *(👉 [Xem cơ chế Testcase](document/Testcases.md))* |
 | `contests` | (Tuỳ chọn) Thông tin về các cuộc thi lập trình nếu tính năng contest được triển khai. |
 
 ---
@@ -117,17 +117,21 @@ WebCodeSoChill/
 ├── backend/          # Node.js + Express – toàn bộ logic server, API, xác thực
 ├── frontend/         # React + Vite + TypeScript – giao diện người dùng
 ├── ai-service/       # FastAPI + ChromaDB – Dịch vụ AI/RAG hỗ trợ học tập
+├── document/         # Thư mục chứa các tài liệu chi tiết (Frontend, Backend, Setup...)
 ├── README.md         # File tài liệu chính
-├── Setup.md          # Hướng dẫn cài đặt chi tiết
 └── .env.example      # Mẫu các biến môi trường cần cấu hình
 ```
 
 Chi tiết hơn về từng phần được mô tả trong:
 
-- [`Frontend.md`](Frontend.md) – Cấu trúc thư mục frontend, danh sách component, flow UI/UX.
-- [`Backend.md`](Backend.md) – Danh sách API endpoints, cơ chế Judge system, luồng xác thực.
-- [`Testcases.md`](Testcases.md) – Cơ chế hoạt động của testcase và công cụ lấy dữ liệu từ LeetCode.
-- [`AI-Service.md`](AI-Service.md) – Kiến trúc RAG, cấu hình Vector Database và tích hợp LLM.
+| Tài liệu | Nội dung / Mô tả chi tiết |
+| --- | --- |
+| 💻 [`Frontend.md`](document/Frontend.md) | Cấu trúc thư mục frontend, danh sách component, flow UI/UX. |
+| ⚙️ [`Backend.md`](document/Backend.md) | Danh sách API endpoints, cơ chế Judge system, luồng xác thực. |
+| 🧪 [`Testcases.md`](document/Testcases.md) | Cơ chế hoạt động của testcase và công cụ lấy dữ liệu từ LeetCode. |
+| 🤖 [`AI-Service.md`](document/AI-Service.md) | Kiến trúc RAG, cấu hình Vector Database và tích hợp LLM. |
+| 🔄 [`Workflow.md`](document/Workflow.md) | Kiến trúc CI/CD Pipeline tự động hóa Test và Deploy trên GitHub Actions. |
+| 🚀 [`Deploy.md`](document/Deploy.md) | Hướng dẫn lấy Token và cấu hình triển khai lên Vercel & Render. |
 
 ---
 
@@ -135,7 +139,7 @@ Chi tiết hơn về từng phần được mô tả trong:
 
 Hướng dẫn cài đặt chi tiết từng bước (bao gồm cài đặt Node.js, MongoDB, biến môi trường...) vui lòng xem tại file:
 
-👉 [**Setup.md**](Setup.md)
+👉 [**Setup.md**](document/Setup.md)
 
 Tóm tắt nhanh các bước chính:
 
