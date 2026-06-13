@@ -103,7 +103,7 @@ export default function ProfilePage() {
     <div className="page-stack">
       <ProfileHeader />
 
-      <UserProfileCard user={profile} stats={stats} isOwnProfile={isOwnProfile} />
+      <UserProfileCard user={isOwnProfile ? { ...profile, ...currentUser } : profile} stats={stats} isOwnProfile={isOwnProfile} />
 
       <div className="grid grid-cols-2 gap-6">
         <ActivityHeatmap userId={profile?._id} />

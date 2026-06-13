@@ -31,7 +31,7 @@ export default function SettingsModal() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { closeModal } = useModal();
   const [cropSrc, setCropSrc] = useState<string | null>(null);
@@ -96,6 +96,7 @@ export default function SettingsModal() {
       const file = new File([croppedBlob], "avatar.jpg", { type: "image/jpeg" });
       const res = await settingService.uploadAvatar(file);
       setFormData(prev => ({ ...prev, avatarUrl: res.data.avatarUrl }));
+      updateUser({ avatarUrl: res.data.avatarUrl });
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to upload image");
     } finally {
@@ -113,13 +114,14 @@ export default function SettingsModal() {
     setError(null);
     setSuccess(null);
     try {
-      await settingService.updateAccount({
+      const res = await settingService.updateAccount({
         displayname: formData.displayname,
         bio: formData.bio,
         phone: formData.phone,
         avatarUrl: formData.avatarUrl,
         socialLinks: formData.socialLinks,
       });
+      updateUser(res.data.user);
       setSuccess("Profile updated successfully!");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
