@@ -71,7 +71,7 @@ const SOCIAL_LINKS = [
   }
 ];
 
-export default function ContactSocialCard({ user }: { user?: any }) {
+export default function ContactSocialCard({ user, horizontal = false }: { user?: any, horizontal?: boolean }) {
   const socialLinks = user?.socialLinks || {};
 
   const linksToDisplay = SOCIAL_LINKS.map(link => {
@@ -86,7 +86,7 @@ export default function ContactSocialCard({ user }: { user?: any }) {
       <h3 className="text-[13px] font-black uppercase tracking-wider text-gray-400 mb-4">Connect</h3>
       
       {linksToDisplay.length > 0 ? (
-        <div className="flex flex-col gap-3">
+        <div className={horizontal ? "grid grid-cols-2 md:grid-cols-3 gap-4" : "flex flex-col gap-3"}>
           {linksToDisplay.map((link) => {
             let handle = link.url;
             try {
