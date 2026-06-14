@@ -26,7 +26,6 @@ app.add_middleware(
 )
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
-
 MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b")
 
 
@@ -127,7 +126,7 @@ async def chat(req: ChatRequest):
                 "repeat_penalty": 1.3,
                 "repeat_last_n": 64,
             },
-        }, timeout=120)
+        }, headers={"ngrok-skip-browser-warning": "true"}, timeout=120)
         response.raise_for_status()
         result = response.json()
         return {"answer": result.get("response", "")}
@@ -172,7 +171,7 @@ async def chat_stream(req: ChatRequest):
                     "repeat_penalty": 1.3,
                     "repeat_last_n": 64,
                 },
-            }, stream=True, timeout=120) as r:
+            }, headers={"ngrok-skip-browser-warning": "true"}, stream=True, timeout=120) as r:
                 for line in r.iter_lines():
                     if line:
                         yield line
