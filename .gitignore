@@ -5,8 +5,10 @@ frontend/node_modules/
 # env
 backend/.env
 backend/.env.*
+!backend/.env.example
 ai-service/.env
 ai-service/.env.*
+!ai-service/.env.example
 frontend/.env.production
 frontend/.env.local
 frontend/.env
