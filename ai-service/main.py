@@ -147,7 +147,7 @@ async def chat(req: ChatRequest):
 async def chat_stream(req: ChatRequest):
     if is_solution_confirmed(req.last_submission_status):
         async def solved_stream():
-            yield f"data: {json.dumps({'token': solved_response()})}\n\n"
+            yield f"data: {json.dumps({'chunk': solved_response()})}\n\n"
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(solved_stream(), media_type="text/event-stream")
@@ -172,6 +172,7 @@ async def chat_stream(req: ChatRequest):
                     "repeat_last_n": 64,
                 },
             }, headers={"ngrok-skip-browser-warning": "true"}, stream=True, timeout=120) as r:
+                r.raise_for_status()
                 for line in r.iter_lines():
                     if line:
                         yield line
@@ -196,9 +197,13 @@ async def chat_stream(req: ChatRequest):
                         chunk = json.dumps({"response": w + " "}).encode('utf-8')
                         asyncio.run_coroutine_threadsafe(queue.put(chunk), loop)
                         time.sleep(0.05)
+                except requests.exceptions.HTTPError as e:
+                    asyncio.run_coroutine_threadsafe(
+                        queue.put(f"__error__:Lỗi kết nối tới AI (HTTP {e.response.status_code}). Ngrok tunnel hoặc proxy có thể đang gặp sự cố. Vui lòng kiểm tra lại."), loop
+                    )
                 except Exception as e:
                     asyncio.run_coroutine_threadsafe(
-                        queue.put(f"__error__:{e}"), loop
+                        queue.put(f"__error__:Lỗi không xác định: {e}"), loop
                     )
                 finally:
                     asyncio.run_coroutine_threadsafe(queue.put(None), loop)
@@ -213,12 +218,17 @@ async def chat_stream(req: ChatRequest):
                 if isinstance(line, str) and line.startswith("__error__:"):
                     yield f"data: {json.dumps({'error': line[len('__error__:'):]})}\n\n"
                     break
-                chunk = json.loads(line)
-                token = chunk.get("response", "")
-                if token:
-                    yield f"data: {json.dumps({'token': token})}\n\n"
-                if chunk.get("done"):
-                    yield "data: [DONE]\n\n"
+                
+                try:
+                    chunk = json.loads(line)
+                    token = chunk.get("response", "")
+                    if token:
+                        yield f"data: {json.dumps({'chunk': token})}\n\n"
+                    if chunk.get("done"):
+                        yield "data: [DONE]\n\n"
+                        break
+                except json.decoder.JSONDecodeError:
+                    yield f"data: {json.dumps({'error': 'Lỗi phản hồi từ AI server: Không phải định dạng JSON (Có thể ngrok báo lỗi).'})}\n\n"
                     break
         except Exception as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
