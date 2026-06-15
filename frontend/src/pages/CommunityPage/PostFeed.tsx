@@ -241,9 +241,14 @@ export default function PostFeed({ searchQuery = "" }: { searchQuery?: string })
 
       {commentPost && (
         <CommentModal 
-          post={commentPost} 
+          post={posts.find(p => p._id === commentPost._id) || commentPost} 
           isLiked={likedPosts.has(commentPost._id)}
           onToggleLike={() => toggleLike(commentPost._id)}
+          onCommentAdded={() => {
+            setPosts(prev => prev.map(p => 
+              p._id === commentPost._id ? { ...p, commentCount: p.commentCount + 1 } : p
+            ));
+          }}
           onClose={() => setCommentPost(null)} 
         />
       )}
