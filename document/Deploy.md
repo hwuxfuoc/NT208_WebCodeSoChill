@@ -1,26 +1,26 @@
-# Hướng Dẫn Chi Tiết: Cấu Hình GitHub Actions Để Deploy Lên Vercel & Render (PaaS)
+# Hướng Dẫn Cấu Hình Deploy Lên Vercel & Render
 
-Mặc dù Vercel và Render hỗ trợ tự động deploy trực tiếp từ GitHub, việc cấu hình qua **GitHub Actions** giúp bạn kiểm soát hoàn toàn quy trình CI/CD:
+Mặc dù Vercel và Render hỗ trợ tự động deploy trực tiếp từ GitHub, việc cấu hình qua **GitHub Actions** giúp người dùng kiểm soát hoàn toàn quy trình CI/CD:
 *   Đảm bảo toàn bộ test case phải pass trước khi deploy.
 *   Kiểm soát thứ tự deploy (ví dụ: Deploy Backend thành công mới bắt đầu deploy Frontend).
 *   Chỉ sử dụng một nguồn quản lý CI/CD duy nhất (GitHub Actions).
 
-Dưới đây là các bước thao tác chi tiết và file `.github/workflows/deploy-paas.yml`.
+Dưới đây là các bước thao tác chi tiết và file `.github/workflows/ci-cd.yml`.
 
 ---
 
 ## 🔑 BƯỚC 1: Lấy Thông Tin Cần Thiết Từ Vercel & Render
 
 ### 1. Phía Vercel (Cho Frontend)
-Để GitHub Actions thay mặt bạn đẩy code lên Vercel, bạn cần 3 thông tin:
+Để GitHub Actions thay mặt người dùng đẩy code lên Vercel, cần 3 thông tin:
 
 *   **Vercel Token (Mã bảo mật cá nhân):**
     1. Truy cập [Vercel Account Tokens](https://vercel.com/account/tokens).
     2. Bấm **Create**, đặt tên là `github-actions-token`, chọn scope thích hợp rồi copy Token này.
 *   **Vercel Org ID & Project ID:**
-    1. Cài đặt Vercel CLI trên máy của bạn (nếu chưa có): `npm install -g vercel`.
+    1. Cài đặt Vercel CLI trên máy  (nếu chưa có): `npm install -g vercel`.
     2. Mở Terminal tại thư mục `frontend` của dự án và gõ: `vercel link`.
-    3. Đăng nhập và liên kết với project Vercel của bạn.
+    3. Đăng nhập và liên kết với project Vercel .
     4. Sau khi liên kết thành công, một thư mục ẩn `.vercel` sẽ được tạo ra chứa file `project.json`. Mở file đó ra để lấy `orgId` và `projectId`.
 
 ### 2. Phía Render (Cho Backend & AI Service)
@@ -35,9 +35,9 @@ Render cung cấp một giải pháp cực kỳ đơn giản gọi là **Deploy 
 
 ## 🔒 BƯỚC 2: Cấu Hình Secrets Trên GitHub
 
-Để bảo mật thông tin, bạn tuyệt đối không được viết trực tiếp Token hay URL vào code. Hãy lưu chúng vào GitHub Secrets:
+Để bảo mật thông tin, người dùng tuyệt đối không được viết trực tiếp Token hay URL vào code. Hãy lưu chúng vào GitHub Secrets:
 
-1. Truy cập vào Repository của bạn trên GitHub.
+1. Truy cập vào Repository  trên GitHub.
 2. Chọn **Settings** -> **Secrets and variables** -> **Actions** -> Chọn **New repository secret**.
 3. Thêm lần lượt 5 Secret sau:
    *   `VERCEL_TOKEN`: Dán Token lấy từ Vercel.
@@ -50,7 +50,7 @@ Render cung cấp một giải pháp cực kỳ đơn giản gọi là **Deploy 
 
 ## 📝 BƯỚC 3: Tạo File Cấu Hình GitHub Actions `.yml`
 
-Tạo file `.github/workflows/deploy-paas.yml` ở root dự án để định nghĩa quy trình tự động hóa. 
+Tạo file `.github/workflows/ci-cd.yml` ở root dự án để định nghĩa quy trình tự động hóa. 
 
 Quy trình hoạt động:
 1. Khi push code lên nhánh `main`, Actions sẽ kích hoạt.
@@ -132,20 +132,20 @@ jobs:
 
 ## 🚀 BƯỚC 4: Tắt Tính Năng Auto-Deploy Mặc Định (Quan trọng)
 
-Để tránh việc cả Vercel/Render lẫn GitHub Actions cùng tranh nhau build khi bạn push code (gây lãng phí tài nguyên và khó quản lý lỗi):
+Để tránh việc cả Vercel/Render lẫn GitHub Actions cùng tranh nhau build khi người dùng push code (gây lãng phí tài nguyên và khó quản lý lỗi):
 
 1. **Trên Vercel:** 
    *   Vào Vercel Project -> **Settings** -> **Git**.
    *   Tìm mục **Ignored Build Step**.
-   *   Chọn lệnh custom hoặc tắt tính năng tự động build khi có commit mới từ nhánh chính (Bạn có thể điền lệnh `exit 0` để Vercel bỏ qua việc tự động build từ Git).
+   *   Chọn lệnh custom hoặc tắt tính năng tự động build khi có commit mới từ nhánh chính (có thể điền lệnh `exit 0` để Vercel bỏ qua việc tự động build từ Git).
 2. **Trên Render:**
-   *   Vào Dashboard Render -> Chọn Web Service của bạn -> **Settings**.
+   *   Vào Dashboard Render -> Chọn Web Service  -> **Settings**.
    *   Tìm mục **Auto-Deploy** -> Chuyển từ **Yes** thành **No**.
 
 ---
 
 ## 📈 Cách Theo Dõi Trạng Thái
-Mỗi khi bạn push code mới lên GitHub:
-1. Vào tab **Actions** trên GitHub repository của bạn.
-2. Bạn sẽ thấy một workflow đang chạy. Click vào đó để xem logs chi tiết từng bước.
+Mỗi khi người dùng push code mới lên GitHub:
+1. Vào tab **Actions** trên GitHub repository .
+2. Người dùng sẽ thấy một workflow đang chạy. Click vào đó để xem logs chi tiết từng bước.
 3. Nếu màu xanh ✅ hiện lên, nghĩa là mọi dịch vụ đã được kích hoạt deploy thành công!

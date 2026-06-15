@@ -9,17 +9,17 @@ Lấy cảm hứng từ các nền tảng uy tín như **LeetCode**, **Codeforce
 
 ## ✨ Tính năng chính
 
-### 🔐 Xác thực người dùng
-
-Hệ thống đăng ký và đăng nhập tài khoản được bảo mật bằng JWT (JSON Web Token) kết hợp mã hóa mật khẩu với bcryptjs. Người dùng có thể tạo tài khoản cá nhân, đăng nhập an toàn và duy trì phiên làm việc liên tục mà không lo lộ thông tin.
-
 ### 📚 Thư viện bài tập phong phú
 
 Bài tập được phân loại rõ ràng theo từng chủ đề như **Lập trình cơ bản**, **Thuật toán**, **Cấu trúc dữ liệu**, **OOP**, và nhiều chủ đề khác. Cách tổ chức này giúp người học dễ dàng lựa chọn bài tập phù hợp với trình độ hiện tại, đồng thời xây dựng lộ trình học tập có hệ thống từ cơ bản đến nâng cao.
 
+### 🖊️ Code Editor trực tuyến
+
+Tích hợp **Ace Editor** hoặc **Monaco Editor** (cùng engine với VS Code) với tính năng **syntax highlighting** theo ngôn ngữ lập trình, giúp người dùng viết code thoải mái ngay trên trình duyệt mà không cần cài đặt bất kỳ phần mềm nào.
+
 ### ⚡ Nộp bài & Chấm tự động thời gian thực
 
-Người dùng viết code trực tiếp trên nền tảng và nhấn Submit để nộp bài. Hệ thống Judge sẽ tự động biên dịch, chạy code qua các testcase được định sẵn và trả về kết quả ngay lập tức – không cần chờ đợi hay thao tác thủ công nào.
+Người dùng viết code trực tiếp trên nền tảng và nhấn Submit để nộp bài. Hệ thống chấm bài tự động sẽ sử dụng và đánh giá code dựa trên các testcase được lấy trực tiếp từ **LeetCode**, sau đó trả về kết quả ngay lập tức – không cần chờ đợi hay thao tác thủ công nào.
 
 ### 📊 Kết quả chấm chi tiết
 
@@ -31,21 +31,41 @@ Sau mỗi lần nộp, người dùng nhận được phản hồi cụ thể v�
 - **Runtime Error (RE)** – Code bị lỗi trong lúc chạy (ví dụ: tràn bộ nhớ, chia cho 0).
 - Và nhiều trạng thái khác giúp người dùng hiểu chính xác vấn đề cần khắc phục.
 
-### 🖊️ Code Editor trực tuyến
-
-Tích hợp **Ace Editor** hoặc **Monaco Editor** (cùng engine với VS Code) với tính năng **syntax highlighting** theo ngôn ngữ lập trình, giúp người dùng viết code thoải mái ngay trên trình duyệt mà không cần cài đặt bất kỳ phần mềm nào.
-
 ### 🕓 Lịch sử nộp bài & Phân tích kết quả
 
 Toàn bộ lịch sử các lần nộp bài được lưu lại, cho phép người dùng xem lại từng submission, so sánh các lần thử, và phân tích sự tiến bộ của bản thân theo thời gian.
 
+### 🤖 Trợ lý ảo AI (AI Assistant)
+
+Tích hợp AI (RAG với ChromaDB và Ollama) để giải thích code, phân tích lỗi sai, gợi ý thuật toán và hỗ trợ người học ngay trong lúc giải bài như một gia sư thực thụ.
+
+### ⚔️ Cuộc thi lập trình (Contests)
+
+Tổ chức các cuộc thi lập trình với bảng xếp hạng riêng biệt theo thời gian thực. Hỗ trợ tính năng Lưu trữ đề thi (Contest Archive) để người dùng có thể làm lại các bài thi cũ.
+
 ### 🏆 Bảng xếp hạng (Leaderboard)
 
-Hệ thống xếp hạng công khai giúp người dùng theo dõi vị trí của mình so với cộng đồng, từ đó tạo động lực học tập và cạnh tranh lành mạnh.
+Hệ thống xếp hạng công khai giúp người dùng theo dõi vị trí cá nhân so với cộng đồng, từ đó tạo động lực học tập và cạnh tranh lành mạnh.
+
+### 👥 Cộng đồng & Nhắn tin (Community & Chat)
+
+Không gian kết nối người dùng, thảo luận, chia sẻ kiến thức. Hỗ trợ hệ thống nhắn tin trực tiếp (Real-time Messaging) giúp các thành viên dễ dàng trao đổi bài vở.
 
 ### 👤 Quản lý Profile cá nhân
 
 Mỗi người dùng có trang cá nhân riêng, hiển thị thông tin tài khoản, danh sách bài đã giải, tỷ lệ thành công và các thành tích đạt được – giúp theo dõi tiến trình học tập một cách trực quan.
+
+### 🔐 Xác thực người dùng
+
+Hệ thống đăng ký và đăng nhập tài khoản được bảo mật bằng JWT (JSON Web Token) kết hợp mã hóa mật khẩu với bcryptjs. Người dùng có thể tạo tài khoản cá nhân, đăng nhập an toàn và duy trì phiên làm việc liên tục mà không lo lộ thông tin.
+
+### 📧 Khôi phục mật khẩu qua Email
+
+Hệ thống tự động gửi mã/link xác thực qua Email an toàn, giúp người dùng dễ dàng lấy lại quyền truy cập khi quên mật khẩu.
+
+### 👑 Quản trị hệ thống (Admin Dashboard)
+
+Giao diện quản lý dành riêng cho Admin để thêm/sửa/xóa bài tập, quản lý người dùng, cài đặt testcase và giám sát toàn bộ hoạt động của nền tảng.
 
 ### 🎨 Giao diện hiện đại, Responsive
 
@@ -64,12 +84,11 @@ Chạy ở port local: `http://localhost:5173`
 
 | Công nghệ | Mục đích sử dụng |
 | --- | --- |
-| **React.js + Vite** | Framework chính để xây dựng giao diện người dùng theo dạng component, Vite giúp quá trình phát triển nhanh hơn đáng kể so với CRA truyền thống. |
-| **HTML5 + CSS3** | Xây dựng cấu trúc trang và viết style cơ bản, làm nền tảng cho toàn bộ giao diện. |
-| **Ant Design** | Thư viện UI component chuyên nghiệp, cung cấp sẵn các thành phần như Button, Table, Form, Modal,... giúp đẩy nhanh tốc độ phát triển UI. |
-| **Bootstrap + CSS thuần** | Hỗ trợ styling linh hoạt, đặc biệt cho các layout responsive và các tinh chỉnh giao diện tùy biến. |
-| **Ace Editor / Monaco Editor** | Trình soạn thảo code trực tuyến với syntax highlighting, line numbering và nhiều tính năng IDE thu gọn. |
-| **Axios** | Thư viện HTTP client dùng để gọi các API từ backend một cách gọn gàng, hỗ trợ xử lý lỗi và interceptor. |
+| **React.js + Vite + TypeScript** | Framework chính để xây dựng giao diện người dùng, Vite giúp phát triển nhanh, TypeScript đảm bảo an toàn kiểu dữ liệu. |
+| **TailwindCSS** | Utility-first CSS framework giúp xây dựng UI nhanh chóng, linh hoạt và dễ dàng tùy biến. |
+| **Framer Motion** | Thư viện animation mạnh mẽ dành cho React, tạo các hiệu ứng chuyển động mượt mà cho UI. |
+| **Monaco Editor** | Trình soạn thảo code trực tuyến với syntax highlighting, line numbering và nhiều tính năng IDE thu gọn (cùng engine với VS Code). |
+| **React Query + Axios** | Quản lý state của server, caching dữ liệu và gọi API từ backend một cách tối ưu. |
 | **React Router DOM** | Quản lý điều hướng (routing) giữa các trang trong ứng dụng Single Page Application (SPA). |
 
 ### ⚙️ Backend
@@ -82,7 +101,18 @@ Chạy ở port local: `http://localhost:5000`
 | **Mongoose** | ODM (Object Document Mapper) giúp định nghĩa schema và tương tác với MongoDB một cách có cấu trúc. |
 | **JWT (JSON Web Token)** | Xác thực người dùng sau khi đăng nhập, đảm bảo chỉ những request hợp lệ mới được truy cập tài nguyên bảo mật. |
 | **bcryptjs** | Mã hóa mật khẩu người dùng trước khi lưu vào database, bảo vệ dữ liệu ngay cả khi hệ thống bị tấn công. |
-| **Judge Engine** | Hệ thống chấm bài tự động chạy code người dùng trong môi trường sandbox an toàn, tránh ảnh hưởng đến hệ thống chính. |
+| **Judge Engine (LeetCode Testcases)** | Hệ thống chấm bài tự động thực hiện đánh giá code người dùng thông qua việc chạy qua các testcase chuẩn được lấy từ LeetCode, thay vì tự host môi trường sandbox cục bộ. |
+
+### 🤖 AI Service
+
+Chạy ở port local: `http://localhost:8000`
+
+| Công nghệ | Mục đích sử dụng |
+| --- | --- |
+| **FastAPI + Uvicorn** | Framework Python hiện đại, hiệu năng cao để xây dựng RESTful API cho dịch vụ AI. |
+| **ChromaDB** | Vector Database dùng để lưu trữ và truy vấn embeddings cho hệ thống RAG (Retrieval-Augmented Generation). |
+| **Sentence Transformers** | Mô hình AI dùng để chuyển đổi văn bản thành vector embeddings, phục vụ cho tìm kiếm ngữ nghĩa. |
+| **Ollama** | Khởi chạy và giao tiếp với các mô hình ngôn ngữ lớn (LLM) cục bộ để sinh câu trả lời tự động. |
 
 ### 🗄 Database
 
@@ -95,7 +125,7 @@ Các collection chính trong database:
 | `users` | Thông tin tài khoản người dùng: tên, email, mật khẩu đã mã hóa, avatar, ngày tạo... |
 | `problems` | Danh sách bài tập: tiêu đề, mô tả, độ khó, chủ đề, giới hạn thời gian & bộ nhớ... |
 | `submissions` | Lịch sử nộp bài: người nộp, bài nộp, code, ngôn ngữ, kết quả, thời gian chấm... |
-| `testcases` | Các bộ dữ liệu input/output dùng để chấm bài, liên kết với từng bài tập. |
+| `testcases` | Các bộ dữ liệu input/output dùng để chấm bài, liên kết với từng bài tập. *(👉 [Xem cơ chế Testcase](document/Testcases.md))* |
 | `contests` | (Tuỳ chọn) Thông tin về các cuộc thi lập trình nếu tính năng contest được triển khai. |
 
 ---
@@ -105,25 +135,82 @@ Các collection chính trong database:
 ```bash
 WebCodeSoChill/
 ├── backend/          # Node.js + Express – toàn bộ logic server, API, xác thực
-├── frontend/         # React + Vite – giao diện người dùng
-├── judge/            # (Tuỳ chọn) Thư mục chứa sandbox code execution engine
-├── README.md         # File bạn đang đọc
-├── Setup.md          # Hướng dẫn cài đặt chi tiết
-└── .env.example      # Mẫu các biến môi trường cần cấu hình
+│   └── .env.example  # Mẫu biến môi trường backend
+├── frontend/         # React + Vite + TypeScript – giao diện người dùng
+│   └── .env.example  # Mẫu biến môi trường frontend
+├── ai-service/       # FastAPI + ChromaDB – Dịch vụ AI/RAG hỗ trợ học tập
+│   └── .env.example  # Mẫu biến môi trường AI
+├── document/         # Thư mục chứa các tài liệu chi tiết (Frontend, Backend, Setup...)
+└── README.md         # File tài liệu chính
 ```
 
 Chi tiết hơn về từng phần được mô tả trong:
 
-- [`Frontend.md`](Frontend.md) – Cấu trúc thư mục frontend, danh sách component, flow UI/UX.
-- [`Backend.md`](Backend.md) – Danh sách API endpoints, cơ chế Judge system, luồng xác thực.
+| Tài liệu | Nội dung / Mô tả chi tiết |
+| --- | --- |
+| 💻 [`Frontend.md`](document/Frontend.md) | Cấu trúc thư mục frontend, danh sách component, flow UI/UX. |
+| ⚙️ [`Backend.md`](document/Backend.md) | Danh sách API endpoints, cơ chế Judge system, luồng xác thực. |
+| 🧪 [`Testcases.md`](document/Testcases.md) | Cơ chế hoạt động của testcase và công cụ lấy dữ liệu từ LeetCode. |
+| 🤖 [`AI-Service.md`](document/AI-Service.md) | Kiến trúc RAG, cấu hình Vector Database và tích hợp LLM. |
+| 🔄 [`Workflow.md`](document/Workflow.md) | Kiến trúc CI/CD Pipeline tự động hóa Test và Deploy trên GitHub Actions. |
+| 🚀 [`Deploy.md`](document/Deploy.md) | Hướng dẫn lấy Token và cấu hình triển khai lên Vercel & Render. |
 
 ---
 
 ## 🚀 Hướng dẫn cài đặt & Chạy local
 
-Hướng dẫn cài đặt chi tiết từng bước (bao gồm cài đặt Node.js, MongoDB, biến môi trường...) vui lòng xem tại file:
+Bạn có thể chạy dự án bằng **Docker** (nhanh chóng, khuyên dùng) hoặc **Cài đặt thủ công** (dành cho phát triển).
 
-👉 [**Setup.md**](Setup.md)
+### 🐳 Cách 1: Chạy dự án bằng Docker (Cách nhanh nhất)
+
+Dự án CodeSoChill được cấu hình sẵn Docker, không yêu cầu cài đặt phức tạp bất kỳ môi trường nào (Node.js, Python, MongoDB). Chỉ cần chạy một lệnh duy nhất.
+
+**Yêu cầu hệ thống:** Đã cài đặt **Docker Desktop** (hoặc Docker Engine + Docker Compose). Không cần cài đặt thêm Node.js hay Python.
+
+**Các bước thực hiện:**
+
+1. Cấu hình biến môi trường:
+   - **MacOS / Linux / Git Bash:**
+     ```bash
+     cp backend/.env.example backend/.env
+     cp ai-service/.env.example ai-service/.env
+     cp frontend/.env.example frontend/.env
+     ```
+   - **Windows (Command Prompt):**
+     ```cmd
+     copy backend\.env.example backend\.env
+     copy ai-service\.env.example ai-service\.env
+     copy frontend\.env.example frontend\.env
+     ```
+   *(Lưu ý: Sau khi copy, vui lòng điền các thông tin bảo mật (Database URI, API Keys) vào file `.env`. Giám khảo/Doanh nghiệp đánh giá vui lòng liên hệ trực tiếp nhóm hoặc lấy từ file đính kèm kèm theo lúc nộp bài).*
+
+2. Mở Terminal (hoặc Command Prompt / PowerShell) tại thư mục gốc của dự án (nơi chứa file `docker-compose.yml`).
+3. Chạy lệnh sau:
+   ```bash
+   docker-compose up --build
+   ```
+   *(Lưu ý: Lần chạy đầu tiên sẽ mất vài phút để Docker tải và cài đặt các thư viện cần thiết. Những lần sau sẽ khởi động ngay lập tức.)*
+
+3. Truy cập ứng dụng:
+   - **Frontend (Giao diện chính)**: [http://localhost:5173](http://localhost:5173)
+   - **Backend API**: [http://localhost:5000](http://localhost:5000)
+   - **AI Service API**: [http://localhost:8000](http://localhost:8000)
+
+**Chú thích về dữ liệu và AI:**
+- **Database**: Hệ thống mặc định kết nối lên MongoDB Atlas (Cloud) bằng cấu hình đã được cung cấp sẵn trong mã nguồn. Nhờ vậy, hệ thống có thể được truy cập ngay với đầy đủ dữ liệu (tài khoản test, câu hỏi, testcase) mà không cần seed lại dữ liệu.
+- **Trợ lý ảo AI (Ollama)**: Để tiết kiệm dung lượng và thời gian build Docker (tránh tải model 5GB), tính năng AI sẽ gọi qua một Ollama instance chạy trên máy tính (host).
+  - *Nếu muốn test tính năng AI*, vui lòng tải và chạy Ollama trên máy: `ollama run qwen2.5-coder:7b` (hoặc `llama3`).
+  - *Nếu không chạy Ollama*, mọi tính năng cốt lõi khác của hệ thống (nộp bài, chấm tự động, bảng xếp hạng) vẫn **hoạt động hoàn hảo 100%**.
+
+**Cách dừng dự án:**
+Để tắt toàn bộ hệ thống, nhấn `Ctrl + C` tại Terminal đang chạy lệnh `docker-compose up`, sau đó gõ thêm:
+```bash
+docker-compose down
+```
+
+### 💻 Cách 2: Cài đặt thủ công (Local Development)
+
+Hướng dẫn cài đặt chi tiết từng bước (bao gồm cài đặt Node.js, MongoDB, biến môi trường...) vui lòng xem tại file: 👉 [**Setup.md**](document/Setup.md)
 
 Tóm tắt nhanh các bước chính:
 
@@ -151,25 +238,29 @@ npm run dev
 # 6. Chạy frontend (port 5173)
 cd frontend
 npm run dev
+
+# 7. Cài đặt và chạy AI Service (port 8000)
+cd ../ai-service
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
 Sau khi khởi động, truy cập ứng dụng tại: [http://localhost:5173](http://localhost:5173/)
 
 ---
 
-## ☁️ Deployment (Gợi ý)
+## ☁️ Deployment
 
-Dưới đây là các nền tảng được khuyến nghị để deploy từng thành phần của ứng dụng:
+Dự án hiện đã được deploy và đang chạy thực tế trên các nền tảng sau:
 
-| Thành phần | Nền tảng gợi ý | Lý do |
-| --- | --- | --- |
-| **Frontend** | [Vercel](https://vercel.com/) / [Netlify](https://netlify.com/) | Hỗ trợ React/Vite tốt, deploy tự động từ GitHub, có free tier. |
-| **Backend** | [Render.com](https://render.com/) / [Railway](https://railway.app/) / [Fly.io](https://fly.io/) | Hỗ trợ Node.js, dễ cấu hình biến môi trường, có free tier. |
-| **Database** | [MongoDB Atlas](https://www.mongodb.com/atlas) | Dịch vụ cloud MongoDB chính thức, free tier đủ dùng cho dự án nhỏ. |
-| **Judge Service** | Docker sandbox (tách riêng service) | Cần môi trường cô lập để chạy code người dùng an toàn, tránh rủi ro bảo mật. |
-
-> ⚠️ **Lưu ý bảo mật**: Judge Engine (hệ thống chạy code người dùng) nên được tách thành một service riêng biệt và chạy trong môi trường sandbox (Docker container) để đảm bảo code độc hại không ảnh hưởng đến server chính.
-> 
+| Thành phần | Nền tảng | Đường dẫn (URL) | Dashboard Quản lý |
+| --- | --- | --- | --- |
+| **Website Chính** | Domain Tùy chỉnh | [https://www.codesochill.io.vn](https://www.codesochill.io.vn) | - |
+| **Frontend** | Vercel | [Vercel App URL](https://nt-208-web-code-so-chill-frontend-eenx-a9ywf1jqb.vercel.app) | [Vercel Project](https://vercel.com/hwuxfuocs-projects/nt-208-web-code-so-chill-frontend-eenx) |
+| **Backend API** | Render | [Render Web Service](https://nt208-webcodesochill-tpqh.onrender.com) | [Render Dashboard](https://dashboard.render.com/web/srv-d877719s16ns738qc280) |
+| **AI Service** | Render | [Render AI Service](https://nt208-webcodesochill-ai.onrender.com) | [Render Dashboard](https://dashboard.render.com/web/srv-d877b0h9rddc7386e6hg) |
+| **Database** | MongoDB Atlas | Cluster của dự án | [MongoDB Dashboard](https://cloud.mongodb.com/v2/69d9a481ccc1bd04de725e02#/overview) |
+| **Media Storage** | Cloudinary | Lưu trữ Avatar User | [Cloudinary Dashboard](https://console.cloudinary.com/app/c-292e5a00e212a4aeeba56df65e8ccb/home/dashboard) |
 
 ---
 
@@ -180,7 +271,7 @@ Dưới đây là các nền tảng được khuyến nghị để deploy từng
 | ER Diagram (thiết kế database) | [Xem trên Eraser.io](https://app.eraser.io/workspace/MibBxluYc33hORCIUomJ?origin=share) |
 | Frontend Local | [http://localhost:5173](http://localhost:5173/) |
 | Backend API Local | [http://localhost:5000](http://localhost:5000/) |
-| Live Demo | *(Sẽ cập nhật sau khi deploy)* |
+| Live Demo | [https://www.codesochill.io.vn](https://www.codesochill.io.vn) |
 
 ---
 
@@ -188,13 +279,13 @@ Dưới đây là các nền tảng được khuyến nghị để deploy từng
 
 | Công nghệ | Vai trò |
 | --- | --- |
-| React.js + Vite | Frontend framework |
-| Ant Design | UI Component Library |
-| Bootstrap | Responsive & Utility CSS |
+| React.js + Vite + TypeScript | Frontend framework |
+| TailwindCSS + Framer Motion | UI & Animation |
 | Node.js + Express | Backend API |
+| FastAPI + ChromaDB | AI / RAG Service |
 | MongoDB + Mongoose | Database |
 | JWT + bcryptjs | Xác thực & Bảo mật |
-| Ace / Monaco Editor | Trình soạn thảo code trực tuyến |
+| Monaco Editor | Trình soạn thảo code trực tuyến |
 
 ---
 

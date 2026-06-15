@@ -23,6 +23,7 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
 
   const isOwnProfile = !username || username === currentUser?.username;
+  const hasFullAccess = isOwnProfile || currentUser?.role === 'admin';
   const displayUsername = username || currentUser?.username;
 
   useEffect(() => {
@@ -102,7 +103,7 @@ export default function ProfilePage() {
     <div className="page-stack">
       <ProfileHeader />
 
-      <UserProfileCard user={profile} stats={stats} isOwnProfile={isOwnProfile} />
+      <UserProfileCard user={isOwnProfile ? { ...profile, ...currentUser } : profile} stats={stats} isOwnProfile={isOwnProfile} />
 
       <div className="grid grid-cols-2 gap-6">
         <ActivityHeatmap userId={profile?._id} />
@@ -114,10 +115,16 @@ export default function ProfilePage() {
         <RecentBadges />
       </div>
 
-      <div className="grid gap-6" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
-        <RecentSubmissions submissions={submissions} />
-        <ContactSocialCard />
-      </div>
+      {hasFullAccess ? (
+        <div className="grid gap-6" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
+          <RecentSubmissions submissions={submissions} />
+          <ContactSocialCard user={profile} />
+        </div>
+      ) : (
+        <div className="mt-6">
+          <ContactSocialCard user={profile} horizontal />
+        </div>
+      )}
     </div>
   );
 }

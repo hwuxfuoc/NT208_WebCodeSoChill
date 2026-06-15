@@ -43,7 +43,7 @@ git --version
 
 ### Bước 3: Cài đặt VS Code
 
-VS Code (Visual Studio Code) là trình soạn thảo code được khuyến nghị cho dự án này. Sau khi cài, bạn nên cài thêm một số extension hữu ích.
+VS Code (Visual Studio Code) là trình soạn thảo code được khuyến nghị cho dự án này. Sau khi cài, cần cài thêm một số extension hữu ích.
 
 1. Truy cập: [https://code.visualstudio.com](https://code.visualstudio.com/)
 2. Tải và cài đặt.
@@ -67,7 +67,7 @@ Dự án sử dụng **MongoDB Atlas** – dịch vụ database trên cloud củ
 
 ### Bước 2: Tạo Cluster (Database Server)
 
-Cluster là nơi chứa toàn bộ dữ liệu của ứng dụng. Bạn chỉ cần tạo một lần duy nhất.
+Cluster là nơi chứa toàn bộ dữ liệu của ứng dụng. chỉ cần tạo một lần duy nhất.
 
 1. Sau khi đăng nhập, click **"Build a Database"** hoặc **"Create"** ở dashboard.
 2. Chọn gói **Shared (M0)** – hoàn toàn miễn phí, đủ dùng cho mục đích học tập và phát triển.
@@ -303,42 +303,25 @@ Nếu đang tạo project mới từ đầu với Vite:
 ```bash
 # Tạo project React + Vite mới
 npm create vite@latest frontend
-# Chọn: React → JavaScript
+# Chọn: React → TypeScript
 cd frontend
 npm install
 ```
 
 ---
 
-### Bước 3: Cài đặt Bootstrap
+### Bước 3: Cài đặt Tailwind CSS
 
-Dự án sử dụng **Bootstrap** làm framework CSS chính để xây dựng giao diện responsive. Bootstrap cung cấp sẵn hệ thống grid, các component UI phổ biến (Button, Card, Modal, Navbar,...) và các class tiện ích, giúp tiết kiệm thời gian viết CSS thủ công.
+Dự án sử dụng **Tailwind CSS** làm framework CSS chính để xây dựng giao diện.
 
 **Cài đặt:**
 
 ```bash
-npm install bootstrap
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
 ```
 
-**Import Bootstrap vào dự án:** Mở file `src/main.jsx` (hoặc `src/index.js`) và thêm dòng import ở đầu file, trước khi render app:
-
-```jsx
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
-```
-
-Import `bootstrap.bundle.min.js` giúp các component cần JavaScript như Dropdown, Modal, Tooltip hoạt động đúng mà không cần cài thêm Popper.js riêng (đã được bundle sẵn).
-
-Nếu muốn tuỳ chỉnh style riêng cho từng component, tạo file `src/index.css` và viết CSS đè lên Bootstrap ở đó – đây là cách linh hoạt hơn so với sửa trực tiếp vào file của Bootstrap.
+**Cấu hình Tailwind:** Mở file `tailwind.config.ts` và thiết lập đường dẫn tới các file template. Thêm directives của Tailwind vào `src/index.css`.
 
 ---
 
@@ -349,11 +332,7 @@ Nếu muốn tuỳ chỉnh style riêng cho từng component, tạo file `src/in
 npm install axios react-router-dom
 ```
 
-Nếu dự án sử dụng thêm Ant Design làm thư viện UI component:
 
-```bash
-npm install antd
-```
 
 ---
 
@@ -365,7 +344,7 @@ npm run dev
 
 Mở trình duyệt và truy cập [http://localhost:5173](http://localhost:5173/). Nếu thấy giao diện React hiển thị là frontend đã hoạt động.
 
-Để kiểm tra kết nối với backend, bạn có thể thêm đoạn code sau vào một component bất kỳ:
+Để kiểm tra kết nối với backend, có thể thêm đoạn code sau vào một component bất kỳ:
 
 ```jsx
 import axios from 'axios';
@@ -376,14 +355,83 @@ axios.get('<http://localhost:5000/>').then(res => console.log(res.data));
 
 ---
 
+## 5. Cài Đặt & Chạy AI Service
+
+AI Service cung cấp tính năng trợ lý ảo hỗ trợ giải thích code và giải thuật, sử dụng FastAPI, Ollama và ChromaDB.
+
+### Bước 1: Chuẩn bị môi trường Python
+
+Di chuyển vào thư mục `ai-service`:
+```bash
+cd NT208_WebCodeSoChill/ai-service
+```
+
+Tạo và kích hoạt môi trường ảo (Virtual Environment):
+```bash
+python -m venv venv
+# Kích hoạt trên Windows:
+venv\Scripts\activate
+# Kích hoạt trên Mac/Linux:
+source venv/bin/activate
+```
+
+### Bước 2: Cài đặt thư viện
+
+```bash
+pip install -r requirements.txt
+```
+
+### Bước 3: Cài đặt Ollama
+
+1. Tải và cài đặt Ollama từ [https://ollama.com](https://ollama.com).
+2. Tải model LLM cục bộ (ví dụ: `llama3` hoặc `mistral`):
+```bash
+ollama run llama3
+```
+
+### Bước 4: Khởi động AI Service
+
+```bash
+uvicorn rag:app --reload --port 8000
+```
+API sẽ chạy tại `http://localhost:8000`.
+
+---
+
+## 6. Khởi Tạo Dữ Liệu (Seed Testcases)
+
+Hệ thống Judge cần các testcase để chấm bài. Thay vì tự tạo dữ liệu thủ công, hệ thống sử dụng script cào dữ liệu từ LeetCode.
+
+### Bước 1: Di chuyển vào thư mục testcase
+
+Mở terminal mới:
+```bash
+cd NT208_WebCodeSoChill/backend/seed/testcase
+```
+
+### Bước 2: Chạy script lấy dữ liệu
+
+Đảm bảo đã cài đặt Python và các thư viện cần thiết (`requests`, `beautifulsoup4` nếu có).
+```bash
+python get_testcases.py
+```
+
+Script này sẽ:
+1. Gửi GraphQL requests tới LeetCode.
+2. Tải về thông tin bài tập (metadata) và các testcase.
+3. Chuyển đổi và lưu dưới dạng file `.json` trong `data/json/` để Judge Engine sử dụng khi chạy nội bộ qua `child_process`.
+
+---
+
 ## ✅ Kiểm Tra Toàn Bộ Hệ Thống
 
-Sau khi hoàn thành các bước trên, bạn nên có:
+Sau khi hoàn thành các bước trên, cần có:
 
 | Thành phần | Địa chỉ | Trạng thái mong đợi |
 | --- | --- | --- |
 | **Frontend** | [http://localhost:5173](http://localhost:5173/) | Hiển thị giao diện React |
 | **Backend API** | [http://localhost:5000](http://localhost:5000/) | Trả về `"Backend running!"` |
+| **AI Service** | [http://localhost:8000](http://localhost:8000/) | Trả về cấu trúc API FastAPI |
 | **Database** | MongoDB Atlas Dashboard | Cluster ở trạng thái `Active` |
 
 ---

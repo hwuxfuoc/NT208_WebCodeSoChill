@@ -96,14 +96,31 @@ async function seed() {
 
     const selectProblems = buildProblemSelection(problemsByDifficulty);
 
-    await Contest.deleteMany({});
-    console.log('🗑️  Đã xóa các contest cũ.');
+    // Lấy season mới nhất
+    const lastContest = await Contest.findOne().sort({ season: -1, endTime: -1 });
+    const currentMaxSeason = lastContest ? lastContest.season : 0;
+    const newSeason = currentMaxSeason + 1;
+
+    // Giữ lại 10 season mới nhất (bao gồm cả season chuẩn bị tạo) => cần xóa các season < newSeason - 9
+    const minSeasonToKeep = newSeason - 9;
+    if (minSeasonToKeep > 0) {
+      await Contest.deleteMany({ season: { $lt: minSeasonToKeep } });
+      console.log(`🗑️  Đã xóa các contest thuộc season < ${minSeasonToKeep} để giữ lại 10 season mới nhất.`);
+    }
+
+    // Tính toán thời gian bắt đầu
+    let baseStartTime = new Date();
+    // Nếu có season cũ chưa kết thúc, nối tiếp vào sau nó
+    if (lastContest && lastContest.endTime > baseStartTime) {
+        baseStartTime = new Date(lastContest.endTime.getTime() + ONE_DAY_MS);
+    }
+    // Đặt baseStartTime về 0h để chia slot trong ngày được chuẩn xác
+    baseStartTime.setHours(0, 0, 0, 0);
 
     const contests = [];
-    const now = new Date();
 
     for (let index = 0; index < CONTEST_COUNT; index += 1) {
-      let title = `Season ${SEASON_NUMBER} Contest #${index + 1}`;
+      let title = `Season ${newSeason} Contest #${index + 1}`;
       let description = NORMAL_CONTEST_DESCRIPTIONS[index % NORMAL_CONTEST_DESCRIPTIONS.length];
       let problemCount = 4;
       let duration = 180;
@@ -111,25 +128,22 @@ async function seed() {
       let distribution = { easy: 1, medium: 2, hard: 1 };
 
       if (index >= 20 && index < 25) {
-        // Major contests
         const majorIndex = index - 20;
-        title = `Season ${SEASON_NUMBER} Major #${majorIndex + 1}: ${MAJOR_CONTEST_NAMES[majorIndex]}`;
+        title = `Season ${newSeason} Major #${majorIndex + 1}: ${MAJOR_CONTEST_NAMES[majorIndex]}`;
         description = 'A higher-stakes contest with harder problems and extended duration.';
         problemCount = 6;
         duration = 180;
         ratedFor = 'advanced';
         distribution = { easy: 1, medium: 2, hard: 3 };
       } else if (index >= 25) {
-        // Themed contests
         const themeIndex = index - 25;
-        title = `Season ${SEASON_NUMBER} Themed #${themeIndex + 1}: ${THEMED_CONTEST_NAMES[themeIndex]}`;
+        title = `Season ${newSeason} Themed #${themeIndex + 1}: ${THEMED_CONTEST_NAMES[themeIndex]}`;
         description = `Themed contest focusing on ${THEMED_CONTEST_NAMES[themeIndex].toLowerCase()}.`;
         problemCount = 5;
         duration = 150;
         ratedFor = themeIndex % 2 === 0 ? 'intermediate' : 'all';
         distribution = { easy: 1, medium: 2, hard: 2 };
       } else {
-        // Normal contests
         if (index % 3 === 0) {
           problemCount = 3;
           distribution = { easy: 1, medium: 1, hard: 1 };
@@ -142,11 +156,13 @@ async function seed() {
         }
       }
 
-      const dayOffset = Math.floor(index / CONTEST_START_HOURS.length) - Math.floor(CURRENT_CONTEST_INDEX / CONTEST_START_HOURS.length);
+      const dayOffset = Math.floor(index / CONTEST_START_HOURS.length);
       const slotIndex = index % CONTEST_START_HOURS.length;
-      const startTime = new Date(now.getTime() + dayOffset * ONE_DAY_MS);
+      
+      const startTime = new Date(baseStartTime.getTime() + dayOffset * ONE_DAY_MS);
       startTime.setHours(CONTEST_START_HOURS[slotIndex], 0, 0, 0);
       const endTime = new Date(startTime.getTime() + duration * 60 * 1000);
+      
       const problemsForContest = selectProblems(problemCount, distribution);
       const contestType = index >= 25 ? 'themed' : index >= 20 ? 'major' : 'normal';
       const theme = index >= 25 ? THEMED_CONTEST_NAMES[index - 25] : '';
@@ -162,7 +178,7 @@ async function seed() {
         ratedFor,
         contestType,
         theme,
-        season: SEASON_NUMBER,
+        season: newSeason,
         contestNumber: index + 1,
         isRated: true,
         createdBy: user._id,
@@ -170,7 +186,7 @@ async function seed() {
     }
 
     await Contest.insertMany(contests);
-    console.log(`✅ Đã tạo thành công ${contests.length} contest cho Season ${SEASON_NUMBER}.`);
+    console.log(`✅ Đã tạo thành công ${contests.length} contest cho Season mới: ${newSeason}.`);
   } catch (err) {
     console.error('❌ Lỗi:', err);
   } finally {

@@ -4,7 +4,8 @@ type ModalType = "messages" | "notifications" | "settings" | null;
 
 type ModalContextValue = {
   activeModal: ModalType;
-  openModal: (type: Exclude<ModalType, null>) => void;
+  modalData: any;
+  openModal: (type: Exclude<ModalType, null>, data?: any) => void;
   closeModal: () => void;
 };
 
@@ -12,7 +13,17 @@ const ModalContext = createContext<ModalContextValue | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
-  const closeModal = () => setActiveModal(null);
+  const [modalData, setModalData] = useState<any>(null);
+
+  const openModal = (type: Exclude<ModalType, null>, data?: any) => {
+    setModalData(data || null);
+    setActiveModal(type);
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+    setModalData(null);
+  };
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -23,8 +34,8 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ activeModal, openModal: setActiveModal, closeModal }),
-    [activeModal]
+    () => ({ activeModal, modalData, openModal, closeModal }),
+    [activeModal, modalData]
   );
 
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;

@@ -19,7 +19,11 @@ const userSchema = new mongoose.Schema({
     // Social links (Settings → Account)
     socialLinks: {
         github:             { type: String, default: '' },
+        linkedin:           { type: String, default: '' },
+        twitter:            { type: String, default: '' },
+        website:            { type: String, default: '' },
         facebook:           { type: String, default: '' },
+        instagram:          { type: String, default: '' },
     },
 
     // Appearance settings (Settings → Appearance)

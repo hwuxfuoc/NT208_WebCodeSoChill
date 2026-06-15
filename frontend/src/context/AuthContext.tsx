@@ -31,6 +31,7 @@ export interface AuthContextType {
   }) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+  updateUser: (data: Partial<User>) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -121,8 +122,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
   };
 
+  const updateUser = (data: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...data } : null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, error, login, register, logout, clearError }}>
+    <AuthContext.Provider value={{ user, token, loading, error, login, register, logout, clearError, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

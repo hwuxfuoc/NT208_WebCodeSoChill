@@ -5,8 +5,10 @@ frontend/node_modules/
 # env
 backend/.env
 backend/.env.*
+!backend/.env.example
 ai-service/.env
 ai-service/.env.*
+!ai-service/.env.example
 frontend/.env.production
 frontend/.env.local
 frontend/.env
@@ -23,3 +25,5 @@ npm-debug.log*
 READMEAI.md
 frontend/README_TUTORIAL.md
 node_modules
+.vercel
+.env*.local

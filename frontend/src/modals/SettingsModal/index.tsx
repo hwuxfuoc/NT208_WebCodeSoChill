@@ -31,7 +31,7 @@ export default function SettingsModal() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { closeModal } = useModal();
   const [cropSrc, setCropSrc] = useState<string | null>(null);
@@ -43,6 +43,7 @@ export default function SettingsModal() {
     bio: "",
     phone: "",
     avatarUrl: "",
+    socialLinks: { github: "", linkedin: "", twitter: "", website: "", facebook: "", instagram: "" }
   });
 
   useEffect(() => {
@@ -54,6 +55,14 @@ export default function SettingsModal() {
         bio: user.bio || "",
         phone: user.phone || "",
         avatarUrl: user.avatarUrl || DEFAULT_AVATAR,
+        socialLinks: {
+          github: (user as any).socialLinks?.github || "",
+          linkedin: (user as any).socialLinks?.linkedin || "",
+          twitter: (user as any).socialLinks?.twitter || "",
+          website: (user as any).socialLinks?.website || "",
+          facebook: (user as any).socialLinks?.facebook || "",
+          instagram: (user as any).socialLinks?.instagram || ""
+        }
       });
     }
   }, [user]);
@@ -100,16 +109,22 @@ export default function SettingsModal() {
   };
 
   const handleSaveChanges = async () => {
+    if (avatarUploading || formData.avatarUrl.startsWith("blob:")) {
+      setError("Please wait for the photo to finish uploading.");
+      return;
+    }
     setSaveLoading(true);
     setError(null);
     setSuccess(null);
     try {
-      await settingService.updateAccount({
+      const res = await settingService.updateAccount({
         displayname: formData.displayname,
         bio: formData.bio,
         phone: formData.phone,
         avatarUrl: formData.avatarUrl,
+        socialLinks: formData.socialLinks,
       });
+      updateUser(res.data.user);
       setSuccess("Profile updated successfully!");
       setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
@@ -285,22 +300,38 @@ export default function SettingsModal() {
 
         {active === "integrations" && (
           <div className="flex flex-col gap-5">
-            <h2 className="text-xl font-extrabold text-[#1A1D2B]">Integrations</h2>
-            {[
-              { name: "GitHub", desc: "Connect to import repos and showcase projects", connected: true },
-              { name: "LinkedIn", desc: "Auto-share badge achievements to your network", connected: false },
-              { name: "Discord", desc: "Get contest reminders on your Discord server", connected: false },
-            ].map(g => (
-              <div key={g.name} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-[#1A1D2B]">{g.name}</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">{g.desc}</p>
-                </div>
-                <button className={`text-xs font-bold px-4 py-2 rounded-xl border transition-colors ${g.connected ? "border-green-200 text-green-600 bg-green-50 hover:bg-green-100" : "border-gray-200 text-gray-600 hover:bg-gray-100"}`}>
-                  {g.connected ? "✓ Connected" : "Connect"}
-                </button>
+            <div className="flex justify-between items-end">
+              <div>
+                <h2 className="text-xl font-extrabold text-[#1A1D2B]">Social Links</h2>
+                <p className="text-sm text-gray-500 mt-1">Add links to your profiles so others can connect with you.</p>
               </div>
-            ))}
+              <button onClick={handleSaveChanges} disabled={saveLoading}
+                className="px-6 py-2.5 rounded-xl text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-60"
+                style={{ backgroundColor: "var(--main-orange-color)" }}>
+                {saveLoading ? "Saving..." : "Save Links"}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 mt-2">
+              <Field label="GitHub URL">
+                <input type="url" value={formData.socialLinks.github} onChange={(e) => setFormData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, github: e.target.value } }))} placeholder="https://github.com/yourusername" className={inputCls} />
+              </Field>
+              <Field label="LinkedIn URL">
+                <input type="url" value={formData.socialLinks.linkedin} onChange={(e) => setFormData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, linkedin: e.target.value } }))} placeholder="https://linkedin.com/in/yourusername" className={inputCls} />
+              </Field>
+              <Field label="Facebook URL">
+                <input type="url" value={formData.socialLinks.facebook} onChange={(e) => setFormData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, facebook: e.target.value } }))} placeholder="https://facebook.com/yourusername" className={inputCls} />
+              </Field>
+              <Field label="Instagram URL">
+                <input type="url" value={formData.socialLinks.instagram} onChange={(e) => setFormData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, instagram: e.target.value } }))} placeholder="https://instagram.com/yourusername" className={inputCls} />
+              </Field>
+              <Field label="Twitter / X URL">
+                <input type="url" value={formData.socialLinks.twitter} onChange={(e) => setFormData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, twitter: e.target.value } }))} placeholder="https://twitter.com/yourusername" className={inputCls} />
+              </Field>
+              <Field label="Personal Website">
+                <input type="url" value={formData.socialLinks.website} onChange={(e) => setFormData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, website: e.target.value } }))} placeholder="https://yourdomain.com" className={inputCls} />
+              </Field>
+            </div>
           </div>
         )}
       </div>

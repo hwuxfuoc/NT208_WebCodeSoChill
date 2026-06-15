@@ -20,7 +20,7 @@ Backend của CodeSoChill đóng vai trò là **trung tâm xử lý toàn bộ l
         ├── Router → Controller → Service
         │
         ├── MongoDB (Mongoose)        ← Lưu dữ liệu
-        └── Judge Engine (Sandbox)   ← Chạy & chấm code
+        └── Judge Engine             ← Chạy code (Local Execution) & chấm điểm
 ```
 
 **Luồng xử lý một request điển hình:**
@@ -37,56 +37,127 @@ Backend của CodeSoChill đóng vai trò là **trung tâm xử lý toàn bộ l
 
 ```
 backend/
-├── server.js               # Entry point – khởi động Express server
 ├── .env                    # Biến môi trường (không commit lên Git)
+├── app.js                  # Cấu hình chính của Express app
+├── check-user.js
 ├── package.json
-│
-├── config/
-│   └── db.js               # Kết nối MongoDB Atlas
-│
-├── models/                 # Schema Mongoose – định nghĩa cấu trúc dữ liệu
-│   ├── User.js
-│   ├── Problem.js
-│   ├── Submission.js
-│   ├── TestCase.js
-│   ├── Contest.js
-│   ├── ContestProblem.js
-│   ├── CommunityPost.js
-│   ├── Comment.js
-│   └── Notification.js
+├── package-lock.json
+├── server.js               # Entry point – khởi động server
+├── test-email.js
 │
 ├── api/                    # Toàn bộ route + controller, tổ chức theo domain
+│   ├── admin/
+│   │   ├── adminController.js
+│   │   └── adminRoutes.js
+│   ├── ai/
+│   │   ├── aiController.js
+│   │   └── aiRoutes.js
 │   ├── auth/
-│   │   ├── auth.routes.js
-│   │   └── auth.controller.js
-│   ├── users/
-│   │   ├── users.routes.js
-│   │   └── users.controller.js
-│   ├── problems/
-│   │   ├── problems.routes.js
-│   │   └── problems.controller.js
-│   ├── submissions/
-│   │   ├── submissions.routes.js
-│   │   └── submissions.controller.js
-│   ├── contests/
-│   │   ├── contests.routes.js
-│   │   └── contests.controller.js
+│   │   ├── authController.js
+│   │   └── authRoutes.js
 │   ├── community/
-│   │   ├── community.routes.js
-│   │   └── community.controller.js
+│   │   ├── communityController.js
+│   │   └── communityRoutes.js
+│   ├── contests/
+│   │   ├── contestController.js
+│   │   └── contestRoutes.js
+│   ├── messages/
+│   │   ├── messageController.js
+│   │   └── messageRoutes.js
 │   ├── notifications/
-│   │   ├── notifications.routes.js
-│   │   └── notifications.controller.js
-│   └── settings/
-│       ├── settings.routes.js
-│       └── settings.controller.js
+│   │   ├── notificationController.js
+│   │   └── notificationRoutes.js
+│   ├── problems/
+│   │   ├── problemController.js
+│   │   └── problemRoutes.js
+│   ├── settings/
+│   │   ├── settingController.js
+│   │   └── settingRoutes.js
+│   ├── stats/
+│   │   ├── statsController.js
+│   │   └── statsRoutes.js
+│   ├── submissions/
+│   │   ├── submissionController.js
+│   │   └── submissionRoutes.js
+│   ├── upload/
+│   │   ├── uploadController.js
+│   │   └── uploadRoutes.js
+│   └── users/
+│       ├── userController.js
+│       └── userRoutes.js
+│
+├── config/
+│   ├── bootstrapAdmin.js
+│   ├── bootstrapSeedProblems.js
+│   ├── db.js               # Kết nối MongoDB
+│   └── seedUtils.js
+│
+├── judge/
+│   └── runner.js           # Thực thi code (Local via child_process) & chấm điểm
 │
 ├── middleware/
+│   ├── adminOnly.js
 │   ├── auth.js             # Xác thực JWT
-│   └── validate.js         # Validate dữ liệu đầu vào
+│   ├── optionalAuth.js
+│   └── validate.js         # Trình validate
 │
-└── judge/
-    └── runner.js           # Chạy code trong sandbox và trả kết quả
+├── models/                 # Schema Mongoose
+│   ├── comment.js
+│   ├── communityPost.js
+│   ├── contest.js
+│   ├── contestProblem.js
+│   ├── conversation.js
+│   ├── message.js
+│   ├── notification.js
+│   ├── problem.js
+│   ├── setting.js
+│   ├── submission.js
+│   ├── testCase.js
+│   ├── test_api.js
+│   ├── test_lb.js
+│   ├── test_leaderboard.js
+│   ├── test_query.js
+│   └── user.js
+│
+├── scripts/                # Script tiện ích
+│   ├── backfillExp.js
+│   ├── cleanupSeedProblems.js
+│   ├── diagnostic.js
+│   ├── seedContests.js
+│   └── seedProblems.js
+│
+├── seed/                   # Chứa dữ liệu khởi tạo (với testcase lấy từ LeetCode)
+│   ├── problems.seed.json
+│   ├── problems/
+│   │   ├── 0001-two-sum.json
+│   │   ├── 0002-add-two-numbers.json
+│   │   ├── 0003-longest-substring-without-repeating-characters.json
+│   │   └── ...
+│   └── testcase/
+│       ├── get_testcases.py
+│       ├── data/
+│       │   ├── json/
+│       │   │   ├── 1. Two Sum.json
+│       │   │   ├── 10. Regular Expression Matching.json
+│       │   │   ├── 100. Same Tree.json
+│       │   │   └── ...
+│       │   └── python/
+│       │       ├── 1. Two Sum.py
+│       │       ├── 10. Regular Expression Matching.py
+│       │       ├── 100. Same Tree.py
+│       │       └── ...
+│       ├── data_raw/
+│       │   ├── 1. Two Sum
+│       │   ├── 22. Generate Parentheses
+│       │   ├── 28. Find the Index of the First Occurrence in a String
+│       │   └── ...
+│       └── problem_data/
+│           └── problem_data.csv
+│
+├── temp_code/              # Chứa các file sinh ra tạm thời lúc chạy code
+└── tests/
+    ├── auth.test.js
+    └── problems.test.js
 ```
 
 ---
@@ -361,14 +432,19 @@ Toàn bộ logic xử lý HTTP được tổ chức theo từng **domain** (nhó
 Ví dụ cách đăng ký routes trong `server.js`:
 
 ```jsx
-app.use('/api/auth',          require('./api/auth/auth.routes'));
-app.use('/api/users',         require('./api/users/users.routes'));
-app.use('/api/problems',      require('./api/problems/problems.routes'));
-app.use('/api/submissions',   require('./api/submissions/submissions.routes'));
-app.use('/api/contests',      require('./api/contests/contests.routes'));
-app.use('/api/community',     require('./api/community/community.routes'));
-app.use('/api/notifications', require('./api/notifications/notifications.routes'));
-app.use('/api/settings',      require('./api/settings/settings.routes'));
+app.use('/api/admin',         require('./api/admin/adminRoutes'));
+app.use('/api/ai',            require('./api/ai/aiRoutes'));
+app.use('/api/auth',          require('./api/auth/authRoutes'));
+app.use('/api/community',     require('./api/community/communityRoutes'));
+app.use('/api/contests',      require('./api/contests/contestRoutes'));
+app.use('/api/messages',      require('./api/messages/messageRoutes'));
+app.use('/api/notifications', require('./api/notifications/notificationRoutes'));
+app.use('/api/problems',      require('./api/problems/problemRoutes'));
+app.use('/api/settings',      require('./api/settings/settingRoutes'));
+app.use('/api/stats',         require('./api/stats/statsRoutes'));
+app.use('/api/submissions',   require('./api/submissions/submissionRoutes'));
+app.use('/api/upload',        require('./api/upload/uploadRoutes'));
+app.use('/api/users',         require('./api/users/userRoutes'));
 ```
 
 ---
@@ -519,7 +595,7 @@ POST /api/submissions
 | --- | --- | --- | --- |
 | POST | `/` | Nộp bài (Submit code) | ✅ |
 | GET | `/:id` | Xem kết quả một submission cụ thể | ✅ |
-| GET | `/my` | Lịch sử tất cả submission của mình | ✅ |
+| GET | `/my` | Lịch sử tất cả submission cá nhân | ✅ |
 | POST | `/run` | Chạy thử code với testcase mẫu (Run Code – không lưu) | ✅ |
 
 ---
@@ -554,7 +630,7 @@ POST /api/submissions
 
 | Method | Endpoint | Mô tả | Auth? |
 | --- | --- | --- | --- |
-| GET | `/` | Lấy danh sách thông báo của mình | ✅ |
+| GET | `/` | Lấy danh sách thông báo cá nhân | ✅ |
 | PUT | `/:id/read` | Đánh dấu một thông báo đã đọc | ✅ |
 | PUT | `/read-all` | Đánh dấu tất cả đã đọc | ✅ |
 | DELETE | `/` | Xóa tất cả thông báo | ✅ |
@@ -570,6 +646,53 @@ POST /api/submissions
 | PUT | `/security/password` | Đổi mật khẩu | ✅ |
 | GET | `/security/sessions` | Danh sách session đang hoạt động | ✅ |
 | DELETE | `/security/sessions/:id` | Đăng xuất một session cụ thể | ✅ |
+
+---
+
+### 💬 Messages – `/api/messages`
+
+| Method | Endpoint | Mô tả | Auth? |
+| --- | --- | --- | --- |
+| POST | `/` | Tạo cuộc trò chuyện mới | ✅ |
+| GET | `/conversations` | Danh sách các cuộc trò chuyện | ✅ |
+| GET | `/:conversationId` | Danh sách tin nhắn trong một cuộc trò chuyện | ✅ |
+| POST | `/:conversationId` | Gửi tin nhắn mới | ✅ |
+
+---
+
+### 🤖 AI – `/api/ai`
+
+| Method | Endpoint | Mô tả | Auth? |
+| --- | --- | --- | --- |
+| POST | `/chat` | Chat trực tiếp với AI trợ lý (Non-streaming) | ❌ |
+| POST | `/chat/stream` | Chat với AI trợ lý dưới dạng Stream | ❌ |
+
+---
+
+### 🛡️ Admin – `/api/admin`
+
+| Method | Endpoint | Mô tả | Auth? |
+| --- | --- | --- | --- |
+| GET | `/users` | Lấy danh sách toàn bộ người dùng | ✅ Admin |
+| POST | `/promote/:userId` | Cấp quyền Admin cho người dùng | ✅ Admin |
+
+---
+
+### 📊 Stats – `/api/stats`
+
+| Method | Endpoint | Mô tả | Auth? |
+| --- | --- | --- | --- |
+| GET | `/daily-problems` | Biểu đồ bài tập hàng ngày | ❌ |
+| GET | `/contest-stats` | Thống kê contest | ❌ |
+
+---
+
+### 📁 Upload – `/api/upload`
+
+| Method | Endpoint | Mô tả | Auth? |
+| --- | --- | --- | --- |
+| POST | `/avatar` | Upload ảnh đại diện (lên Cloudinary) | ✅ |
+| POST | `/image` | Upload ảnh bài viết community (lên Cloudinary) | ✅ |
 
 ---
 

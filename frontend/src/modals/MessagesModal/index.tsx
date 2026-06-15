@@ -5,7 +5,7 @@ import * as messageService from "../../services/messageService";
 import { DEFAULT_AVATAR } from "../../utils/constants";
 
 export default function MessagesModal() {
-  const { closeModal } = useModal();
+  const { closeModal, modalData } = useModal();
   const [active, setActive] = useState<string | null>(null);
   const [convos, setConvos] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
@@ -15,6 +15,12 @@ export default function MessagesModal() {
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    if (modalData && modalData.action === 'open_chat' && modalData.user) {
+      handleSelectUser(modalData.user);
+    }
+  }, [modalData]);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,7 +106,7 @@ export default function MessagesModal() {
     };
   }, [searchTerm]);
 
-  const handleSelectUser = async (user: any) => {
+  async function handleSelectUser(user: any) {
     setError(null);
     setSearchTerm("");
     setSearchResults([]);
