@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getComments, addComment } from "../../services/communityService";
 import ImageModal from "./ImageModal";
 import ModalPortal from "../../components/ModalPortal";
+import { useAuth } from "../../hooks/useAuth";
 
 interface Author {
   _id: string;
@@ -34,13 +35,16 @@ export default function CommentModal({
   post, 
   isLiked,
   onToggleLike,
+  onCommentAdded,
   onClose 
 }: { 
   post: Post; 
   isLiked: boolean;
   onToggleLike: () => void;
+  onCommentAdded: () => void;
   onClose: () => void; 
 }) {
+  const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
@@ -70,6 +74,7 @@ export default function CommentModal({
       setSubmitting(true);
       await addComment(post._id, { content: newComment });
       setNewComment("");
+      onCommentAdded();
       fetchComments();
     } catch (err) {
       console.error("Failed to add comment:", err);
@@ -175,7 +180,7 @@ export default function CommentModal({
             </div>
 
             <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-2.5 border border-gray-100">
-              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="you" className="w-7 h-7 rounded-full flex-shrink-0" />
+              <img src={user?.avatarUrl || "https://ui-avatars.com/api/?name=User"} alt="you" className="w-7 h-7 rounded-full flex-shrink-0 object-cover" />
               <input 
                 className="flex-1 bg-transparent text-sm outline-none text-gray-600" 
                 placeholder="Write a comment..." 
