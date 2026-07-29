@@ -97,7 +97,7 @@ function SidebarContent({ isAdmin, showAdminMenu, setShowAdminMenu, onNavClick }
       <div className="brand mb-6">
         <div className="flex flex-row items-center">
           <span className="logo mr-2">
-            <img src={logo} alt="Logo" className="w-12 h-12 scale-150 origin-center object-contain" />
+            <img src={logo} alt="Logo" className="w-7 h-7 object-contain" />
           </span>
           <span style={{ color: 'var(--text-primary)' }}>CodeSo</span><span style={{ color: 'var(--main-orange-color)' }}>Chill.</span>
         </div>
