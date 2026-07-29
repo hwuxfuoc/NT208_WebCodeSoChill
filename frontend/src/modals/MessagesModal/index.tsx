@@ -165,13 +165,13 @@ export default function MessagesModal() {
 
   return (
     <motion.div
-      className="modal-panel w-[780px] h-[520px] p-0 flex overflow-hidden border-none shadow-2xl"
+      className="modal-panel messages-modal w-[780px] h-[520px] p-0 flex overflow-hidden border-none shadow-2xl"
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      <div className="w-[280px] border-r border-gray-100 flex flex-col bg-white">
+      <div className="messages-modal-sidebar w-[280px] border-r border-gray-100 flex flex-col bg-white">
         <div className="px-5 pt-5 pb-3 flex justify-between items-center">
           <h2 className="text-base font-extrabold text-[#1A1D2B]">Messages</h2>
           <button className="text-gray-400 hover:text-gray-600 transition-colors">

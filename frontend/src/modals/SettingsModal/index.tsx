@@ -182,7 +182,7 @@ export default function SettingsModal() {
         />
       )}
       <motion.div
-        className="modal-panel bg-[#f8fafc] w-[860px] max-h-[88vh] p-4 flex gap-4 rounded-[32px] border-none shadow-2xl relative"
+        className="modal-panel settings-modal bg-[#f8fafc] w-[860px] max-h-[88vh] p-4 flex gap-4 rounded-[32px] border-none shadow-2xl relative"
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.96 }}
@@ -195,7 +195,7 @@ export default function SettingsModal() {
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
 
-      <div className="w-[220px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-1 flex-shrink-0 pt-12">
+      <div className="settings-modal-sidebar w-[220px] bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-1 flex-shrink-0 pt-12">
         <h2 className="text-base font-extrabold text-[#1A1D2B] mb-4">Settings</h2>
         {TABS.map(t => (
           <button key={t.id} onClick={() => { setActive(t.id); setError(null); setSuccess(null); }}
@@ -232,7 +232,7 @@ export default function SettingsModal() {
                 {avatarUploading ? "Uploading..." : "Change Photo"}
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Username">
                 <input type="text" name="username" value={formData.username} disabled className={`${inputCls} cursor-not-allowed opacity-60`} />
               </Field>
@@ -273,7 +273,7 @@ export default function SettingsModal() {
             <Field label="Current Password">
               <input type="password" name="currentPassword" value={securityData.currentPassword} onChange={handleSecurityChange} placeholder="••••••••" className={inputCls} />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="New Password">
                 <input type="password" name="newPassword" value={securityData.newPassword} onChange={handleSecurityChange} placeholder="••••••••" className={inputCls} />
               </Field>

@@ -41,7 +41,7 @@ export default function UserProfileCard({ user, stats, isOwnProfile = false }: U
   const progressPct = expInLevel;        // 0–100 %
 
   return (
-    <section className="card flex items-center gap-6 relative overflow-visible z-50" onClick={() => setShowShare(false)}>
+    <section className="card flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 relative overflow-visible z-50" onClick={() => setShowShare(false)}>
       <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none" style={{ background: "var(--main-orange-color)", opacity: 0.06 }} />
 
       <div className="relative shrink-0">
