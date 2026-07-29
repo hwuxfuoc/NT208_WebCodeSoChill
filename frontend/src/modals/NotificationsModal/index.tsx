@@ -67,7 +67,7 @@ export default function NotificationsModal() {
 
   return (
     <motion.div
-      className="modal-panel w-[380px] p-0 overflow-hidden flex flex-col"
+      className="modal-panel notifications-modal w-[380px] p-0 overflow-hidden flex flex-col"
       style={{ maxHeight: "85vh" }}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}

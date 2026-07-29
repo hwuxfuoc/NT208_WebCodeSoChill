@@ -145,10 +145,10 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
         <div style={{ width: COL.status, flexShrink: 0, textAlign: "center", fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "3px" }}>
           Status
         </div>
-        <div style={{ flex: COL.title, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "10px" }}>
+        <div style={{ flex: COL.title, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "10px", minWidth: 0, overflow: "hidden" }}>
           Title
         </div>
-        <div style={{ width: COL.acceptance, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: "20px" }}>
+        <div className="hidden-mobile" style={{ width: COL.acceptance, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: "20px" }}>
           Acceptance
         </div>
         <div style={{ width: COL.difficulty, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginRight: "7px" }}>
@@ -173,10 +173,10 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
                 <span style={{ width: "16px", height: "16px", borderRadius: "50%", border: "2px solid #d1d5db", display: "inline-block" }} />
               )}
             </div>
-            <div style={{ flex: COL.title, display: "flex", alignItems: "center" }}>
-              <span style={{ fontWeight: 700, fontSize: "13.5px", color: "#1A1D2B", lineHeight: 1.4 }}>{p.title}</span>
+            <div style={{ flex: COL.title, display: "flex", alignItems: "center", minWidth: 0, overflow: "hidden" }}>
+              <span style={{ fontWeight: 700, fontSize: "13.5px", color: "#1A1D2B", lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", width: "100%" }}>{p.title}</span>
             </div>
-            <div style={{ width: COL.acceptance, flexShrink: 0, display: "flex", alignItems: "center" }}>
+            <div className="hidden-mobile" style={{ width: COL.acceptance, flexShrink: 0, display: "flex", alignItems: "center" }}>
               <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
             </div>
             <div style={{ width: COL.difficulty, flexShrink: 0, display: "flex", alignItems: "center" }}>

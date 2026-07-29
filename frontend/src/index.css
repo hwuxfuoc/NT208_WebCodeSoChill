@@ -621,8 +621,9 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
     cursor: pointer;
+    white-space: nowrap;
   }
 
   .mobile-header-actions {
@@ -770,3 +771,125 @@ p {
   background-color: #d1d5db;
   color: #374151;
 }
+
+/* ─── Responsive visibility helpers ───────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+/* ─── Mobile header dropdown ──────────────────────────────────────────────── */
+.mobile-dropdown-toggle {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mobile-dropdown-toggle:hover {
+  background: rgba(252, 107, 87, 0.08);
+  color: var(--main-orange-color);
+}
+
+.mobile-toolbar-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  padding: 6px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Poppins, ui-sans-serif, system-ui, sans-serif;
+  transition: all 0.15s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.mobile-dropdown-item:hover {
+  background: rgba(252, 107, 87, 0.06);
+  color: var(--main-orange-color);
+}
+
+.mobile-dropdown-item svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.mobile-dropdown-item:hover svg {
+  opacity: 1;
+}
+
+/* ─── Modal responsive ────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .modal-panel {
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 80px) !important;
+    border-radius: 20px !important;
+  }
+
+  /* Settings modal: stack sidebar+content vertically */
+  .settings-modal {
+    width: calc(100vw - 24px) !important;
+    flex-direction: column !important;
+  }
+
+  .settings-modal-sidebar {
+    width: 100% !important;
+    flex-direction: row !important;
+    overflow-x: auto;
+    padding-top: 2.5rem !important;
+    gap: 4px;
+    border-radius: 16px !important;
+  }
+
+  .settings-modal-sidebar h2 {
+    display: none;
+  }
+
+  /* Messages modal */
+  .messages-modal {
+    width: calc(100vw - 24px) !important;
+    height: calc(100vh - 100px) !important;
+    flex-direction: column !important;
+  }
+
+  .messages-modal-sidebar {
+    width: 100% !important;
+    max-height: 200px;
+    border-right: none !important;
+    border-bottom: 1px solid #eceff3;
+  }
+
+  /* Notifications modal */
+  .notifications-modal {
+    width: calc(100vw - 24px) !important;
+  }
+}

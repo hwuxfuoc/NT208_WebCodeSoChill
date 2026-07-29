@@ -105,18 +105,18 @@ export default function ProfilePage() {
 
       <UserProfileCard user={isOwnProfile ? { ...profile, ...currentUser } : profile} stats={stats} isOwnProfile={isOwnProfile} />
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ActivityHeatmap userId={profile?._id} />
         <ContestRating stats={stats} profile={profile} />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <SolvedProblems stats={stats} solvedByDifficulty={stats?.solvedByDifficulty} totalProblemsByDifficulty={stats?.totalProblemsByDifficulty} />
         <RecentBadges />
       </div>
 
       {hasFullAccess ? (
-        <div className="grid gap-6" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
+        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6">
           <RecentSubmissions submissions={submissions} />
           <ContactSocialCard user={profile} />
         </div>
