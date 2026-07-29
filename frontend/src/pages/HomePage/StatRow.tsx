@@ -32,7 +32,7 @@ export default function StatRow() {
   }, []);
 
   return (
-    <div className="stats-row mt-0 h-28">
+    <div className="stats-row mt-0">
       <StatCard 
         title="Problems" 
         value={loading ? "..." : stats.totalProblems + "+"} 

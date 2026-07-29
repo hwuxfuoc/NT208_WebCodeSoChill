@@ -46,18 +46,26 @@ export default function ProblemsPage() {
     <div className="page-stack">
       <ProblemsHeader />
 
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 flex flex-col gap-4 min-w-0">
           <TodayChallengePanel />
 
-          <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+          <div className="block lg:hidden w-full">
+            <CalendarStreak />
+          </div>
+
+          <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-x-auto">
             <TopicFilterBar topic={topic} setTopic={setTopic} setPage={setPage} />
             <ProblemSearchBar query={query} setQuery={setQuery} tab={tab} setTab={setTab} setPage={setPage} />
             <ProblemTable rows={problems} page={page} pageCount={totalPages} setPage={setPage} total={total} pageSize={PAGE_SIZE} />
           </section>
+
+          <div className="block lg:hidden w-full mt-2">
+            <DailyRandomChallenge />
+          </div>
         </div>
 
-        <div className="w-[280px] flex flex-col gap-6">
+        <div className="hidden lg:flex w-[280px] flex-col gap-6">
           <CalendarStreak />
           <DailyRandomChallenge />
         </div>

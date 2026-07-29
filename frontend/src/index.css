@@ -312,6 +312,7 @@ p {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  /* no fixed height — let cards auto-size */
 }
 
 .stat-card {
@@ -616,12 +617,12 @@ p {
   }
 
   .mobile-header-logo {
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     cursor: pointer;
-    flex: 1;
-    justify-content: center;
   }
 
   .mobile-header-actions {
@@ -686,6 +687,7 @@ p {
 
   .stats-row {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .main-content {
@@ -704,7 +706,7 @@ p {
 
 @media (max-width: 600px) {
   .stats-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .main-content {

@@ -12,7 +12,7 @@ export default function UpcomingContestsTable({ contests, onRegister }: Upcoming
     <>
       <p className="text-xs font-bold text-gray-500 tracking-wider mt-6 mb-2 uppercase">Upcoming Contests</p>
 
-      <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+      <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-x-auto">
         <table className="w-full text-left">
           <thead>
             <tr>

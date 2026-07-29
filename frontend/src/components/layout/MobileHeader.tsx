@@ -54,11 +54,18 @@ export default function MobileHeader({ onMenuToggle }: MobileHeaderProps) {
         ) : (
           <>
             <button
-              className="rounded-xl text-white font-bold text-[11px] px-3 py-2"
-              style={{ backgroundColor: "var(--main-orange-color)" }}
+              className="rounded-xl font-bold text-[11px] px-3 py-2"
+              style={{ backgroundColor: "var(--main-orange-color)", color: "white" }}
               onClick={() => navigate("/login")}
             >
               Sign In
+            </button>
+            <button
+              className="rounded-xl font-bold text-[11px] px-3 py-2"
+              style={{ backgroundColor: "#f3f4f6", color: "var(--text-primary)" }}
+              onClick={() => navigate("/register")}
+            >
+              Register
             </button>
           </>
         )}
