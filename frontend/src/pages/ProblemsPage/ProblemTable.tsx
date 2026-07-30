@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Problem } from "../../types/problem";
+import type { Problem } from "../../services/problemService";
 
 interface ProblemTableProps {
   rows: Problem[];
