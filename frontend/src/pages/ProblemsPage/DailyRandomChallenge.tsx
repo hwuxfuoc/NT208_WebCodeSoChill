@@ -2,6 +2,7 @@ import { useDailyProblems } from "../../hooks/useDailyProblems";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import LoginRequiredModal from "../../components/common/LoginRequiredModal";
 
 const TODAY_KEY = `daily_exp_earned_${new Date().toISOString().split("T")[0]}`;
 
@@ -9,6 +10,7 @@ export default function DailyRandomChallenge() {
   const { user } = useAuth();
   const { problems, loading, solvedIds, solvedCount, solvedLoading } = useDailyProblems();
   const [earned, setEarned] = useState(() => localStorage.getItem(TODAY_KEY) === "true");
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
 
   const total = problems.length || 3;
@@ -27,7 +29,7 @@ export default function DailyRandomChallenge() {
 
   const handleSolveRandom = () => {
     if (!user) {
-      navigate("/login");
+      setShowLoginModal(true);
       return;
     }
     const unsolved = problems.filter(p => !solvedIds.has(p._id));
@@ -49,7 +51,14 @@ export default function DailyRandomChallenge() {
   };
 
   return (
-    <section className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4">
+    <>
+      <LoginRequiredModal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="Bạn cần đăng nhập để nhận thử thách ngẫu nhiên và nhận EXP."
+      />
+
+      <section className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col gap-4">
       <div className="flex items-center gap-3">
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -110,6 +119,7 @@ export default function DailyRandomChallenge() {
         )}
         {btnLabel()}
       </button>
-    </section>
+      </section>
+    </>
   );
 }
