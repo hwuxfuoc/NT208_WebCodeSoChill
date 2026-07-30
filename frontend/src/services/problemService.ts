@@ -1,5 +1,5 @@
-//frontend/src/services/problemService.ts
 import api from "./api";
+export type { Problem } from "../types/problem";
 
 export interface GetProblemsParams {
   page?: number;

@@ -49,7 +49,7 @@ export default function TopicFilterBar({ topic, setTopic, setPage }: TopicFilter
           <button
             key={item}
             onClick={() => { setTopic(item); setPage(1); }}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all"
+            className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all whitespace-nowrap"
             style={
               isActive
                 ? { backgroundColor: "var(--main-orange-color)", color: "#fff" }
@@ -57,7 +57,7 @@ export default function TopicFilterBar({ topic, setTopic, setPage }: TopicFilter
             }
           >
             {item === "All Topics" && (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                 <circle cx="12" cy="12" r="3"></circle>
                 <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
               </svg>
@@ -65,7 +65,7 @@ export default function TopicFilterBar({ topic, setTopic, setPage }: TopicFilter
             {item}
             {item !== "All Topics" && count !== undefined && (
               <span
-                className="text-[10px] font-black px-1.5 py-0.5 rounded-full"
+                className="text-[10px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0"
                 style={{
                   backgroundColor: isActive ? "rgba(255,255,255,0.25)" : "var(--main-orange-color)",
                   color: "#fff",

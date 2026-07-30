@@ -1,65 +1,72 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Problem } from '../../types/problem';
-import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
+import type { Problem } from "../../types/problem";
 
 interface ProblemTableProps {
   rows: Problem[];
   page: number;
   pageCount: number;
+  setPage: (p: number) => void;
+  total: number;
   pageSize: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  total?: number;
 }
 
-const DIFF: Record<string, { bg: string; color: string; barColor: string }> = {
-  easy: { bg: "#dcfce7", color: "var(--main-green-color)", barColor: "var(--main-green-color)" },
-  medium: { bg: "#ffedd5", color: "var(--main-orange-color)", barColor: "var(--main-orange-color)" },
-  hard: { bg: "#fee2e2", color: "#dc2626", barColor: "#dc2626" },
-};
-
-
-const COL = {
-  status: "44px",
-  title: "1",
-  acceptance: "130px",
-  difficulty: "82px",
-  action: "110px",
+const DIFFICULTY_STYLE: Record<string, { bg: string; color: string }> = {
+  easy: { bg: "#dcfce7", color: "#16a34a" },
+  medium: { bg: "#fef3c7", color: "#d97706" },
+  hard: { bg: "#fee2e2", color: "#dc2626" },
 };
 
 function DifficultyBadge({ difficulty }: { difficulty: string }) {
-  const d = difficulty.toLowerCase();
-  const s = DIFF[d] ?? DIFF.hard;
+  const d = (difficulty || "easy").toLowerCase();
+  const st = DIFFICULTY_STYLE[d] ?? DIFFICULTY_STYLE.easy;
   return (
     <span
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "6px",
-        fontWeight: 900,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        fontSize: "10px",
-        width: "52px",
-        padding: "3px 0",
-        backgroundColor: s.bg,
-        color: s.color,
+        display: "inline-block",
+        padding: "3px 10px",
+        borderRadius: "999px",
+        fontSize: "11px",
+        fontWeight: 700,
+        backgroundColor: st.bg,
+        color: st.color,
+        textTransform: "capitalize",
+        whiteSpace: "nowrap",
       }}
     >
-      {difficulty}
+      {d}
     </span>
   );
 }
 
 function AcceptanceBar({ value, difficulty }: { value: number; difficulty: string }) {
-  const d = difficulty.toLowerCase();
-  const s = DIFF[d] ?? DIFF.hard;
+  const pct = Math.round(value);
+  const d = (difficulty || "easy").toLowerCase();
+  const st = DIFFICULTY_STYLE[d] ?? DIFFICULTY_STYLE.easy;
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-      <div style={{ width: "52px", height: "6px", backgroundColor: "#f3f4f6", borderRadius: "99px", overflow: "hidden", flexShrink: 0 }}>
-        <div style={{ height: "100%", width: `${value}%`, backgroundColor: s.barColor, borderRadius: "99px" }} />
+    <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" }}>
+      <div
+        style={{
+          flex: 1,
+          height: "6px",
+          borderRadius: "999px",
+          backgroundColor: "#f3f4f6",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${pct}%`,
+            backgroundColor: st.color,
+            borderRadius: "999px",
+            transition: "width 0.4s ease",
+          }}
+        />
       </div>
-      <span style={{ fontSize: "13.5px", color: "#6b7280" }}>{value}%</span>
+      <span style={{ fontSize: "11px", fontWeight: 700, color: "#6b7280", minWidth: "32px", textAlign: "right" }}>
+        {pct}%
+      </span>
     </div>
   );
 }
@@ -69,169 +76,122 @@ function SolveButton({ id, solved, onSolveClick }: { id: string; solved: boolean
     <Link
       to={`/problems/${id}`}
       onClick={onSolveClick}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontWeight: 700,
-        fontSize: "14px",
-        borderRadius: "12px",
-        minWidth: "84px",
-        padding: "7px 16px",
-        backgroundColor: solved ? "#f3f4f6" : "var(--main-orange-color)",
-        color: solved ? "#6b7280" : "#fff",
-        textDecoration: "none",
-        whiteSpace: "nowrap",
-      }}
+      className={`inline-flex items-center justify-center font-bold text-xs sm:text-sm rounded-xl px-3 sm:px-4 py-1.5 transition-all whitespace-nowrap ${
+        solved ? "bg-gray-100 text-gray-600 hover:bg-gray-200" : "text-white hover:opacity-90 shadow-sm"
+      }`}
+      style={!solved ? { backgroundColor: "var(--main-orange-color)" } : {}}
     >
       {solved ? "Solved" : "Solve"}
     </Link>
   );
 }
 
-function Row({ children, isHeader = false }: { children: React.ReactNode; isHeader?: boolean }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        borderBottom: "1px solid #f3f4f6",
-        padding: isHeader ? "0 0 10px 0" : "14px 0",
-      }}
-      className={!isHeader ? "hover:bg-gray-50/60 transition-colors" : ""}
-    >
-      {children}
-    </div>
-  );
-}
+export default function ProblemTable({ rows, page, pageCount, setPage, total, pageSize }: ProblemTableProps) {
+  const startItem = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const endItem = Math.min(page * pageSize, total);
 
-export default function ProblemTable({ rows, page, pageCount, pageSize, setPage, total }: ProblemTableProps) {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
-  const totalCount = total ?? rows.length;
-  const startItem = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
-  const endItem = Math.min(page * pageSize, totalCount);
-
-  const handleSolveClick = (e: React.MouseEvent, id: string) => {
-    if (!user) {
-      e.preventDefault();
-      navigate("/login");
-    }
+  const handleSolveClick = (e: React.MouseEvent, slug: string) => {
+    e.stopPropagation();
   };
 
-
-  const getPageNumbers = () => {
-    const pages: (number | '...')[] = [];
-    if (pageCount <= 7) {
-      for (let i = 1; i <= pageCount; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (page > 3) pages.push('...');
-      for (let i = Math.max(2, page - 1); i <= Math.min(pageCount - 1, page + 1); i++) {
-        pages.push(i);
-      }
-      if (page < pageCount - 2) pages.push('...');
-      pages.push(pageCount);
-    }
-    return pages;
-  };
-
-  const pageNumbers = getPageNumbers();
-
-  return (
-    <>
-      <Row isHeader>
-        <div style={{ width: COL.status, flexShrink: 0, textAlign: "center", fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "3px" }}>
-          Status
-        </div>
-        <div style={{ flex: COL.title, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginLeft: "10px", minWidth: 0, overflow: "hidden" }}>
-          Title
-        </div>
-        <div className="hidden-mobile" style={{ width: COL.acceptance, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: "20px" }}>
-          Acceptance
-        </div>
-        <div className="hidden-mobile-xs" style={{ width: COL.difficulty, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginRight: "7px" }}>
-          Difficulty
-        </div>
-        <div style={{ width: COL.action, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "right", paddingRight: "20px" }}>
-          Action
-        </div>
-      </Row>
-
-      {rows.map((p, idx) => {
-        const key = p.slug ?? p._id ?? idx;
-        return (
-          <Row key={key}>
-            <div style={{ width: COL.status, flexShrink: 0, display: "flex", justifyContent: "center", alignItems: "center" }}>
-              {p.solved ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--main-green-color)" }}>
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-              ) : (
-                <span style={{ width: "16px", height: "16px", borderRadius: "50%", border: "2px solid #d1d5db", display: "inline-block" }} />
-              )}
-            </div>
-            <div style={{ flex: COL.title, display: "flex", alignItems: "center", minWidth: 0, overflow: "hidden" }}>
-              <span style={{ fontWeight: 700, fontSize: "13.5px", color: "#1A1D2B", lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", width: "100%" }}>{p.title}</span>
-            </div>
-            <div className="hidden-mobile" style={{ width: COL.acceptance, flexShrink: 0, display: "flex", alignItems: "center" }}>
-              <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
-            </div>
-            <div className="hidden-mobile-xs" style={{ width: COL.difficulty, flexShrink: 0, display: "flex", alignItems: "center" }}>
-              <DifficultyBadge difficulty={p.difficulty} />
-            </div>
-            <div style={{ width: COL.action, flexShrink: 0, display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-              <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} onSolveClick={(e) => handleSolveClick(e, p.slug ?? p._id ?? '')} />
-            </div>
-          </Row>
-        );
-      })}
-
-      <div className="flex justify-between items-center mt-5 pt-4 border-t border-gray-100">
-        <span className="text-[11px] text-gray-400 font-medium">
-          Showing {startItem}-{endItem} of {totalCount} problems
-        </span>
-        <div className="flex items-center gap-1.5">
-          <button
-            disabled={page <= 1}
-            onClick={() => setPage((v) => v - 1)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#f4f6f8] text-gray-500 disabled:opacity-40 hover:bg-gray-200 transition-colors"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          {pageNumbers.map((n, i) =>
-            n === '...' ? (
-              <span key={`dots-${i}`} className="text-gray-400 text-sm px-1">...</span>
-            ) : (
-              <button
-                key={n}
-                onClick={() => setPage(n as number)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-[13px] font-bold transition-colors"
-                style={
-                  page === n
-                    ? { backgroundColor: "var(--main-orange-color)", color: "#fff" }
-                    : { backgroundColor: "#f4f6f8", color: "#374151" }
-                }
-              >
-                {n}
-              </button>
-            )
-          )}
-          <button
-            disabled={page >= pageCount}
-            onClick={() => setPage((v) => v + 1)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#f4f6f8] text-gray-500 disabled:opacity-40 hover:bg-gray-200 transition-colors"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
+  if (rows.length === 0) {
+    return (
+      <div style={{ padding: "40px 0", textAlign: "center", color: "#9ca3af", fontSize: "14px", fontWeight: 600 }}>
+        No problems found matching criteria.
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="w-full min-w-0">
+      {/* Header */}
+      <div className="flex items-center pb-2.5 mb-2 border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+        <div className="w-9 shrink-0 text-center">Status</div>
+        <div className="flex-1 min-w-0 px-3">Title</div>
+        <div className="hidden md:block w-32 shrink-0 px-2">Acceptance</div>
+        <div className="hidden sm:block w-20 shrink-0 text-center">Difficulty</div>
+        <div className="w-20 sm:w-24 shrink-0 text-right pr-2">Action</div>
+      </div>
+
+      {/* Rows */}
+      <div className="flex flex-col divide-y divide-gray-100">
+        {rows.map((p, idx) => {
+          const key = p.slug ?? p._id ?? idx;
+          return (
+            <div key={key} className="flex items-center py-3.5 hover:bg-gray-50/80 transition-colors rounded-xl px-1 min-w-0">
+              {/* Status */}
+              <div className="w-9 shrink-0 flex items-center justify-center">
+                {p.solved ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--main-green-color)" }}>
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                ) : (
+                  <span className="w-4 h-4 rounded-full border-2 border-gray-300 inline-block" />
+                )}
+              </div>
+
+              {/* Title & Mobile Difficulty tag */}
+              <div className="flex-1 min-w-0 px-3 flex flex-col justify-center">
+                <span className="font-bold text-xs sm:text-[13.5px] text-[#1A1D2B] truncate block leading-tight">
+                  {p.title}
+                </span>
+                <span className="sm:hidden text-[10px] font-semibold text-gray-400 capitalize mt-0.5">
+                  <span className={`inline-block w-2 h-2 rounded-full mr-1 ${
+                    (p.difficulty || '').toLowerCase() === 'easy' ? 'bg-green-500' :
+                    (p.difficulty || '').toLowerCase() === 'medium' ? 'bg-amber-500' : 'bg-red-500'
+                  }`}></span>
+                  {p.difficulty}
+                </span>
+              </div>
+
+              {/* Acceptance Bar (md+) */}
+              <div className="hidden md:block w-32 shrink-0 px-2">
+                <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
+              </div>
+
+              {/* Difficulty Badge (sm+) */}
+              <div className="hidden sm:flex w-20 shrink-0 justify-center items-center">
+                <DifficultyBadge difficulty={p.difficulty} />
+              </div>
+
+              {/* Solve Button */}
+              <div className="w-20 sm:w-24 shrink-0 flex justify-end items-center pr-1">
+                <SolveButton id={p.slug ?? p._id ?? ''} solved={p.solved ?? false} onSolveClick={(e) => handleSolveClick(e, p.slug ?? p._id ?? '')} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Pagination Footer */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-5 pt-4 border-t border-gray-100">
+        <span className="text-xs font-semibold text-gray-400 text-center sm:text-left">
+          Showing {startItem}-{endItem} of {total} problems
+        </span>
+
+        {pageCount > 1 && (
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page <= 1}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-40 transition-colors"
+            >
+              Prev
+            </button>
+            <span className="text-xs font-bold text-gray-600 px-2">
+              {page} / {pageCount}
+            </span>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page >= pageCount}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-40 transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
