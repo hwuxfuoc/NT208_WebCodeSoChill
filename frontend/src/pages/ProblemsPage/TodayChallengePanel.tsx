@@ -28,19 +28,19 @@ export default function TodayChallengePanel() {
     <div
       id="today-challenge"
       ref={panelRef}
-      className="rounded-2xl p-5 text-white relative overflow-hidden"
+      className="rounded-2xl p-4 sm:p-5 text-white relative overflow-hidden w-full box-border"
       style={{ background: "linear-gradient(135deg, #fdba74, var(--main-orange-color))" }}
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-2xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/3 w-24 h-24 bg-white/10 rounded-full translate-y-1/3 blur-2xl pointer-events-none" />
 
-      <div className="relative z-10">
+      <div className="relative z-10 w-full">
         <div className="flex items-start justify-between mb-3">
           <div>
             <p className="text-[10px] font-black tracking-widest uppercase opacity-80 mb-0.5">Today's Challenge</p>
-            <p className="text-sm font-semibold opacity-90">Solve {total} problems · earn EXP</p>
+            <p className="text-xs sm:text-sm font-semibold opacity-90">Solve {total} problems · earn EXP</p>
           </div>
-          <span className="text-lg font-black tabular-nums">
+          <span className="text-base sm:text-lg font-black tabular-nums">
             {solvedLoading ? "..." : `${solvedCount}/${total}`}
           </span>
         </div>
@@ -52,7 +52,7 @@ export default function TodayChallengePanel() {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full">
           {loading ? (
             <div className="flex items-center justify-center bg-white/20 rounded-xl px-3 py-3">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -65,9 +65,9 @@ export default function TodayChallengePanel() {
                 <Link
                   key={p._id}
                   to={`/problems/${p.problemId}`}
-                  className="flex items-center justify-between bg-white/20 hover:bg-white/30 transition-colors rounded-xl px-3 py-2.5 border border-white/20 group"
+                  className="flex items-center justify-between gap-3 bg-white/20 hover:bg-white/30 transition-colors rounded-xl px-3 py-2.5 border border-white/20 group min-w-0 w-full overflow-hidden"
                 >
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
                     {isSolved ? (
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="opacity-100 flex-shrink-0 drop-shadow">
                         <polyline points="20 6 9 17 4 12" />
@@ -78,7 +78,7 @@ export default function TodayChallengePanel() {
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                       </svg>
                     )}
-                    <span className={`text-sm font-semibold group-hover:underline truncate max-w-full ${isSolved ? 'line-through opacity-70' : ''}`}>
+                    <span className={`block truncate min-w-0 flex-1 text-xs sm:text-sm font-semibold group-hover:underline ${isSolved ? 'line-through opacity-70' : ''}`}>
                       {p.title}
                     </span>
                   </div>
