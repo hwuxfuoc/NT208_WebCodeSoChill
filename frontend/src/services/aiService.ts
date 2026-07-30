@@ -18,7 +18,11 @@ interface ChatStreamOptions {
   onComplete?: () => void;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// AI service có URL riêng, KHÔNG dùng chung VITE_API_URL với backend chính
+// - Local dev: http://localhost:8000 (AI service port)
+// - Production: set VITE_AI_API_URL trên Vercel trỏ đến AI service Render
+const API_BASE_URL = import.meta.env.VITE_AI_API_URL || "http://localhost:8000";
+
 
 export async function chatStream(options: ChatStreamOptions): Promise<void> {
   const {
