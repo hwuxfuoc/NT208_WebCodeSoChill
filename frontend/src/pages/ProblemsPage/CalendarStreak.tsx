@@ -43,10 +43,10 @@ export default function CalendarStreak() {
 
   return (
     <section
-      className="rounded-3xl shadow-md text-white relative overflow-hidden w-full box-border"
+      className="rounded-3xl shadow-md text-white relative overflow-hidden"
       style={{ background: "linear-gradient(135deg, #fdba74, var(--main-orange-color))" }}
     >
-      <div className="flex items-center justify-between px-4 sm:px-5 pt-5 pb-4">
+      <div className="flex items-center justify-between px-5 pt-5 pb-4">
         <button
           onClick={handlePrevMonth}
           className="w-7 h-7 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors"
@@ -55,7 +55,7 @@ export default function CalendarStreak() {
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
-        <span className="font-bold text-sm sm:text-[15px]">{`${monthName}, ${year}`}</span>
+        <span className="font-bold text-[15px]">{`${monthName}, ${year}`}</span>
         <button
           onClick={handleNextMonth}
           className="w-7 h-7 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors"
@@ -66,16 +66,16 @@ export default function CalendarStreak() {
         </button>
       </div>
 
-      <div className="grid grid-cols-7 px-3 sm:px-4 mb-1 text-center">
+      <div className="grid grid-cols-7 px-4 mb-1">
         {DAYS.map((d, i) => (
-          <div key={i} className="text-center text-[10px] sm:text-[11px] font-bold text-white/60 py-1">{d}</div>
+          <div key={i} className="text-center text-[11px] font-bold text-white/60 py-1">{d}</div>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 px-3 sm:px-4 pb-4 gap-1 items-center justify-items-center">
+      <div className="grid grid-cols-7 px-4 pb-4 gap-1">
         {/* Empty padding days */}
         {Array.from({ length: emptyDays }).map((_, i) => (
-          <div key={`empty-${i}`} className="w-full aspect-square max-w-[30px]" />
+          <div key={`empty-${i}`} className="w-7 h-7" />
         ))}
 
         {/* Actual days */}
@@ -85,13 +85,14 @@ export default function CalendarStreak() {
           const dd = String(day).padStart(2, '0');
           const dateStr = `${yyyy}-${mm}-${dd}`;
           
+          // Determine if date matches today precisely using local year/month/day
           const isToday = isCurrentMonth && day === todayDate;
           const isSolved = activeDates.has(dateStr);
 
           return (
             <div
               key={day}
-              className="w-full aspect-square max-w-[30px] flex items-center justify-center rounded-lg text-[10px] sm:text-[11px] font-semibold transition-all cursor-pointer"
+              className="w-7 h-7 mx-auto flex items-center justify-center rounded-lg text-[11px] font-semibold transition-all cursor-pointer"
               title={dateStr}
               style={
                 isToday
@@ -108,11 +109,11 @@ export default function CalendarStreak() {
       </div>
 
       {user && (
-        <div className="bg-white/15 mx-3 sm:mx-4 mb-4 rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3 flex flex-col items-center text-center">
-          <p className="text-lg sm:text-[20px] font-black flex items-center justify-center gap-2 whitespace-nowrap">
+        <div className="bg-white/15 mx-4 mb-4 rounded-2xl px-4 py-3 flex flex-col items-center text-center">
+          <p className="text-[20px] font-black flex items-center justify-center gap-2 whitespace-nowrap">
             🔥 Streak {streak} {streak === 1 ? "day" : "days"}!
           </p>
-          <p className="text-[11px] sm:text-[12px] text-white/80 mt-0.5">Keep up the great work, {user.displayname.split(" ")[0]}!</p>
+          <p className="text-[12px] text-white/80 mt-0.5">Keep up the great work, {user.displayname.split(" ")[0]}!</p>
         </div>
       )}
     </section>

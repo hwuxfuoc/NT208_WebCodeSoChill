@@ -39,32 +39,33 @@ export default function ProblemsPage() {
     solved,
   });
 
-  if (loading && problems.length === 0) return <div className="p-8 text-center text-gray-500 font-semibold">Loading problems...</div>;
-  if (error) return <div className="p-8 text-center text-red-500 font-semibold">Error: {error}</div>;
+  if (loading && problems.length === 0) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="page-stack">
       <ProblemsHeader />
 
-      <div className="flex flex-col xl:flex-row gap-6 items-start">
-        <div className="w-full xl:flex-1 flex flex-col gap-6 min-w-0">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex-1 flex flex-col gap-4 min-w-0">
           <TodayChallengePanel />
 
-          {/* On screens < 1350px (under xl), render Calendar & Daily Challenge in a responsive 2-column grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:hidden w-full">
+          <div className="block lg:hidden w-full">
             <CalendarStreak />
-            <DailyRandomChallenge />
           </div>
 
-          <section className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100 min-w-0 w-full overflow-hidden">
+          <section className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100 overflow-x-auto min-w-0">
             <TopicFilterBar topic={topic} setTopic={setTopic} setPage={setPage} />
             <ProblemSearchBar query={query} setQuery={setQuery} tab={tab} setTab={setTab} setPage={setPage} />
             <ProblemTable rows={problems} page={page} pageCount={totalPages} setPage={setPage} total={total} pageSize={PAGE_SIZE} />
           </section>
+
+          <div className="block lg:hidden w-full mt-2">
+            <DailyRandomChallenge />
+          </div>
         </div>
 
-        {/* On screens >= 1350px (xl+), render side widgets in dedicated right column */}
-        <div className="hidden xl:flex w-[280px] flex-shrink-0 flex-col gap-6">
+        <div className="hidden lg:flex w-[280px] flex-shrink-0 flex-col gap-6">
           <CalendarStreak />
           <DailyRandomChallenge />
         </div>
@@ -72,3 +73,4 @@ export default function ProblemsPage() {
     </div>
   );
 }
+
