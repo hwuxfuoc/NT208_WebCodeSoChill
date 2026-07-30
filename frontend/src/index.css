@@ -50,57 +50,6 @@ body {
   z-index: 50;
 }
 
-.brand {
-  font-size: 20px;
-  font-weight: 800;
-  padding: 4px 8px;
-}
-
-.side-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.side-item {
-  width: 100%;
-}
-
-.side-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 16px;
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.side-link:hover {
-  background: #f6f7f9;
-  color: var(--text-primary);
-}
-
-.side-link.active {
-  background: var(--main-orange-color);
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(252, 107, 87, 0.3);
-}
-
-.side-link.active .side-icon,
-.side-link.active .label {
-  color: #ffffff !important;
-}
-
-.side-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Main Content */
 .main-content {
   padding: 30px 10px;
@@ -114,69 +63,6 @@ body {
   gap: 24px;
   width: 100%;
   min-width: 0;
-}
-
-/* Home Grid Layouts */
-.home-grid-top {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
-}
-
-.home-grid-bottom {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.page-grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-.community-layout {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
-}
-
-.community-layout .feed {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-}
-
-.community-layout .side-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-@media (max-width: 900px) {
-  .stats-row {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .page-grid-2 {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 1200px) {
-  .home-grid-top,
-  .home-grid-bottom,
-  .community-layout {
-    grid-template-columns: 1fr;
-  }
 }
 
 .page-header {
