@@ -148,11 +148,10 @@ p {
 
 /* Main Content */
 .main-content {
-  padding: 30px 10px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 30px 16px 30px 10px;
   width: 100%;
   min-width: 0;
+  overflow: hidden;
 }
 
 /* Header Elements */
@@ -779,6 +778,12 @@ p {
   }
 }
 
+@media (max-width: 480px) {
+  .hidden-mobile-xs {
+    display: none !important;
+  }
+}
+
 /* ─── Mobile header dropdown ──────────────────────────────────────────────── */
 .mobile-dropdown-toggle {
   width: 32px;
@@ -883,13 +888,45 @@ p {
 
   .messages-modal-sidebar {
     width: 100% !important;
-    max-height: 200px;
+    max-height: 180px !important;
+    min-height: 120px;
     border-right: none !important;
     border-bottom: 1px solid #eceff3;
+    flex-shrink: 0 !important;
+    overflow-y: auto;
+  }
+
+  /* Chat area fills remaining space */
+  .messages-modal > div:last-child {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden;
   }
 
   /* Notifications modal */
   .notifications-modal {
     width: calc(100vw - 24px) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Even tighter on very small screens */
+  .messages-modal {
+    width: calc(100vw - 12px) !important;
+    height: calc(100vh - 80px) !important;
+    border-radius: 16px !important;
+  }
+
+  .messages-modal-sidebar {
+    max-height: 150px !important;
+    min-height: 100px;
+  }
+
+  .settings-modal {
+    width: calc(100vw - 12px) !important;
+  }
+
+  .notifications-modal {
+    width: calc(100vw - 12px) !important;
   }
 }
