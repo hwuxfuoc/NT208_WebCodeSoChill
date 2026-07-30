@@ -151,7 +151,7 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
         <div className="hidden-mobile" style={{ width: COL.acceptance, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", paddingLeft: "20px" }}>
           Acceptance
         </div>
-        <div style={{ width: COL.difficulty, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginRight: "7px" }}>
+        <div className="hidden-mobile-xs" style={{ width: COL.difficulty, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", marginRight: "7px" }}>
           Difficulty
         </div>
         <div style={{ width: COL.action, flexShrink: 0, fontSize: "10px", fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.08em", textAlign: "right", paddingRight: "20px" }}>
@@ -179,7 +179,7 @@ export default function ProblemTable({ rows, page, pageCount, pageSize, setPage,
             <div className="hidden-mobile" style={{ width: COL.acceptance, flexShrink: 0, display: "flex", alignItems: "center" }}>
               <AcceptanceBar value={p.acceptance ?? 0} difficulty={p.difficulty} />
             </div>
-            <div style={{ width: COL.difficulty, flexShrink: 0, display: "flex", alignItems: "center" }}>
+            <div className="hidden-mobile-xs" style={{ width: COL.difficulty, flexShrink: 0, display: "flex", alignItems: "center" }}>
               <DifficultyBadge difficulty={p.difficulty} />
             </div>
             <div style={{ width: COL.action, flexShrink: 0, display: "flex", justifyContent: "flex-end", alignItems: "center" }}>

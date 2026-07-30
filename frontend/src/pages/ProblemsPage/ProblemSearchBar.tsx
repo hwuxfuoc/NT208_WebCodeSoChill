@@ -10,8 +10,8 @@ interface ProblemSearchBarProps {
 
 export default function ProblemSearchBar({ query, setQuery, tab, setTab, setPage }: ProblemSearchBarProps) {
   return (
-    <div className="flex items-center gap-3 mb-6">
-      <div className="relative flex-1">
+    <div className="flex flex-wrap items-center gap-3 mb-6">
+      <div className="relative flex-1 min-w-[180px]">
         <svg
           width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"

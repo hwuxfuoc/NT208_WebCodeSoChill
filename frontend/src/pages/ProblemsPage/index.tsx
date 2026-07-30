@@ -54,7 +54,7 @@ export default function ProblemsPage() {
             <CalendarStreak />
           </div>
 
-          <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-x-auto">
+          <section className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-gray-100 overflow-x-auto min-w-0">
             <TopicFilterBar topic={topic} setTopic={setTopic} setPage={setPage} />
             <ProblemSearchBar query={query} setQuery={setQuery} tab={tab} setTab={setTab} setPage={setPage} />
             <ProblemTable rows={problems} page={page} pageCount={totalPages} setPage={setPage} total={total} pageSize={PAGE_SIZE} />
@@ -65,7 +65,7 @@ export default function ProblemsPage() {
           </div>
         </div>
 
-        <div className="hidden lg:flex w-[280px] flex-col gap-6">
+        <div className="hidden lg:flex w-[280px] flex-shrink-0 flex-col gap-6">
           <CalendarStreak />
           <DailyRandomChallenge />
         </div>
